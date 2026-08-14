@@ -543,7 +543,11 @@ router.post("/payout-account", (req, res) => {
     return res.json({ success: true, message: "Payout details submitted for verification successfully!", account });
   } catch (error) {
     console.error("Save payout account error:", error);
-    return res.status(500).json({ success: false, error: error.message || "Server error" });// GET /api/profile/seller-earnings/:userId - Get seller earnings breakdown and history
+    return res.status(500).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// GET /api/profile/seller-earnings/:userId - Get seller earnings breakdown and history
 router.get("/seller-earnings/:userId", (req, res) => {
   try {
     const userId = parseInt(req.params.userId, 10);
