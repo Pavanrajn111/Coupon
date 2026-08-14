@@ -1,0 +1,1343 @@
+const Database = require("better-sqlite3");
+const path = require("path");
+const bcrypt = require("bcryptjs");
+
+const DB_PATH = path.join(__dirname, "details.db");
+
+let db;
+
+const getDb = () => {
+  if (!db) {
+    db = new Database(DB_PATH);
+    db.pragma("journal_mode = WAL");
+    db.pragma("foreign_keys = ON");
+  }
+  return db;
+};
+
+const ensureTableColumn = (database, tableName, columnName, definition) => {
+  const columns = database.prepare(`PRAGMA table_info(${tableName})`).all();
+  const hasColumn = columns.some((column) => column.name === columnName);
+  if (!hasColumn) {
+    database.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definition}`);
+  }
+};
+
+const initDetailsDb = () => {
+  const database = getDb();
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      fullName TEXT NOT NULL,
+      username TEXT NOT NULL UNIQUE,
+      email TEXT NOT NULL UNIQUE,
+      phoneNumber TEXT NOT NULL,
+      password TEXT NOT NULL,
+      isVerified INTEGER DEFAULT 0,
+      role TEXT DEFAULT 'user',
+      status TEXT DEFAULT 'active',
+      createdAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  ensureTableColumn(database, "users", "bio", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "users", "profilePhoto", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "users", "balance", "REAL DEFAULT 0.0");
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS coupons (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER NOT NULL,
+      brand TEXT NOT NULL,
+      category TEXT NOT NULL,
+      code TEXT NOT NULL,
+      expiryDate TEXT NOT NULL,
+      originalValue REAL NOT NULL,
+      askingPrice REAL NOT NULL,
+      description TEXT DEFAULT '',
+      status TEXT DEFAULT 'pending',
+      createdAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  // Add image column to coupons table if it doesn't exist
+  ensureTableColumn(database, "coupons", "image", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "coupons", "status", "TEXT DEFAULT 'pending'");
+  ensureTableColumn(database, "users", "balance", "REAL DEFAULT 0.0");
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS purchases (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      couponId INTEGER NOT NULL,
+      buyerId INTEGER NOT NULL,
+      sellerId INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      purchasedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (couponId) REFERENCES coupons(id),
+      FOREIGN KEY (buyerId) REFERENCES users(id),
+      FOREIGN KEY (sellerId) REFERENCES users(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS payouts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      bankDetails TEXT NOT NULL,
+      status TEXT DEFAULT 'pending',
+      createdAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  // Preserve topups data across restarts (no DROP TABLE)
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS topups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      requestId TEXT UNIQUE,
+      userId INTEGER NOT NULL,
+      userFullName TEXT,
+      username TEXT,
+      email TEXT,
+      packageName TEXT,
+      requestedCredits REAL NOT NULL,
+      purchaseAmount REAL NOT NULL,
+      discount REAL DEFAULT 0,
+      totalAmount REAL NOT NULL,
+      paymentMethod TEXT NOT NULL,
+      paymentStatus TEXT DEFAULT 'Pending',
+      requestStatus TEXT DEFAULT 'Pending',
+      paymentReference TEXT,
+      rejectionReason TEXT,
+      approvedAt TEXT,
+      approvedBy TEXT,
+      createdAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS identity_verifications (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER NOT NULL,
+      fullName TEXT NOT NULL,
+      dob TEXT DEFAULT '',
+      idNumber TEXT DEFAULT '',
+      idFrontImage TEXT DEFAULT '',
+      idBackImage TEXT DEFAULT '',
+      selfieImage TEXT DEFAULT '',
+      status TEXT DEFAULT 'pending',
+      rejectionReason TEXT DEFAULT '',
+      submittedAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS disputes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER NOT NULL,
+      orderId INTEGER,
+      reason TEXT NOT NULL,
+      description TEXT DEFAULT '',
+      status TEXT DEFAULT 'new',
+      resolvedAt TEXT,
+      resolvedBy TEXT,
+      createdAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS payout_accounts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER NOT NULL UNIQUE,
+      accountHolderName TEXT NOT NULL,
+      bankName TEXT NOT NULL,
+      accountNumber TEXT NOT NULL,
+      ifscCode TEXT NOT NULL,
+      upiId TEXT DEFAULT '',
+      payoutMethod TEXT DEFAULT 'BANK_TRANSFER',
+      status TEXT DEFAULT 'PENDING VERIFICATION',
+      rejectionReason TEXT DEFAULT '',
+      verifiedAt TEXT,
+      verifiedBy TEXT,
+      createdAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      orderNumber TEXT UNIQUE NOT NULL,
+      couponId INTEGER NOT NULL,
+      buyerId INTEGER NOT NULL,
+      sellerId INTEGER NOT NULL,
+      grossAmount REAL NOT NULL,
+      platformFee REAL NOT NULL,
+      sellerNetAmount REAL NOT NULL,
+      paymentStatus TEXT DEFAULT 'PAID',
+      orderStatus TEXT DEFAULT 'COMPLETED',
+      disputeId INTEGER,
+      createdAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (couponId) REFERENCES coupons(id),
+      FOREIGN KEY (buyerId) REFERENCES users(id),
+      FOREIGN KEY (sellerId) REFERENCES users(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS seller_earnings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sellerId INTEGER NOT NULL,
+      orderId INTEGER NOT NULL,
+      grossAmount REAL NOT NULL,
+      platformFee REAL NOT NULL,
+      sellerNetAmount REAL NOT NULL,
+      status TEXT DEFAULT 'AVAILABLE',
+      createdAt TEXT DEFAULT (datetime('now')),
+      updatedAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (sellerId) REFERENCES users(id),
+      FOREIGN KEY (orderId) REFERENCES orders(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS payout_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      payoutNumber TEXT UNIQUE NOT NULL,
+      sellerId INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      payoutMethod TEXT NOT NULL,
+      payoutAccountId INTEGER NOT NULL,
+      status TEXT DEFAULT 'REQUESTED',
+      failureReason TEXT DEFAULT '',
+      providerPayoutId TEXT DEFAULT '',
+      requestedAt TEXT DEFAULT (datetime('now')),
+      processedAt TEXT,
+      FOREIGN KEY (sellerId) REFERENCES users(id),
+      FOREIGN KEY (payoutAccountId) REFERENCES payout_accounts(id)
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS transactions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      transactionId TEXT UNIQUE NOT NULL,
+      userId INTEGER NOT NULL,
+      orderId INTEGER,
+      type TEXT NOT NULL,
+      amount REAL NOT NULL,
+      currency TEXT NOT NULL,
+      balanceBefore REAL NOT NULL,
+      balanceAfter REAL NOT NULL,
+      status TEXT DEFAULT 'COMPLETED',
+      description TEXT DEFAULT '',
+      createdAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  // Create indexes for faster lookups
+  database.exec(`
+    CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+    CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+    CREATE INDEX IF NOT EXISTS idx_coupons_userId ON coupons(userId);
+    CREATE INDEX IF NOT EXISTS idx_coupons_status ON coupons(status);
+    CREATE INDEX IF NOT EXISTS idx_purchases_buyerId ON purchases(buyerId);
+    CREATE INDEX IF NOT EXISTS idx_purchases_sellerId ON purchases(sellerId);
+    CREATE INDEX IF NOT EXISTS idx_payouts_userId ON payouts(userId);
+    CREATE INDEX IF NOT EXISTS idx_payouts_status ON payouts(status);
+    CREATE INDEX IF NOT EXISTS idx_topups_userId ON topups(userId);
+    CREATE INDEX IF NOT EXISTS idx_topups_status ON topups(requestStatus);
+    CREATE INDEX IF NOT EXISTS idx_topups_approvedAt ON topups(approvedAt);
+    CREATE INDEX IF NOT EXISTS idx_identity_status ON identity_verifications(status);
+    CREATE INDEX IF NOT EXISTS idx_disputes_status ON disputes(status);
+    CREATE INDEX IF NOT EXISTS idx_payout_accounts_userId ON payout_accounts(userId);
+    CREATE INDEX IF NOT EXISTS idx_orders_buyerId ON orders(buyerId);
+    CREATE INDEX IF NOT EXISTS idx_orders_sellerId ON orders(sellerId);
+    CREATE INDEX IF NOT EXISTS idx_seller_earnings_sellerId ON seller_earnings(sellerId);
+    CREATE INDEX IF NOT EXISTS idx_payout_requests_sellerId ON payout_requests(sellerId);
+    CREATE INDEX IF NOT EXISTS idx_transactions_userId ON transactions(userId);
+  `);
+
+  // Ensure initial verified payout account for Pavan Raj N (userId = 1)
+  const existingAcc = database.prepare("SELECT * FROM payout_accounts WHERE userId = 1").get();
+  if (!existingAcc) {
+    database.prepare(`
+      INSERT INTO payout_accounts (userId, accountHolderName, bankName, accountNumber, ifscCode, upiId, payoutMethod, status, verifiedBy, verifiedAt)
+      VALUES (1, 'Pavan Raj N', 'HDFC Bank', '501002349182', 'HDFC0001234', 'pavanraj@upi', 'BANK_TRANSFER', 'VERIFIED', 'admin', datetime('now'))
+    `).run();
+  } else {
+    database.prepare(`
+      UPDATE payout_accounts
+      SET status = 'VERIFIED', verifiedBy = 'admin', verifiedAt = datetime('now')
+      WHERE userId = 1
+    `).run();
+  }
+
+  console.log("SQLite details.db initialized successfully.");
+  return database;
+};
+
+const createUser = (userData) => {
+  const database = getDb();
+  const { fullName, username, email, phoneNumber, password } = userData;
+
+  const stmt = database.prepare(`
+    INSERT INTO users (fullName, username, email, phoneNumber, password)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+
+  const result = stmt.run(fullName, username, email, phoneNumber, password);
+  return result.lastInsertRowid;
+};
+
+const findUserByUsernameOrEmail = (usernameOrEmail) => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT * FROM users WHERE username = ? OR email = ?
+  `);
+  return stmt.get(usernameOrEmail.toLowerCase(), usernameOrEmail.toLowerCase());
+};
+
+const findUserByUsername = (username) => {
+  const database = getDb();
+  const stmt = database.prepare("SELECT * FROM users WHERE username = ?");
+  return stmt.get((username || "").trim().toLowerCase());
+};
+
+const findUserByEmail = (email) => {
+  const database = getDb();
+  const stmt = database.prepare("SELECT * FROM users WHERE email = ?");
+  return stmt.get(email.toLowerCase());
+};
+
+const verifyPassword = async (plainPassword, hashedPassword) => {
+  return bcrypt.compare(plainPassword, hashedPassword);
+};
+
+const getAllUsers = () => {
+  const database = getDb();
+  const stmt = database.prepare(
+    "SELECT id, fullName, username, email, phoneNumber, isVerified, role, status, bio, profilePhoto, balance, createdAt, updatedAt FROM users",
+  );
+  return stmt.all();
+};
+
+const updateUserProfile = (userId, updates = {}) => {
+  const database = getDb();
+  const currentUser = database
+    .prepare("SELECT * FROM users WHERE id = ?")
+    .get(userId);
+
+  if (!currentUser) {
+    return { success: false, errors: { general: "User not found" } };
+  }
+
+  const nextFullName = (updates.fullName !== undefined ? updates.fullName : (currentUser.fullName || "")).trim();
+  const nextUsername = (updates.username !== undefined ? updates.username : (currentUser.username || "")).trim().toLowerCase();
+  const nextPhone = (updates.phoneNumber !== undefined ? updates.phoneNumber : (currentUser.phoneNumber || "")).trim();
+  const nextBio = updates.bio !== undefined ? updates.bio : (currentUser.bio || "");
+  const nextPhoto = updates.profilePhoto !== undefined ? updates.profilePhoto : (currentUser.profilePhoto || "");
+
+  if (!nextFullName || !nextUsername) {
+    return {
+      success: false,
+      errors: { fullName: "Full name is required", username: "Username is required" },
+    };
+  }
+
+  const existingByUsername = findUserByUsername(nextUsername);
+  if (existingByUsername && existingByUsername.id !== userId) {
+    return { success: false, errors: { username: "Username already taken" } };
+  }
+
+  const stmt = database.prepare(`
+    UPDATE users
+    SET fullName = ?, username = ?, phoneNumber = ?, bio = ?, profilePhoto = ?, updatedAt = datetime('now')
+    WHERE id = ?
+  `);
+  stmt.run(nextFullName, nextUsername, nextPhone, nextBio, nextPhoto, userId);
+
+  return {
+    success: true,
+    user: {
+      id: currentUser.id,
+      fullName: nextFullName,
+      username: nextUsername,
+      email: currentUser.email,
+      phoneNumber: nextPhone,
+      bio: nextBio,
+      profilePhoto: nextPhoto,
+      role: currentUser.role,
+      isVerified: currentUser.isVerified,
+      balance: currentUser.balance || 0.0,
+      createdAt: currentUser.createdAt,
+    },
+  };
+};
+
+
+// ===== COUPON FUNCTIONS =====
+
+const createCoupon = (couponData) => {
+  const database = getDb();
+  const {
+    userId,
+    brand,
+    category,
+    code,
+    expiryDate,
+    originalValue,
+    askingPrice,
+    description,
+    image,
+  } = couponData;
+  const stmt = database.prepare(`
+    INSERT INTO coupons (userId, brand, category, code, expiryDate, originalValue, askingPrice, description, image)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const result = stmt.run(
+    userId,
+    brand,
+    category,
+    code,
+    expiryDate,
+    originalValue,
+    askingPrice,
+    description || "",
+    image || "",
+  );
+  return result.lastInsertRowid;
+};
+
+const getCouponsByUserId = (userId) => {
+  const database = getDb();
+  const stmt = database.prepare(
+    "SELECT * FROM coupons WHERE userId = ? AND status = ? ORDER BY createdAt DESC",
+  );
+  return stmt.all(userId, "active");
+};
+
+const getAllActiveCoupons = () => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT c.*, u.username, u.fullName FROM coupons c
+    JOIN users u ON c.userId = u.id
+    WHERE c.status = 'active'
+    ORDER BY c.createdAt DESC
+  `);
+  return stmt.all();
+};
+
+const getCouponById = (couponId) => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT c.*, u.username, u.fullName FROM coupons c
+    JOIN users u ON c.userId = u.id
+    WHERE c.id = ?
+  `);
+  return stmt.get(couponId);
+};
+
+const updateCouponStatus = (couponId, status) => {
+  const database = getDb();
+  const stmt = database.prepare("UPDATE coupons SET status = ? WHERE id = ?");
+  return stmt.run(status, couponId);
+};
+
+// ===== PURCHASE FUNCTIONS =====
+
+const createPurchase = (purchaseData) => {
+  const database = getDb();
+  const { couponId, buyerId, sellerId, amount } = purchaseData;
+  const stmt = database.prepare(`
+    INSERT INTO purchases (couponId, buyerId, sellerId, amount)
+    VALUES (?, ?, ?, ?)
+  `);
+  return stmt.run(couponId, buyerId, sellerId, amount);
+};
+
+const getPurchasesByBuyerId = (buyerId) => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT p.*, c.brand, c.category, c.code, c.originalValue, u.username as sellerUsername
+    FROM purchases p
+    JOIN coupons c ON p.couponId = c.id
+    JOIN users u ON p.sellerId = u.id
+    WHERE p.buyerId = ?
+    ORDER BY p.purchasedAt DESC
+  `);
+  return stmt.all(buyerId);
+};
+
+const getPurchasesBySellerId = (sellerId) => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT p.*, c.brand, c.category, c.code, c.originalValue, u.username as buyerUsername
+    FROM purchases p
+    JOIN coupons c ON p.couponId = c.id
+    JOIN users u ON p.buyerId = u.id
+    WHERE p.sellerId = ?
+    ORDER BY p.purchasedAt DESC
+  `);
+  return stmt.all(sellerId);
+};
+
+// ===== STATS FUNCTIONS =====
+
+const getUserStats = (userId) => {
+  const database = getDb();
+  const offered = database
+    .prepare("SELECT COUNT(*) as count FROM coupons WHERE userId = ?")
+    .get(userId);
+  const purchased = database
+    .prepare("SELECT COUNT(*) as count FROM purchases WHERE buyerId = ?")
+    .get(userId);
+  const sold = database
+    .prepare("SELECT COUNT(*) as count FROM purchases WHERE sellerId = ?")
+    .get(userId);
+  return {
+    offered: offered.count,
+    purchased: purchased.count,
+    sold: sold.count,
+  };
+};
+
+// ===== PAYOUT & ADMIN FUNCTIONS =====
+
+const createPayout = (payoutData) => {
+  const database = getDb();
+  const { userId, amount, bankDetails } = payoutData;
+  
+  // Verify user has sufficient balance
+  const user = database.prepare("SELECT balance FROM users WHERE id = ?").get(userId);
+  if (!user || user.balance < amount) {
+    throw new Error("Insufficient balance");
+  }
+  
+  // Deduct from user balance
+  database.prepare("UPDATE users SET balance = balance - ? WHERE id = ?").run(amount, userId);
+  
+  const stmt = database.prepare(`
+    INSERT INTO payouts (userId, amount, bankDetails)
+    VALUES (?, ?, ?)
+  `);
+  const result = stmt.run(userId, amount, bankDetails);
+  return result.lastInsertRowid;
+};
+
+const getPayoutsByUserId = (userId) => {
+  const database = getDb();
+  const stmt = database.prepare("SELECT * FROM payouts WHERE userId = ? ORDER BY createdAt DESC");
+  return stmt.all(userId);
+};
+
+const getAllPendingPayouts = () => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT p.*, u.username, u.fullName 
+    FROM payouts p
+    JOIN users u ON p.userId = u.id
+    WHERE p.status = 'pending'
+    ORDER BY p.createdAt DESC
+  `);
+  return stmt.all();
+};
+
+const updatePayoutStatus = (payoutId, status) => {
+  const database = getDb();
+  
+  // If rejected, refund the user
+  if (status === 'rejected') {
+    const payout = database.prepare("SELECT userId, amount, status FROM payouts WHERE id = ?").get(payoutId);
+    if (payout && payout.status === 'pending') {
+      database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(payout.amount, payout.userId);
+    }
+  }
+  
+  const stmt = database.prepare("UPDATE payouts SET status = ? WHERE id = ?");
+  return stmt.run(status, payoutId);
+};
+
+const getAllPendingCoupons = () => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT c.*, u.username, u.fullName
+    FROM coupons c
+    JOIN users u ON c.userId = u.id
+    WHERE c.status = 'pending'
+    ORDER BY c.createdAt DESC
+  `);
+  return stmt.all();
+};
+
+const approveCoupon = (couponId) => {
+  const database = getDb();
+  // Get the coupon details
+  const coupon = database.prepare("SELECT userId, askingPrice, status FROM coupons WHERE id = ?").get(couponId);
+  if (!coupon) throw new Error("Coupon not found");
+  if (coupon.status !== 'pending') return { success: false, message: "Coupon is not pending" };
+  
+  // Mark coupon as active
+  database.prepare("UPDATE coupons SET status = 'active' WHERE id = ?").run(couponId);
+  
+  // Credit askingPrice to seller
+  database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(coupon.askingPrice, coupon.userId);
+  
+  return { success: true };
+};
+
+const getAdminStats = () => {
+  const database = getDb();
+  const pendingCoupons = database.prepare("SELECT COUNT(*) as count FROM coupons WHERE status = 'pending'").get().count;
+  const pendingPayouts = database.prepare("SELECT COUNT(*) as count FROM topups WHERE requestStatus = 'Pending'").get().count;
+  const activeSellers = database.prepare("SELECT COUNT(DISTINCT userId) as count FROM coupons").get().count;
+  const voucherVolume = pendingCoupons;
+
+  // Count active/new disputes
+  const disputes = database.prepare(
+    "SELECT COUNT(*) as count FROM disputes WHERE status = 'new' OR status = 'open'"
+  ).get().count;
+
+  // Daily total approved in ₹ (purchaseAmount, NOT requestedCredits)
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  const dailyApprovedAmount = database.prepare(
+    "SELECT COALESCE(SUM(purchaseAmount), 0) as total FROM topups WHERE requestStatus = 'Approved' AND approvedAt >= ?"
+  ).get(todayStart).total;
+
+  return {
+    pendingCoupons,
+    pendingPayouts,
+    activeSellers,
+    voucherVolume,
+    disputes,
+    trustScore: 95,
+    dailyApprovedAmount
+  };
+};
+
+const getAdminPaymentStats = () => {
+  const database = getDb();
+
+  const pendingReviews = database.prepare(
+    "SELECT COUNT(*) as count FROM topups WHERE requestStatus = 'Pending'"
+  ).get().count;
+
+  // Daily total approved in ₹ (uses purchaseAmount, NOT requestedCredits)
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  const dailyApprovedAmount = database.prepare(
+    "SELECT COALESCE(SUM(purchaseAmount), 0) as total FROM topups WHERE requestStatus = 'Approved' AND approvedAt >= ?"
+  ).get(todayStart).total;
+
+  return { pendingReviews, dailyApprovedAmount };
+};
+
+const addCredits = (userId, amount) => {
+  const database = getDb();
+  database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(amount, userId);
+  const allUsers = getAllUsers();
+  const updatedUser = allUsers.find(u => u.id === userId);
+  return updatedUser;
+};
+
+const createTopup = (topupData) => {
+  const database = getDb();
+  const {
+    requestId,
+    userId,
+    userName,
+    username,
+    email,
+    packageName,
+    requestedCredits,
+    purchaseAmount,
+    discount,
+    totalAmount,
+    paymentMethod,
+    paymentStatus,
+    requestStatus,
+    paymentReference
+  } = topupData;
+
+  const stmt = database.prepare(`
+    INSERT INTO topups (
+      requestId, userId, userFullName, username, email, packageName,
+      requestedCredits, purchaseAmount, discount, totalAmount,
+      paymentMethod, paymentStatus, requestStatus, paymentReference,
+      createdAt, updatedAt
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?,
+      ?, ?, ?, ?,
+      datetime('now'), datetime('now')
+    )
+  `);
+
+  const generatedId = `CPX-PAY-${Date.now().toString(36).toUpperCase()}`;
+
+  const result = stmt.run(
+    requestId || generatedId,
+    userId,
+    userName || "",
+    username || "",
+    email || "",
+    packageName || "Custom Amount",
+    requestedCredits,
+    purchaseAmount,
+    discount || 0,
+    totalAmount,
+    paymentMethod,
+    paymentStatus || "Pending",
+    requestStatus || "Pending",
+    paymentReference || ""
+  );
+  return result.lastInsertRowid;
+};
+
+const getAllPendingTopups = (filterMethod = null) => {
+  const database = getDb();
+  let query = `
+    SELECT id, requestId, userId, userFullName AS userName, username, email, packageName,
+           requestedCredits, purchaseAmount, discount, totalAmount, paymentMethod,
+           paymentStatus, requestStatus, paymentReference, rejectionReason,
+           approvedAt, approvedBy, createdAt, updatedAt
+    FROM topups
+    WHERE requestStatus = 'Pending'
+  `;
+  const params = [];
+
+  if (filterMethod && filterMethod !== 'all') {
+    query += ` AND LOWER(paymentMethod) LIKE ?`;
+    params.push(`%${filterMethod.toLowerCase()}%`);
+  }
+
+  query += ` ORDER BY createdAt DESC`;
+  const rows = database.prepare(query).all(...params);
+
+  // Deduplicate duplicate requests for the same payment submission
+  const seenSignatures = new Set();
+  const uniqueRows = [];
+
+  for (const r of rows) {
+    const signature = `${r.userId}_${r.requestedCredits}_${r.totalAmount}_${(r.paymentMethod || "").toUpperCase()}_${(r.paymentReference || "").trim()}`;
+    if (!seenSignatures.has(signature)) {
+      seenSignatures.add(signature);
+      uniqueRows.push(r);
+    }
+  }
+
+  return uniqueRows;
+};
+
+const getTopupById = (id) => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT id, requestId, userId, userFullName AS userName, username, email, packageName,
+           requestedCredits, purchaseAmount, discount, totalAmount, paymentMethod,
+           paymentStatus, requestStatus, paymentReference, rejectionReason,
+           approvedAt, approvedBy, createdAt, updatedAt
+    FROM topups WHERE id = ?
+  `).get(id);
+};
+
+const updateTopupStatus = (topupId, status, adminUser = "admin", reason = "") => {
+  const database = getDb();
+  
+  // Safe checks using sequential updates
+  const topup = database.prepare("SELECT * FROM topups WHERE id = ?").get(topupId);
+  if (!topup) {
+    throw new Error("Payment request not found.");
+  }
+  if (topup.requestStatus !== 'Pending') {
+    throw new Error("Payment request is already processed.");
+  }
+
+  const signature = `${topup.userId}_${topup.requestedCredits}_${topup.totalAmount}_${(topup.paymentMethod || "").toUpperCase()}_${(topup.paymentReference || "").trim()}`;
+
+  if (status === 'Approved') {
+    // Add credits to user wallet balance (once)
+    database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(topup.requestedCredits, topup.userId);
+    
+    // Update target topup request status to Approved
+    database.prepare(`
+      UPDATE topups
+      SET requestStatus = 'Approved', paymentStatus = 'Completed', approvedAt = datetime('now'), approvedBy = ?, updatedAt = datetime('now')
+      WHERE id = ?
+    `).run(adminUser, topupId);
+
+    // Also update any duplicate pending records for the same payment submission
+    const allPending = database.prepare("SELECT id, userId, requestedCredits, totalAmount, paymentMethod, paymentReference FROM topups WHERE requestStatus = 'Pending'").all();
+    allPending.forEach(p => {
+      const pSig = `${p.userId}_${p.requestedCredits}_${p.totalAmount}_${(p.paymentMethod || "").toUpperCase()}_${(p.paymentReference || "").trim()}`;
+      if (pSig === signature && p.id !== topupId) {
+        database.prepare(`
+          UPDATE topups
+          SET requestStatus = 'Approved', paymentStatus = 'Completed', approvedAt = datetime('now'), approvedBy = ?, updatedAt = datetime('now')
+          WHERE id = ?
+        `).run(adminUser, p.id);
+      }
+    });
+  } else if (status === 'Rejected') {
+    database.prepare(`
+      UPDATE topups
+      SET requestStatus = 'Rejected', paymentStatus = 'Failed', rejectionReason = ?, updatedAt = datetime('now')
+      WHERE id = ?
+    `).run(reason || "Rejected by admin", topupId);
+
+    const allPending = database.prepare("SELECT id, userId, requestedCredits, totalAmount, paymentMethod, paymentReference FROM topups WHERE requestStatus = 'Pending'").all();
+    allPending.forEach(p => {
+      const pSig = `${p.userId}_${p.requestedCredits}_${p.totalAmount}_${(p.paymentMethod || "").toUpperCase()}_${(p.paymentReference || "").trim()}`;
+      if (pSig === signature && p.id !== topupId) {
+        database.prepare(`
+          UPDATE topups
+          SET requestStatus = 'Rejected', paymentStatus = 'Failed', rejectionReason = ?, updatedAt = datetime('now')
+          WHERE id = ?
+        `).run(reason || "Rejected by admin", p.id);
+      }
+    });
+  }
+  return true;
+};
+
+const saveIdentityVerification = (data) => {
+  const database = getDb();
+  const { userId, fullName, dob, idNumber, idFrontImage, idBackImage, selfieImage } = data;
+
+  // Mark previous pending attempts as superseded if any
+  database.prepare("UPDATE identity_verifications SET status = 'superseded' WHERE userId = ? AND status = 'pending'").run(userId);
+
+  const stmt = database.prepare(`
+    INSERT INTO identity_verifications (
+      userId, fullName, dob, idNumber, idFrontImage, idBackImage, selfieImage, status, submittedAt, updatedAt
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', datetime('now'), datetime('now'))
+  `);
+
+  const result = stmt.run(
+    userId,
+    fullName || "",
+    dob || "",
+    idNumber || "",
+    idFrontImage || "",
+    idBackImage || "",
+    selfieImage || ""
+  );
+
+  return result.lastInsertRowid;
+};
+
+const getAllPendingIdentityVerifications = () => {
+  const database = getDb();
+  const stmt = database.prepare(`
+    SELECT v.*, u.username, u.email
+    FROM identity_verifications v
+    JOIN users u ON v.userId = u.id
+    WHERE v.status = 'pending'
+    ORDER BY v.submittedAt DESC
+  `);
+  return stmt.all();
+};
+
+const getIdentityVerificationById = (id) => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT v.*, u.username, u.email
+    FROM identity_verifications v
+    JOIN users u ON v.userId = u.id
+    WHERE v.id = ?
+  `).get(id);
+};
+
+const getUserLatestIdentityVerification = (userId) => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT v.*, u.username, u.email, u.isVerified
+    FROM identity_verifications v
+    JOIN users u ON v.userId = u.id
+    WHERE v.userId = ?
+    ORDER BY v.id DESC
+    LIMIT 1
+  `).get(userId);
+};
+
+const updateIdentityVerificationStatus = (id, status, reason = "") => {
+  const database = getDb();
+  const verification = database.prepare("SELECT * FROM identity_verifications WHERE id = ?").get(id);
+  if (!verification) {
+    throw new Error("Verification request not found");
+  }
+
+  const nextStatus = status === 'approved' ? 'approved' : 'rejected';
+  
+  database.prepare(`
+    UPDATE identity_verifications
+    SET status = ?, rejectionReason = ?, updatedAt = datetime('now')
+    WHERE id = ?
+  `).run(nextStatus, reason || "", id);
+
+  if (nextStatus === 'approved') {
+    // Update user verified flag and fullName if available
+    database.prepare("UPDATE users SET isVerified = 1, fullName = COALESCE(NULLIF(?, ''), fullName) WHERE id = ?")
+      .run(verification.fullName, verification.userId);
+  }
+
+  return true;
+};
+
+// --- PAYOUT ACCOUNT FUNCTIONS ---
+const getPayoutAccountByUserId = (userId) => {
+  const database = getDb();
+  return database.prepare("SELECT * FROM payout_accounts WHERE userId = ?").get(userId);
+};
+
+const saveOrUpdatePayoutAccount = (userId, data) => {
+  const database = getDb();
+  const existing = database.prepare("SELECT * FROM payout_accounts WHERE userId = ?").get(userId);
+
+  if (existing) {
+    database.prepare(`
+      UPDATE payout_accounts
+      SET accountHolderName = ?, bankName = ?, accountNumber = ?, ifscCode = ?, upiId = ?, payoutMethod = ?, status = 'PENDING VERIFICATION', rejectionReason = '', updatedAt = datetime('now')
+      WHERE userId = ?
+    `).run(
+      data.accountHolderName,
+      data.bankName,
+      data.accountNumber,
+      data.ifscCode,
+      data.upiId || "",
+      data.payoutMethod || "BANK_TRANSFER",
+      userId
+    );
+    return getPayoutAccountByUserId(userId);
+  } else {
+    database.prepare(`
+      INSERT INTO payout_accounts (userId, accountHolderName, bankName, accountNumber, ifscCode, upiId, payoutMethod, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'PENDING VERIFICATION')
+    `).run(
+      userId,
+      data.accountHolderName,
+      data.bankName,
+      data.accountNumber,
+      data.ifscCode,
+      data.upiId || "",
+      data.payoutMethod || "BANK_TRANSFER"
+    );
+    return getPayoutAccountByUserId(userId);
+  }
+};
+
+const getAllPendingPayoutAccounts = () => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT p.*, u.username, u.email, u.fullName
+    FROM payout_accounts p
+    JOIN users u ON p.userId = u.id
+    WHERE p.status = 'PENDING VERIFICATION'
+    ORDER BY p.updatedAt DESC
+  `).all();
+};
+
+const getAllPayoutAccountsSummary = () => {
+  const database = getDb();
+  const allAccounts = database.prepare(`
+    SELECT p.*, u.username, u.email, u.fullName
+    FROM payout_accounts p
+    JOIN users u ON p.userId = u.id
+    ORDER BY p.updatedAt DESC
+  `).all();
+
+  const counts = database.prepare(`
+    SELECT 
+      SUM(CASE WHEN status = 'PENDING VERIFICATION' THEN 1 ELSE 0 END) as pendingCount,
+      SUM(CASE WHEN status = 'VERIFIED' THEN 1 ELSE 0 END) as verifiedCount,
+      SUM(CASE WHEN status = 'REJECTED' THEN 1 ELSE 0 END) as rejectedCount
+    FROM payout_accounts
+  `).get();
+
+  return {
+    allAccounts,
+    pendingCount: counts ? (counts.pendingCount || 0) : 0,
+    verifiedCount: counts ? (counts.verifiedCount || 0) : 0,
+    rejectedCount: counts ? (counts.rejectedCount || 0) : 0,
+    queue: allAccounts.filter(a => a.status === 'PENDING VERIFICATION')
+  };
+};
+
+const updatePayoutAccountStatus = (accountId, status, adminUser = "admin", reason = "") => {
+  const database = getDb();
+  const account = database.prepare("SELECT * FROM payout_accounts WHERE id = ?").get(accountId);
+  if (!account) throw new Error("Payout account not found");
+
+  const nextStatus = status === 'VERIFIED' ? 'VERIFIED' : 'REJECTED';
+  database.prepare(`
+    UPDATE payout_accounts
+    SET status = ?, rejectionReason = ?, verifiedBy = ?, verifiedAt = datetime('now'), updatedAt = datetime('now')
+    WHERE id = ?
+  `).run(nextStatus, reason || "", adminUser, accountId);
+
+  return true;
+};
+
+// --- TRANSACTION LEDGER FUNCTIONS ---
+const recordTransaction = (data) => {
+  const database = getDb();
+  const txnId = data.transactionId || `TXN-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+  database.prepare(`
+    INSERT INTO transactions (transactionId, userId, orderId, type, amount, currency, balanceBefore, balanceAfter, status, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    txnId,
+    data.userId,
+    data.orderId || null,
+    data.type,
+    data.amount,
+    data.currency || 'C',
+    data.balanceBefore || 0,
+    data.balanceAfter || 0,
+    data.status || 'COMPLETED',
+    data.description || ''
+  );
+  return txnId;
+};
+
+const getUserTransactions = (userId, typeFilter = null) => {
+  const database = getDb();
+  let query = "SELECT * FROM transactions WHERE userId = ?";
+  const params = [userId];
+
+  if (typeFilter && typeFilter !== 'ALL') {
+    query += " AND type = ?";
+    params.push(typeFilter);
+  }
+
+  query += " ORDER BY id DESC";
+  return database.prepare(query).all(...params);
+};
+
+// --- ORDERS & SELLER EARNINGS FUNCTIONS ---
+const createOrderWithEarnings = (couponId, buyerId) => {
+  const database = getDb();
+  const coupon = database.prepare("SELECT * FROM coupons WHERE id = ?").get(couponId);
+  if (!coupon) throw new Error("Coupon not found");
+
+  const buyer = database.prepare("SELECT * FROM users WHERE id = ?").get(buyerId);
+  if (!buyer) throw new Error("Buyer not found");
+
+  const grossAmount = coupon.askingPrice;
+  const platformFee = Math.round(grossAmount * 0.05 * 100) / 100; // 5% platform fee
+  const sellerNetAmount = grossAmount - platformFee;
+  const orderNumber = `ORD-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+
+  // Create Order
+  const orderResult = database.prepare(`
+    INSERT INTO orders (orderNumber, couponId, buyerId, sellerId, grossAmount, platformFee, sellerNetAmount, paymentStatus, orderStatus)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'PAID', 'COMPLETED')
+  `).run(orderNumber, couponId, buyerId, coupon.userId, grossAmount, platformFee, sellerNetAmount);
+
+  const orderId = orderResult.lastInsertRowid;
+
+  // Create Seller Earning record
+  database.prepare(`
+    INSERT INTO seller_earnings (sellerId, orderId, grossAmount, platformFee, sellerNetAmount, status)
+    VALUES (?, ?, ?, ?, ?, 'AVAILABLE')
+  `).run(coupon.userId, orderId, grossAmount, platformFee, sellerNetAmount);
+
+  // Record buyer transaction
+  recordTransaction({
+    userId: buyerId,
+    orderId,
+    type: 'COUPON_PURCHASE',
+    amount: grossAmount,
+    currency: 'C',
+    balanceBefore: buyer.balance,
+    balanceAfter: buyer.balance - grossAmount,
+    description: `Purchased ${coupon.brand} Coupon (${coupon.code})`
+  });
+
+  // Record seller earning transaction
+  const seller = database.prepare("SELECT * FROM users WHERE id = ?").get(coupon.userId);
+  recordTransaction({
+    userId: coupon.userId,
+    orderId,
+    type: 'SELLER_EARNING',
+    amount: sellerNetAmount,
+    currency: 'INR',
+    balanceBefore: seller ? seller.balance : 0,
+    balanceAfter: seller ? seller.balance : 0,
+    description: `Sale of ${coupon.brand} Coupon (Order #${orderNumber})`
+  });
+
+  return orderId;
+};
+
+const getSellerEarningsSummary = (sellerId) => {
+  const database = getDb();
+  
+  const available = database.prepare(`
+    SELECT COALESCE(SUM(sellerNetAmount), 0) as total
+    FROM seller_earnings
+    WHERE sellerId = ? AND status = 'AVAILABLE'
+  `).get(sellerId).total;
+
+  const pending = database.prepare(`
+    SELECT COALESCE(SUM(sellerNetAmount), 0) as total
+    FROM seller_earnings
+    WHERE sellerId = ? AND status = 'PENDING'
+  `).get(sellerId).total;
+
+  const totalEarned = database.prepare(`
+    SELECT COALESCE(SUM(sellerNetAmount), 0) as total
+    FROM seller_earnings
+    WHERE sellerId = ? AND status IN ('AVAILABLE', 'PAID', 'CONVERTED_TO_CREDITS')
+  `).get(sellerId).total;
+
+  const totalWithdrawn = database.prepare(`
+    SELECT COALESCE(SUM(amount), 0) as total
+    FROM payout_requests
+    WHERE sellerId = ? AND status = 'COMPLETED'
+  `).get(sellerId).total;
+
+  return { available, pending, totalEarned, totalWithdrawn };
+};
+
+const getSellerEarningsList = (sellerId, filterStatus = null) => {
+  const database = getDb();
+  let query = `
+    SELECT e.*, o.orderNumber, c.brand, c.code
+    FROM seller_earnings e
+    JOIN orders o ON e.orderId = o.id
+    JOIN coupons c ON o.couponId = c.id
+    WHERE e.sellerId = ?
+  `;
+  const params = [sellerId];
+
+  if (filterStatus && filterStatus !== 'ALL') {
+    query += " AND e.status = ?";
+    params.push(filterStatus);
+  }
+
+  query += " ORDER BY e.id DESC";
+  return database.prepare(query).all(...params);
+};
+
+const convertSellerEarningToCredits = (sellerId, amount) => {
+  const database = getDb();
+  const summary = getSellerEarningsSummary(sellerId);
+  if (summary.available < amount) {
+    throw new Error("Insufficient available seller earnings");
+  }
+
+  // 1:1 ratio seller earnings -> credits
+  const creditsToAdd = amount;
+  const user = database.prepare("SELECT * FROM users WHERE id = ?").get(sellerId);
+
+  // Update user balance
+  database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(creditsToAdd, sellerId);
+
+  // Mark earnings as CONVERTED_TO_CREDITS up to amount
+  let remaining = amount;
+  const availableEarnings = database.prepare("SELECT * FROM seller_earnings WHERE sellerId = ? AND status = 'AVAILABLE' ORDER BY id ASC").all(sellerId);
+
+  for (const e of availableEarnings) {
+    if (remaining <= 0) break;
+    if (e.sellerNetAmount <= remaining) {
+      database.prepare("UPDATE seller_earnings SET status = 'CONVERTED_TO_CREDITS', updatedAt = datetime('now') WHERE id = ?").run(e.id);
+      remaining -= e.sellerNetAmount;
+    } else {
+      // Partial conversion split if needed
+      database.prepare("UPDATE seller_earnings SET sellerNetAmount = sellerNetAmount - ?, updatedAt = datetime('now') WHERE id = ?").run(remaining, e.id);
+      remaining = 0;
+    }
+  }
+
+  // Record Ledger Transaction
+  recordTransaction({
+    userId: sellerId,
+    type: 'SELLER_CREDIT_CONVERSION',
+    amount: creditsToAdd,
+    currency: 'C',
+    balanceBefore: user.balance,
+    balanceAfter: user.balance + creditsToAdd,
+    description: `Converted ₹${amount} seller earnings to ${creditsToAdd}C credits`
+  });
+
+  return true;
+};
+
+const requestSellerPayout = (sellerId, amount) => {
+  const database = getDb();
+
+  // Check payout account verification
+  const account = getPayoutAccountByUserId(sellerId);
+  if (!account || account.status !== 'VERIFIED') {
+    throw new Error("Your payout account must be verified by an admin before you can withdraw money.");
+  }
+
+  // Check available earnings balance
+  const summary = getSellerEarningsSummary(sellerId);
+  if (summary.available < amount) {
+    throw new Error("Insufficient available earnings for payout.");
+  }
+
+  const payoutNumber = `PO-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+
+  // Create Payout Request
+  const res = database.prepare(`
+    INSERT INTO payout_requests (payoutNumber, sellerId, amount, payoutMethod, payoutAccountId, status)
+    VALUES (?, ?, ?, ?, ?, 'REQUESTED')
+  `).run(payoutNumber, sellerId, amount, account.payoutMethod || 'BANK_TRANSFER', account.id);
+
+  // Mark corresponding earnings as PAYOUT_REQUESTED
+  let remaining = amount;
+  const availableEarnings = database.prepare("SELECT * FROM seller_earnings WHERE sellerId = ? AND status = 'AVAILABLE' ORDER BY id ASC").all(sellerId);
+  for (const e of availableEarnings) {
+    if (remaining <= 0) break;
+    if (e.sellerNetAmount <= remaining) {
+      database.prepare("UPDATE seller_earnings SET status = 'PAYOUT_REQUESTED', updatedAt = datetime('now') WHERE id = ?").run(e.id);
+      remaining -= e.sellerNetAmount;
+    } else {
+      database.prepare("UPDATE seller_earnings SET sellerNetAmount = sellerNetAmount - ?, updatedAt = datetime('now') WHERE id = ?").run(remaining, e.id);
+      remaining = 0;
+    }
+  }
+
+  return res.lastInsertRowid;
+};
+
+const processSellerPayout = (payoutRequestId, status, failureReason = "") => {
+  const database = getDb();
+  const payout = database.prepare("SELECT * FROM payout_requests WHERE id = ?").get(payoutRequestId);
+  if (!payout) throw new Error("Payout request not found");
+
+  const nextStatus = status === 'COMPLETED' ? 'COMPLETED' : 'FAILED';
+
+  database.prepare(`
+    UPDATE payout_requests
+    SET status = ?, failureReason = ?, processedAt = datetime('now')
+    WHERE id = ?
+  `).run(nextStatus, failureReason || "", payoutRequestId);
+
+  const user = database.prepare("SELECT * FROM users WHERE id = ?").get(payout.sellerId);
+
+  if (nextStatus === 'COMPLETED') {
+    // Record Payout Transaction
+    recordTransaction({
+      userId: payout.sellerId,
+      type: 'SELLER_PAYOUT',
+      amount: payout.amount,
+      currency: 'INR',
+      balanceBefore: user ? user.balance : 0,
+      balanceAfter: user ? user.balance : 0,
+      description: `Monetary payout processed (#${payout.payoutNumber})`
+    });
+  } else if (nextStatus === 'FAILED') {
+    // Restore earnings status to AVAILABLE
+    database.prepare(`
+      UPDATE seller_earnings
+      SET status = 'AVAILABLE', updatedAt = datetime('now')
+      WHERE sellerId = ? AND status = 'PAYOUT_REQUESTED'
+    `).run(payout.sellerId);
+  }
+
+  return true;
+};
+
+const getUserSalesDetailed = (sellerId) => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT o.id as orderId, o.orderNumber, o.grossAmount, o.platformFee, o.sellerNetAmount,
+           o.orderStatus, o.createdAt as saleDate,
+           c.brand, c.category, c.code,
+           b.username as buyerUsername, b.fullName as buyerName,
+           COALESCE(e.status, 'AVAILABLE') as payoutStatus
+    FROM orders o
+    JOIN coupons c ON o.couponId = c.id
+    JOIN users b ON o.buyerId = b.id
+    LEFT JOIN seller_earnings e ON e.orderId = o.id
+    WHERE o.sellerId = ?
+    ORDER BY o.id DESC
+  `).all(sellerId);
+};
+
+const getUserPurchasesDetailed = (buyerId) => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT o.id as orderId, o.orderNumber, o.grossAmount as amount, o.paymentStatus, o.orderStatus,
+           o.createdAt as purchaseDate,
+           c.brand, c.category, c.code, c.originalValue, c.askingPrice,
+           s.username as sellerUsername, s.fullName as sellerName
+    FROM orders o
+    JOIN coupons c ON o.couponId = c.id
+    JOIN users s ON o.sellerId = s.id
+    WHERE o.buyerId = ?
+    ORDER BY o.id DESC
+  `).all(buyerId);
+};
+
+module.exports = {
+  addCredits,
+  initDetailsDb,
+  getDb,
+  createUser,
+  findUserByUsernameOrEmail,
+  findUserByUsername,
+  findUserByEmail,
+  verifyPassword,
+  getAllUsers,
+  updateUserProfile,
+  createCoupon,
+  getCouponsByUserId,
+  getAllActiveCoupons,
+  getCouponById,
+  updateCouponStatus,
+  createPurchase,
+  getPurchasesByBuyerId,
+  getPurchasesBySellerId,
+  getUserStats,
+  createPayout,
+  getPayoutsByUserId,
+  getAllPendingPayouts,
+  updatePayoutStatus,
+  getAllPendingCoupons,
+  approveCoupon,
+  getAdminStats,
+  getAdminPaymentStats,
+  createTopup,
+  getAllPendingTopups,
+  getTopupById,
+  updateTopupStatus,
+  saveIdentityVerification,
+  getAllPendingIdentityVerifications,
+  getIdentityVerificationById,
+  getUserLatestIdentityVerification,
+  updateIdentityVerificationStatus,
+  getPayoutAccountByUserId,
+  saveOrUpdatePayoutAccount,
+  getAllPendingPayoutAccounts,
+  getAllPayoutAccountsSummary,
+  updatePayoutAccountStatus,
+  recordTransaction,
+  getUserTransactions,
+  createOrderWithEarnings,
+  getSellerEarningsSummary,
+  getSellerEarningsList,
+  convertSellerEarningToCredits,
+  requestSellerPayout,
+  processSellerPayout,
+  getUserSalesDetailed,
+  getUserPurchasesDetailed,
+};

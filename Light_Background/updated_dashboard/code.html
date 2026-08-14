@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx - Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#1c1c18",
+                        "tertiary-fixed": "#ffe08e",
+                        "surface-dim": "#dcdad3",
+                        "primary-fixed-dim": "#ffb59d",
+                        "on-tertiary-container": "#4f3d00",
+                        "surface-container-high": "#ebe8e1",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#ff6b35",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-secondary-container": "#4e5d7f",
+                        "on-surface": "#1c1c18",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#c8d7fe",
+                        "surface-tint": "#ab3500",
+                        "surface-bright": "#fcf9f2",
+                        "surface": "#fcf9f2",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#31312c",
+                        "on-secondary-fixed": "#0a1b39",
+                        "secondary": "#4f5e80",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#ffb59d",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#cea62b",
+                        "outline-variant": "#e1bfb5",
+                        "tertiary": "#755b00",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface-variant": "#594139",
+                        "surface-variant": "#e5e2db",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "surface-container-low": "#f6f3ec",
+                        "background": "#fcf9f2",
+                        "on-primary-fixed": "#390c00",
+                        "primary": "#ab3500",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "on-secondary-fixed-variant": "#374667",
+                        "surface-container": "#f0eee7",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#832600",
+                        "primary-fixed": "#ffdbd0",
+                        "outline": "#8d7168",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-container-highest": "#e5e2db",
+                        "on-primary-container": "#5f1900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Geist"],
+                        "price-display": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .card-image-gradient {
+            background: linear-gradient(135deg, #f0eee7 0%, #e5e2db 100%);
+            position: relative;
+        }
+        .card-image-gradient::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle at 50% 50%, rgba(171, 53, 0, 0.03) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col">
+<!-- Desktop Header Navigation -->
+<header class="bg-background border-b border-surface-container-high px-margin-desktop py-stack-md w-full sticky top-0 z-40 flex justify-center">
+<div class="w-full max-w-[1200px] flex justify-between items-center">
+<div class="flex items-center gap-stack-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">confirmation_number</span>
+<h1 class="font-display-lg text-display-lg font-extrabold text-on-secondary-fixed tracking-tight">CouponEx</h1>
+</div>
+<nav class="hidden md:flex gap-stack-md ml-4">
+<a class="font-headline-md text-headline-md text-primary bg-primary-fixed/20 px-3 py-1 rounded transition-colors" href="#">Home</a>
+<a class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xl">explore</span> Discover
+                </a>
+<a class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xl">add_circle</span> Sell
+                </a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="hidden lg:inline">Wallet</span>
+</button>
+<button class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">person</span>
+<span class="hidden lg:inline">Profile</span>
+</button>
+<button class="text-secondary p-2 hover:bg-surface-container-high rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col gap-stack-lg">
+<!-- Search & Filters Container -->
+<section class="flex flex-col gap-stack-md bg-surface-container-low p-6 rounded-2xl border border-surface-container-high shadow-sm">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-lowest border border-surface-container-high rounded-xl font-body-lg text-body-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-on-background placeholder-outline" placeholder="Search for brands, categories, or specific deals..." type="text"/>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-stack-md">
+<div class="flex overflow-x-auto no-scrollbar gap-2 py-1">
+<button class="whitespace-nowrap px-5 py-2 rounded-full bg-primary text-on-primary font-semibold text-body-sm shadow-sm hover:brightness-110 transition-all">All Deals</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-body-sm hover:border-primary hover:text-primary transition-all">Food &amp; Dining</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-body-sm hover:border-primary hover:text-primary transition-all">E-commerce</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-body-sm hover:border-primary hover:text-primary transition-all">Travel</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-body-sm hover:border-primary hover:text-primary transition-all">Fashion</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-body-sm hover:border-primary hover:text-primary transition-all">Beauty</button>
+</div>
+<div class="flex items-center gap-3 px-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">Verified Sellers Only</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-container-high after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<div class="flex items-center gap-4 py-1 border-t border-surface-container-high mt-1 pt-4 overflow-x-auto no-scrollbar">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider shrink-0">Popular Brands</span>
+<div class="flex gap-4 items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Swiggy</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Zomato</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Amazon</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Flipkart</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Myntra</span>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="flex flex-col gap-stack-lg">
+<!-- Featured Section -->
+<section>
+<div class="flex items-center justify-between mb-stack-md">
+<h2 class="font-display-lg text-2xl text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_awesome</span> Featured Deal
+                </h2>
+<a class="text-primary font-semibold text-body-sm hover:underline" href="#">See more</a>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-container-high shadow-md transition-all hover:shadow-lg flex flex-col md:flex-row group">
+<div class="md:w-1/2 aspect-[16/9] md:aspect-auto relative overflow-hidden">
+<img alt="50% OFF Swiggy Instamart" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFkU22Nu2Znbhd7N9R37Mc81GGdvcExyQoiNUHQEYn1VaRvD6ygPtCZmRd656aMCTewOlbGb_DBtIPiiK5HLR2DC3wRgiIX0z2saHD_MxYxc1OhYJYmhiKDA5RItpbEMTYR9Dyq2HNSzPwz2a-b2em9GeAyYoNIuWgPVXYkf3cXzKfRfPYGLEdN7w3uUCnLp8-3X5bqW3JBRKVn0Jn_DdZk9IJvuR_AJK3sSG9-Fz4j5vt_GTXNlslorDuLGF1k-LK-clb2EjJAR0"/>
+<div class="absolute top-4 right-4 z-10">
+<span class="bg-white/80 backdrop-blur-md text-primary px-3 py-1.5 rounded-full text-[12px] font-bold uppercase tracking-wider border border-primary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+</div>
+<div class="md:w-1/2 p-8 flex flex-col justify-between">
+<div>
+<span class="text-primary font-bold text-xs tracking-[0.1em] uppercase mb-2 block">Food &amp; Dining</span>
+<h3 class="text-on-background text-4xl font-bold mb-4 leading-tight">50% OFF Swiggy Instamart</h3>
+<p class="text-on-surface-variant mb-6 text-body-lg">Get massive discounts on your groceries. Instant delivery, minimum order value ₹500. Limited time offer from top-rated seller.</p>
+</div>
+<div class="flex justify-between items-center pt-6 border-t border-surface-container">
+<div class="flex items-center gap-3">
+<img alt="@ArjunDeals" class="w-8 h-8 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"/>
+<span class="font-semibold text-on-secondary-fixed text-body-lg">@ArjunDeals</span>
+</div>
+<button class="bg-primary text-on-primary font-bold px-10 py-3 rounded-xl hover:shadow-lg hover:brightness-110 active:scale-95 transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Section -->
+<section>
+<div class="flex items-center justify-between mb-stack-md">
+<h2 class="font-display-lg text-2xl text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">trending_up</span> Trending Now
+                </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-lg">
+<!-- Trending Card 1 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group">
+<div class="aspect-[16/8] relative overflow-hidden">
+<img alt="30% OFF Zomato Pro" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi4tq0wBjapD3Tzr_caikCAV4wcEQz0d4rddnp_H1NFzOHwJKUMOpUrrgE7pUzWIXSpRWTN3y3E7hytRPZp4bvtl9mJG6CQjMJr4lt8S-9WNPg-YTf_wRjoI-yJJpERenF1qzcPj4No8GIJwIzqkkzXAhK36t120ktVBJL_aeiwGEGorxR3RmCdy6kpesBw_5mf6zw1x1lWPw5hU7M16b6aaxgxQsOuGLoq7c0dWLTtXHYV0acdesrfZoktuZlCbtZMKWaAFwlPHg"/>
+<span class="absolute top-3 right-3 bg-white/80 backdrop-blur-md text-primary px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-primary/10 flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">Food &amp; Dining</span>
+<h4 class="text-on-background text-xl font-bold mb-4">30% OFF Zomato Pro</h4>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex items-center gap-2">
+<img alt="@DealMaster" class="w-7 h-7 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"/>
+<span class="font-semibold text-on-secondary-fixed text-sm">@DealMaster</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-5 py-2 rounded-lg text-sm hover:bg-on-secondary-fixed-variant transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Trending Card 2 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group">
+<div class="aspect-[16/8] relative overflow-hidden">
+<img alt="₹50 CB Amazon Pay" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7veNecVIkHLD1a1SWYOgCHrpvgbZCHKKWjW6-l1TcA-csR7NGyTWWA5VBgeZoiDQpjwuEO4S88iqMtNSVzzFSJXDv4QMnGzXGO5UbiTKZKp6IhE5HWwu0pN1RyiQRi7HXoDamBMZOASCFnDyNzgFUAB7zUkvr97c_yWU1B2E2eS9q9TgPGgs2iu04JWCcnrPJKDioY0vcNT0P2LmNBNxa6p6iQ7RwuQqz_qFbI1qE4cqPydvbLnMvByy3OzcNxzjKsYJU_GbNK7o"/>
+<span class="absolute top-3 right-3 bg-white/80 backdrop-blur-md text-primary px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-primary/10 flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">E-commerce</span>
+<h4 class="text-on-background text-xl font-bold mb-4">₹50 CB Amazon Pay</h4>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex items-center gap-2">
+<img alt="@PriyaSavings" class="w-7 h-7 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"/>
+<span class="font-semibold text-on-secondary-fixed text-sm">@PriyaSavings</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-5 py-2 rounded-lg text-sm hover:bg-on-secondary-fixed-variant transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Trending Card 3 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group">
+<div class="aspect-[16/8] relative overflow-hidden">
+<img alt="₹1000 OFF MakeMyTrip" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvJzkzE1LJYn6G3MlNk1YEp_eD2BSUz1XhYOVeyLIBOfoPxk_cGCC9DgxlDqUixWsYE5L9DHRc67P6g_K6iz-M5kwN2WZW0kMSA0CCpt_Nwou3Aast3uMJuDqIzDxdA8t8WX-HqEHj3S4xZEHi7R3ptkDyr8dSzgCFAhVUYly9eWcfwRaoyjbF_PXk2Lz4iOBg35cRG17zy0uysHQ07EiTCCzntPux1qngPNPD-DCaPo_H8dB9CJEEtjBzkTB7Z_Kk_-Bfr9ZzN48"/>
+<span class="absolute top-3 right-3 bg-white/80 backdrop-blur-md text-primary px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-primary/10 flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+<div class="p-6 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">Travel</span>
+<h4 class="text-on-background text-xl font-bold mb-4">₹1000 OFF MakeMyTrip</h4>
+</div>
+<div class="flex justify-between items-center mt-4">
+<div class="flex items-center gap-2">
+<img alt="@TravelGuru" class="w-7 h-7 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"/>
+<span class="font-semibold text-on-secondary-fixed text-sm">@TravelGuru</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-5 py-2 rounded-lg text-sm hover:bg-on-secondary-fixed-variant transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- More Coupons Section -->
+<section>
+<div class="flex items-center justify-between mb-stack-md">
+<h2 class="font-display-lg text-2xl text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">apps</span> More Coupons
+                </h2>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded-lg border border-surface-container-high text-on-surface-variant hover:bg-surface-container-high">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-1.5 rounded-lg border border-surface-container-high text-outline hover:bg-surface-container-high">
+<span class="material-symbols-outlined">view_list</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+<!-- More Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group h-[360px]">
+<div class="aspect-[16/9] relative overflow-hidden shrink-0">
+<img alt="20% OFF Uber Ride" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNKwn7VMeKd_4GXAF6VVfnF3u-OtfrGYd5mLFlM6J_AzSy-BM_Q8LhAJG-S6Af6v8SZAHUafIneRwtM5zF0pUzpDIcM0PfM43jaReZwYFutOsOC-H68q_0e-VhmP8qluWVHuBpKBE9fReTQcVVc0vl5R5SYHIPsvbi2qcNyZkCeXEsETf1OALGykOictBp92d5x5v2SdQHqMw4RkHELJ2fmY9uCTIb4ZGMFJ_wKodweWwB4uEVkB0FPPPF4MX4fVLOE3NMyJrmMVc"/>
+<span class="absolute top-3 right-3 bg-white/80 backdrop-blur-md text-primary px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-primary/10 flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+<div class="p-5 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">Travel</span>
+<h4 class="text-on-background text-lg font-bold mb-3 line-clamp-2">20% OFF Uber Ride</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Save on your next commute. Valid on premium rides only.</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<img alt="@CityRider" class="w-6 h-6 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"/>
+<span class="font-semibold text-on-secondary-fixed text-xs">@CityRider</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-4 py-1.5 rounded-lg text-xs hover:shadow transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- More Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group h-[360px]">
+<div class="aspect-[16/9] relative overflow-hidden shrink-0">
+<img alt="₹500 OFF Flights" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnLcB0UHDiVZtGEY_7RmAunhl5mDC-UUDTKVJtjV5XcaR_s6h36ARMT0H-7xlrSRuokPDYQT33zsIS49S15EjEPreAe-zpgEROJDx21X6Gdw10Y3LdioqSarcKLFmqs507hApBYF3dxoigkHxOMCNu5SlvyOOLhsSVBqLgLt5OScb8gc-ZqHPDcpOZxaj_Y6JCf_BmvLDaYVCSrHBue09ThYyLGcQBjsbUe5y0EwEtg9BjKTDL7Rl5dfC8EDjhftQcHgMwKyACJiA"/>
+<span class="absolute top-3 right-3 bg-white/80 backdrop-blur-md text-primary px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-primary/10 flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+<div class="p-5 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">Travel</span>
+<h4 class="text-on-background text-lg font-bold mb-3 line-clamp-2">₹500 OFF Flights</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Flat discount on domestic flight bookings via Indigo.</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<img alt="@FlyHigh" class="w-6 h-6 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"/>
+<span class="font-semibold text-on-secondary-fixed text-xs">@FlyHigh</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-4 py-1.5 rounded-lg text-xs hover:shadow transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- More Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group h-[360px]">
+<div class="aspect-[16/9] relative overflow-hidden shrink-0">
+<img alt="₹100 CB Blinkit" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcXZad7DMSWxtghLrmMNdhIWw3714sZID8yTwxVSUIaOlUSvP04-wH48zjlx3NfoveBUmRxNa--iLbDUe7SzGtAKGqKw6e2MqbF5BRU9gSlnlzPlKMDyebVGQqBYRW-5h8dDAQkisu5azP46eAI5HcZhWJT0fMes9WOLt02EAY4P8ETZzWNkg5mghUWvUSpbq-BhiaE3MgK2RMjeMcxqk_B9Jylov_iPx62aEfOB3kXfQmom1Qut_hPh-CVeAK-r9svCPOuuFgS2g"/>
+</div>
+<div class="p-5 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">Grocery</span>
+<h4 class="text-on-background text-lg font-bold mb-3 line-clamp-2">₹100 CB Blinkit</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Cashback on your next grocery refill. Min order ₹750.</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<img alt="@FreshDeals" class="w-6 h-6 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"/>
+<span class="font-semibold text-on-secondary-fixed text-xs">@FreshDeals</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-4 py-1.5 rounded-lg text-xs hover:shadow transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- More Item 4 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-surface-container-high shadow-sm hover:shadow-md transition-all flex flex-col group h-[360px]">
+<div class="aspect-[16/9] relative overflow-hidden shrink-0">
+<img alt="Extra 10% OFF Myntra" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXkSiJuhAThfqo2r-KBxbtbB_6jdeDM973p0ZXgMrtEj3Fqs_VfutaMrj8eolnRs4vJFT_xpjosHEQG1vTuy9QfTkgZWShaF52zhc4MgZWmgnUBmBZ7V6IS4_0YgNV8Hsw_7gL8h5NT-xE9AWHfD9DwE6xbxv8dtVCMCABKUEULCB3UOUt0gpeCVxUltlimeRSvGhs1Nul5zXBqLqPoCYsmLmp-Cz_Bx3Rx2_wDxHzEkgCm1fUD84o-rfpvV4mp6Ng5NgOUoMJ2H8"/>
+<span class="absolute top-3 right-3 bg-white/80 backdrop-blur-md text-primary px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-primary/10 flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1">verified</span> Verified
+                        </span>
+</div>
+<div class="p-5 flex-grow flex flex-col justify-between">
+<div>
+<span class="text-primary text-[10px] font-bold tracking-[0.1em] uppercase block mb-1">Fashion</span>
+<h4 class="text-on-background text-lg font-bold mb-3 line-clamp-2">Extra 10% OFF Myntra</h4>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Additional discount on top of ongoing seasonal sales.</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<img alt="@StyleIcon" class="w-6 h-6 rounded-full object-cover border border-surface-container-high shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"/>
+<span class="font-semibold text-on-secondary-fixed text-xs">@StyleIcon</span>
+</div>
+<button class="bg-secondary text-on-secondary font-bold px-4 py-1.5 rounded-lg text-xs hover:shadow transition-all">Buy Now</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg flex justify-center">
+<button class="flex items-center gap-2 px-8 py-3 rounded-full border border-outline text-on-surface-variant font-bold hover:bg-surface-container-high transition-colors">
+                    Load More Coupons <span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Desktop Footer -->
+<footer class="bg-surface-container px-margin-desktop py-stack-lg border-t border-surface-container-high mt-stack-lg">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-stack-lg">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl">confirmation_number</span>
+<h2 class="font-display-lg text-xl font-bold">CouponEx</h2>
+</div>
+<p class="text-on-surface-variant text-sm">The most trusted marketplace for buying and selling unused digital coupons and gift cards.</p>
+</div>
+<div>
+<h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-outline">Marketplace</h3>
+<ul class="flex flex-col gap-2 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Browse All</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Featured Brands</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Sell Your Coupon</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Verified Sellers</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-outline">Support</h3>
+<ul class="flex flex-col gap-2 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">How it works</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Trust &amp; Safety</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-outline">Legal</h3>
+<ul class="flex flex-col gap-2 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Cookie Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto mt-10 pt-6 border-t border-surface-container-highest flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-outline">
+<p>© 2024 CouponEx Marketplace. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary" href="#"><span class="material-symbols-outlined text-lg">public</span></a>
+<a class="hover:text-primary" href="#"><span class="material-symbols-outlined text-lg">chat</span></a>
+<a class="hover:text-primary" href="#"><span class="material-symbols-outlined text-lg">mail</span></a>
+</div>
+</div>
+</footer>
+</body></html>

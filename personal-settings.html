@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Settings | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          document.body.className = theme === "light" ? "theme-light" : "";
+        });
+      })();
+    </script>
+    <style>
+      .settings-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top: 24px;
+        max-width: 900px;
+      }
+      @media (min-width: 768px) {
+        .settings-container {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+      .settings-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+      .settings-section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+      }
+      .settings-section-title span {
+        color: var(--primary);
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        letter-spacing: 0.05em;
+      }
+      .select-input, .text-input {
+        width: 100%;
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px;
+        color: var(--text-strong);
+        font-family: inherit;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .select-input:focus, .text-input:focus {
+        border-color: var(--primary);
+      }
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        cursor: pointer;
+      }
+      .checkbox-label input {
+        margin-top: 4px;
+      }
+      .checkbox-label-text {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-strong);
+      }
+      .checkbox-label-desc {
+        font-size: 0.85rem;
+        color: var(--text-soft);
+        margin-top: 2px;
+      }
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+      }
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+      }
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: var(--surface-soft);
+        border: 1px solid var(--border);
+        transition: .3s;
+        border-radius: 24px;
+      }
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: var(--text-soft);
+        transition: .3s;
+        border-radius: 50%;
+      }
+      input:checked + .toggle-slider {
+        background-color: var(--primary);
+      }
+      input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+        background-color: var(--button-primary-text);
+      }
+      .save-btn {
+        background: var(--primary);
+        color: var(--button-primary-text);
+        padding: 12px 24px;
+        border: 0;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        cursor: pointer;
+        transition: filter 0.2s;
+        margin-top: 8px;
+      }
+      .save-btn:hover {
+        filter: brightness(1.1);
+      }
+    </style>
+      <script src="header.js"></script>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page">
+      <div class="shell stack">
+        <h1 class="section-title-new" style="font-size: 2.25rem; font-weight: 800; margin-top: 12px; margin-bottom: 4px;">Profile Settings</h1>
+        <p style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 24px;">Manage your account preferences and notification settings.</p>
+
+        <div class="settings-container">
+          <div>
+            <!-- Section 1: Account Preferences -->
+            <div class="settings-card">
+              <h2 class="settings-section-title">
+                <span class="material-symbols-outlined">person</span> Account Preferences
+              </h2>
+              
+              <div class="form-group">
+                <label class="form-label">Language</label>
+                <select class="select-input">
+                  <option>English (US)</option>
+                  <option>Hindi</option>
+                  <option>Spanish</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Timezone</label>
+                <select class="select-input">
+                  <option>(GMT+05:30) Indian Standard Time</option>
+                  <option>(GMT-08:00) Pacific Time</option>
+                  <option>(GMT+00:00) UTC</option>
+                </select>
+              </div>
+
+              <div class="toggle-row" style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <div>
+                  <strong style="font-size: 0.95rem; color: var(--text-strong);">Public Profile Visibility</strong>
+                  <p style="font-size: 0.82rem; color: var(--text-soft); margin-top: 2px;">Allow other users to see your seller rating and active listings.</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Section 2: Notifications -->
+            <div class="settings-card">
+              <h2 class="settings-section-title">
+                <span class="material-symbols-outlined">notifications_active</span> Notification Settings
+              </h2>
+
+              <div class="form-group">
+                <label class="form-label">Email Notifications</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" checked />
+                    <div>
+                      <span class="checkbox-label-text">Order Updates</span>
+                      <p class="checkbox-label-desc">Receive alerts when your coupons are bought or sold.</p>
+                    </div>
+                  </label>
+
+                  <label class="checkbox-label">
+                    <input type="checkbox" />
+                    <div>
+                      <span class="checkbox-label-text">Promotional Offers</span>
+                      <p class="checkbox-label-desc">Occasional emails about platform updates and top deals.</p>
+                    </div>
+                  </label>
+
+                  <label class="checkbox-label">
+                    <input type="checkbox" checked disabled />
+                    <div>
+                      <span class="checkbox-label-text" style="color: var(--text-muted)">Security Alerts (Required)</span>
+                      <p class="checkbox-label-desc" style="color: var(--text-muted)">Important notifications about your account security.</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <label class="form-label">Mobile Notifications</label>
+                
+                <div class="toggle-row">
+                  <div>
+                    <strong style="font-size: 0.95rem; color: var(--text-strong);">Watchlist Price Drops</strong>
+                    <p style="font-size: 0.82rem; color: var(--text-soft); margin-top: 2px;">Push notifications when watched items drop in price.</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="toggle-row">
+                  <div>
+                    <strong style="font-size: 0.95rem; color: var(--text-strong);">New Messages</strong>
+                    <p style="font-size: 0.82rem; color: var(--text-soft); margin-top: 2px;">SMS alerts for direct messages from other users.</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+              <button class="save-btn" type="button" onclick="alert('Settings Saved Successfully!')">Save Preferences</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+        }
+
+        
+          document.addEventListener("click", () => {
+            profileDropdown.classList.remove("show");
+          });
+          profileDropdown.addEventListener("click", (e) => {
+            e.stopPropagation();
+          });
+        }
+      });
+
+      function logoutUser() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx - Shopping Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#241a00",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-variant": "#e5e2db",
+                        "surface": "#fcf9f2",
+                        "outline": "#8d7168",
+                        "surface-container-highest": "#e5e2db",
+                        "surface-tint": "#ab3500",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f6f3ec",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1c1c18",
+                        "surface-bright": "#fcf9f2",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffe08e",
+                        "on-secondary-container": "#4e5d7f",
+                        "primary-fixed-dim": "#ffb59d",
+                        "primary-container": "#ff6b35",
+                        "tertiary-container": "#cea62b",
+                        "on-primary-container": "#5f1900",
+                        "surface-container": "#f0eee7",
+                        "primary-fixed": "#ffdbd0",
+                        "secondary": "#4f5e80",
+                        "background": "#fcf9f2",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#0a1b39",
+                        "inverse-primary": "#ffb59d",
+                        "on-tertiary-container": "#4f3d00",
+                        "secondary-fixed": "#d8e2ff",
+                        "secondary-container": "#c8d7fe",
+                        "surface-container-high": "#ebe8e1",
+                        "inverse-surface": "#31312c",
+                        "on-secondary-fixed-variant": "#374667",
+                        "on-primary-fixed": "#390c00",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#755b00",
+                        "on-background": "#1c1c18",
+                        "primary": "#ab3500",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#594139",
+                        "outline-variant": "#e1bfb5",
+                        "on-primary-fixed-variant": "#832600",
+                        "surface-dim": "#dcdad3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "20px",
+                        "stack-lg": "32px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "price-display": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-sm": ["Geist"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "price-display": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .coupon-notch {
+            mask-image: radial-gradient(circle at 0 50%, transparent 8px, black 9px), radial-gradient(circle at 100% 50%, transparent 8px, black 9px);
+            mask-size: 51% 100%, 51% 100%;
+            mask-position: left, right;
+            mask-repeat: no-repeat;
+            -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 8px, black 9px), radial-gradient(circle at 100% 50%, transparent 8px, black 9px);
+            -webkit-mask-size: 51% 100%, 51% 100%;
+            -webkit-mask-position: left, right;
+            -webkit-mask-repeat: no-repeat;
+        }
+        .coupon-divider {
+            border-left: 1.5px dashed #E7E2D8;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col">
+<!-- TopNavBar component -->
+<header class="w-full h-16 bg-surface border-b border-outline-variant flat no shadows">
+<div class="flex justify-between items-center px-margin-desktop max-w-container-max mx-auto h-full">
+<div class="flex items-center gap-8">
+<span class="font-display-lg text-display-lg text-primary">CouponEx</span>
+<nav class="hidden md:flex gap-6 items-center h-full pt-1">
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Home</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Search</a>
+<a class="font-body-lg text-body-lg text-primary border-b-2 border-primary pb-1 h-full flex items-center cursor-pointer active:opacity-80 mt-1" href="#">Orders</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-80" href="#">Account</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<button class="bg-primary-container text-on-primary px-4 py-2 rounded-lg font-label-caps hover:opacity-90 transition-opacity">List Coupon</button>
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-on-secondary-fixed hover:text-primary transition-colors cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-primary hover:text-primary transition-colors cursor-pointer" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant bg-surface-container-high">
+<img alt="User Account Profile" class="w-full h-full object-cover" data-alt="A clean, minimalist abstract avatar representing a user profile in a high-end digital marketplace. The image should feature simple geometric shapes in an ivory and navy color palette, reflecting a trustworthy and clinical fintech aesthetic. High-key lighting, soft gradients, modern and professional vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx8wom2OtuBBmpUItqEcfxfDsrAzbsSUi0mG3pxcs6QAzZDiRPMhwxucXq7GM4efnMv_SCms-MPesrsblXFA5VOr3TQvsnb0FQ8da2NARwrmiSkdtY9hg9110VJtkD2mGcuVlzuQYxOU4OLygx-QNDOF_qdRnamHT1PRZSCmtGtfemhSH43feTcu3t5BVGWhnayQbQt5ZeEGdF4yy5BSCepR2VqBI_WWgH42b262_DfYzQ_lcE7IkL"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow max-w-container-max mx-auto w-full px-margin-desktop py-stack-lg">
+<div class="mb-stack-lg">
+<h1 class="font-display-lg text-display-lg text-on-secondary-fixed mb-2">Shopping Cart</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Review your selected coupons before proceeding to checkout.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-start">
+<!-- Cart Items (Left Column) -->
+<div class="md:col-span-8 flex flex-col gap-stack-md">
+<!-- Coupon Item 1 -->
+<div class="bg-on-primary border border-outline-variant rounded-lg coupon-notch flex items-stretch min-h-[120px] relative">
+<div class="flex-grow p-6 flex flex-col justify-center">
+<div class="flex items-start justify-between mb-2">
+<div>
+<span class="inline-flex items-center px-2 py-0.5 rounded border border-tertiary-container text-tertiary-container font-label-caps text-label-caps mb-2">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="verified">verified</span>
+                                    VERIFIED
+                                </span>
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed">Amazon 20% Off Electronics</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Valid until Oct 31, 2024</p>
+</div>
+<button class="text-error hover:opacity-80 transition-opacity p-1">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<div class="w-[140px] coupon-divider flex flex-col items-center justify-center bg-surface-container-lowest p-4">
+<span class="font-price-display text-price-display text-primary">C 150</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">PRICE</span>
+</div>
+</div>
+<!-- Coupon Item 2 -->
+<div class="bg-on-primary border border-outline-variant rounded-lg coupon-notch flex items-stretch min-h-[120px] relative">
+<div class="flex-grow p-6 flex flex-col justify-center">
+<div class="flex items-start justify-between mb-2">
+<div>
+<span class="inline-flex items-center px-2 py-0.5 rounded border border-tertiary-container text-tertiary-container font-label-caps text-label-caps mb-2">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="verified">verified</span>
+                                    VERIFIED
+                                </span>
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed">Flipkart ₹500 Flat Discount</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Min spend ₹2000. Valid until Nov 15.</p>
+</div>
+<button class="text-error hover:opacity-80 transition-opacity p-1">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<div class="w-[140px] coupon-divider flex flex-col items-center justify-center bg-surface-container-lowest p-4">
+<span class="font-price-display text-price-display text-primary">C 45</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">PRICE</span>
+</div>
+</div>
+<!-- Coupon Item 3 -->
+<div class="bg-on-primary border border-outline-variant rounded-lg coupon-notch flex items-stretch min-h-[120px] relative">
+<div class="flex-grow p-6 flex flex-col justify-center">
+<div class="flex items-start justify-between mb-2">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed">Swiggy Free Delivery Pass</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">10 free deliveries valid for 1 month.</p>
+</div>
+<button class="text-error hover:opacity-80 transition-opacity p-1">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<div class="w-[140px] coupon-divider flex flex-col items-center justify-center bg-surface-container-lowest p-4">
+<span class="font-price-display text-price-display text-primary">C 20</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">PRICE</span>
+</div>
+</div>
+</div>
+<!-- Order Summary (Right Column) -->
+<div class="md:col-span-4">
+<div class="bg-on-primary border border-outline-variant rounded-lg p-6 sticky top-24">
+<h2 class="font-headline-md text-headline-md text-on-secondary-fixed mb-6 border-b border-surface-variant pb-4">Order Summary</h2>
+<div class="flex justify-between items-center mb-4">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Subtotal (3 items)</span>
+<span class="font-price-display text-price-display text-on-secondary-fixed">C 215</span>
+</div>
+<div class="flex justify-between items-center mb-6">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Platform Fee</span>
+<span class="font-price-display text-price-display text-on-secondary-fixed">C 5</span>
+</div>
+<div class="border-t border-surface-variant pt-4 mb-8">
+<div class="flex justify-between items-end">
+<span class="font-headline-md text-headline-md text-on-secondary-fixed">Total Amount</span>
+<span class="font-display-lg text-display-lg text-primary">C 220</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-right mt-1">Available Balance: C 450</p>
+</div>
+<div class="flex items-center gap-2 mb-6 p-3 bg-surface-container-low rounded border border-surface-variant">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="lock">lock</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Secure escrow transaction. Credits held until verified.</span>
+</div>
+<button class="w-full bg-primary-container text-on-primary py-3 px-6 rounded-lg font-label-caps text-label-caps hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                        PROCEED TO CHECKOUT
+                        <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-12 bg-on-secondary-fixed border-t border-outline-variant flat no shadows mt-auto">
+<div class="flex flex-col items-center justify-center space-y-4 px-margin-desktop">
+<div class="font-headline-md text-headline-md text-surface mb-2">CouponEx</div>
+<div class="flex flex-wrap justify-center gap-6 mb-4">
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">FAQ</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Support</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Careers</a>
+</div>
+<div class="font-label-caps text-label-caps text-secondary-fixed-dim">
+                © 2024 CouponEx. Peer-to-Peer Digital Marketplace.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sell Coupons - CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#908fa0",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "surface-container-highest": "#2d3449",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-surface": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#2a1700",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-primary-fixed": "#07006c",
+                        "on-background": "#dae2fd",
+                        "surface-dim": "#0b1326",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-secondary": "#003915",
+                        "surface-container": "#171f33",
+                        "on-primary-container": "#0d0096",
+                        "inverse-on-surface": "#283044",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ffddb8",
+                        "secondary-fixed": "#6bff8f",
+                        "on-tertiary-container": "#3e2400",
+                        "on-surface-variant": "#c7c4d7",
+                        "surface-container-high": "#222a3d",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#e1e0ff",
+                        "primary-container": "#8083ff",
+                        "on-secondary-container": "#004119",
+                        "on-primary": "#1000a9",
+                        "on-secondary-fixed": "#002109",
+                        "secondary": "#4ae176",
+                        "inverse-primary": "#494bd6",
+                        "inverse-surface": "#dae2fd",
+                        "outline-variant": "#464554",
+                        "background": "#0b1326",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-fixed-variant": "#005321",
+                        "primary": "#c0c1ff",
+                        "surface-container-lowest": "#060e20",
+                        "on-tertiary": "#472a00",
+                        "surface-variant": "#2d3449",
+                        "tertiary": "#ffb95f",
+                        "surface": "#0b1326",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-container": "#00b954",
+                        "tertiary-container": "#ca8100",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "lg": "40px",
+                        "margin-desktop": "48px",
+                        "base": "4px",
+                        "xl": "64px",
+                        "xs": "8px",
+                        "sm": "16px",
+                        "md": "24px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .step-inactive { opacity: 0.4; filter: grayscale(1); transition: all 0.3s ease; }
+        .step-active { opacity: 1; filter: grayscale(0); transition: all 0.3s ease; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(128, 131, 255, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-margin-mobile h-16">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional close-up studio portrait of a tech-savvy young adult with soft ambient blue lighting. The person is smiling confidently, reflecting a high-trust fintech atmosphere. The background is a deep navy gradient consistent with a premium corporate modern design aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3iE1yDba4U98S5SJkgj-fZ9hk6DY1jpfJ9uNzzvCEidUIp-xOY4HEQgi3uMYvq177biq9WHWBbdxkiaqT2-ocPLDOCnjRKI9c1-ssV898GsGzGJplND4S2iwm2e9K_bd0Z5MCdBQfj45FMCJsbLgaSACMeavPFJ4w2QWzsAbOAeM9fPTODzgSpnJQn2vAho56xprwpBlcTwsuEloKzq6F1e1pV1tyIwlDUOcgaV4vbLILkB4pO2COI5qO5i9UkjvkG4utlPWoQ2s"/>
+</div>
+<span class="font-headline-md text-headline-md font-bold text-primary">CouponEx</span>
+</div>
+<button class="bg-surface-container-high px-4 py-1.5 rounded-full flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95 duration-100">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-md text-label-md text-primary">C: 1,250</span>
+</button>
+</header>
+<main class="max-w-2xl mx-auto px-margin-mobile pt-8">
+<!-- Trust Guarantee Badge -->
+<div class="flex justify-center mb-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 border border-secondary/20 rounded-full">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-md text-label-md text-secondary">Trust Guarantee: Verified Transactions Only</span>
+</div>
+</div>
+<section class="space-y-6">
+<div class="flex flex-col gap-2">
+<h1 class="font-headline-lg text-headline-lg text-primary">List a Coupon</h1>
+<p class="font-body-md text-on-surface-variant">Turn your unused digital value into instant cash.</p>
+</div>
+<!-- Multi-step Progress -->
+<div class="flex items-center justify-between px-4 mb-4">
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
+<span class="font-label-sm text-label-sm">Details</span>
+</div>
+<div class="h-0.5 flex-1 bg-surface-container-highest mx-4 mb-6"></div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold">2</div>
+<span class="font-label-sm text-label-sm">Verify</span>
+</div>
+<div class="h-0.5 flex-1 bg-surface-container-highest mx-4 mb-6"></div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-bold">3</div>
+<span class="font-label-sm text-label-sm">Confirm</span>
+</div>
+</div>
+<!-- Form Card -->
+<div class="glass-card rounded-2xl p-6 md:p-8 space-y-8">
+<!-- Brand Selection -->
+<div class="space-y-4">
+<label class="font-label-md text-label-md block text-on-surface">Brand Name</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">storefront</span>
+<input class="w-full bg-surface-container text-on-surface border border-outline-variant rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary transition-colors font-body-md" placeholder="e.g. Amazon, Starbucks, Uber" type="text"/>
+</div>
+</div>
+<!-- Coupon Code & Expiry Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-4">
+<label class="font-label-md text-label-md block text-on-surface">Coupon Code</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">qr_code_2</span>
+<input class="w-full bg-surface-container text-on-surface border border-outline-variant rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary transition-colors font-body-md uppercase" placeholder="Enter code" type="text"/>
+</div>
+</div>
+<div class="space-y-4">
+<label class="font-label-md text-label-md block text-on-surface">Expiry Date</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">calendar_today</span>
+<input class="w-full bg-surface-container text-on-surface border border-outline-variant rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary transition-colors font-body-md" type="date"/>
+</div>
+</div>
+</div>
+<!-- Toggle for Coupon Type -->
+<div class="space-y-4">
+<label class="font-label-md text-label-md block text-on-surface">Coupon Type</label>
+<div class="grid grid-cols-3 gap-3">
+<button class="type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant bg-surface-container hover:bg-surface-variant transition-all border-primary bg-primary/10" onclick="setType(this)">
+<span class="material-symbols-outlined text-primary">public</span>
+<span class="font-label-sm text-label-sm">Universal</span>
+</button>
+<button class="type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant bg-surface-container hover:bg-surface-variant transition-all" onclick="setType(this)">
+<span class="material-symbols-outlined">fingerprint</span>
+<span class="font-label-sm text-label-sm">Unique</span>
+</button>
+<button class="type-btn flex flex-col items-center gap-2 p-3 rounded-xl border border-outline-variant bg-surface-container hover:bg-surface-variant transition-all" onclick="setType(this)">
+<span class="material-symbols-outlined">block</span>
+<span class="font-label-sm text-label-sm">Restricted</span>
+</button>
+</div>
+<p class="text-on-surface-variant font-label-sm" id="type-description">Universal: Code can be used multiple times by different users.</p>
+</div>
+<!-- Estimate Value Button -->
+<div class="pt-4">
+<button class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-4 rounded-xl flex items-center justify-center gap-2 glow-button transition-all transform active:scale-[0.98]">
+<span class="material-symbols-outlined">analytics</span>
+                        Estimate Value
+                    </button>
+<p class="text-center mt-3 font-label-sm text-on-surface-variant/70">Our AI analyzes market demand for the best pricing.</p>
+</div>
+</div>
+<!-- Footer Meta -->
+<div class="flex items-center justify-between px-2 text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="font-label-sm text-label-sm">End-to-End Encrypted</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+<span class="font-label-sm text-label-sm">24/7 Support</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-2 pb-safe bg-surface-container shadow-lg z-50 rounded-t-xl border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label-sm text-label-sm">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-3 py-1 scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-sm text-label-sm">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        function setType(element) {
+            // Reset all buttons
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.classList.remove('border-primary', 'bg-primary/10');
+                btn.querySelector('span:first-child').style.fontVariationSettings = "'FILL' 0";
+            });
+            
+            // Activate selected
+            element.classList.add('border-primary', 'bg-primary/10');
+            element.querySelector('span:first-child').style.fontVariationSettings = "'FILL' 1";
+            
+            // Update description
+            const desc = document.getElementById('type-description');
+            const typeText = element.querySelector('span:last-child').textContent;
+            if (typeText === 'Universal') desc.textContent = 'Universal: Code can be used multiple times by different users.';
+            else if (typeText === 'Unique') desc.textContent = 'Unique: Single-use code that generates a unique value for one buyer.';
+            else desc.textContent = 'Restricted: Region or user-locked code with specific redemption criteria.';
+        }
+
+        // Simple animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const card = document.querySelector('.glass-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body></html>

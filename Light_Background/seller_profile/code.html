@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx - Trust Score &amp; Seller Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#832600",
+                      "surface-variant": "#e5e2db",
+                      "secondary-fixed": "#d8e2ff",
+                      "surface-dim": "#dcdad3",
+                      "secondary-container": "#c8d7fe",
+                      "on-error": "#ffffff",
+                      "surface-container": "#f0eee7",
+                      "on-secondary-container": "#4e5d7f",
+                      "on-secondary-fixed": "#0a1b39",
+                      "on-background": "#1c1c18",
+                      "on-primary-container": "#5f1900",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#31312c",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "primary-container": "#ff6b35",
+                      "tertiary": "#755b00",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#584400",
+                      "tertiary-container": "#cea62b",
+                      "background": "#fcf9f2",
+                      "on-tertiary-fixed": "#241a00",
+                      "secondary": "#4f5e80",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#ab3500",
+                      "surface-container-low": "#f6f3ec",
+                      "primary": "#ab3500",
+                      "tertiary-fixed": "#ffe08e",
+                      "on-surface": "#1c1c18",
+                      "surface-container-highest": "#e5e2db",
+                      "on-secondary-fixed-variant": "#374667",
+                      "inverse-primary": "#ffb59d",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#fcf9f2",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "surface-container-high": "#ebe8e1",
+                      "on-error-container": "#93000a",
+                      "outline": "#8d7168",
+                      "on-primary-fixed": "#390c00",
+                      "outline-variant": "#e1bfb5",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4f3d00",
+                      "on-surface-variant": "#594139",
+                      "inverse-on-surface": "#f3f0ea",
+                      "primary-fixed-dim": "#ffb59d",
+                      "primary-fixed": "#ffdbd0",
+                      "surface-bright": "#fcf9f2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "stack-md": "16px",
+                      "stack-sm": "8px",
+                      "container-max": "1200px",
+                      "gutter": "16px",
+                      "stack-lg": "32px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "price-display": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-sm min-h-screen pt-20 pb-24 md:pb-8">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background dark:bg-background flex justify-between items-center px-gutter py-stack-sm border-b border-outline-variant flat no shadows">
+<button class="text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="font-display-lg text-display-lg font-bold text-secondary dark:text-secondary-fixed">
+            CouponEx
+        </div>
+<button class="text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop space-y-stack-lg">
+<!-- Trust Score Section -->
+<section class="flex flex-col items-center pt-stack-md">
+<div class="relative w-48 h-48 flex items-center justify-center mb-stack-md">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="#E7E2D8" stroke-width="4"></circle>
+<circle cx="50" cy="50" fill="none" r="45" stroke="#FF6B35" stroke-dasharray="282.7" stroke-dashoffset="11.3" stroke-linecap="round" stroke-width="4"></circle> <!-- 4.8/5.0 approx 96% of circumference -->
+</svg>
+<div class="text-center z-10 flex flex-col items-center">
+<span class="font-display-lg-mobile md:font-display-lg text-on-secondary-fixed">4.8</span>
+<span class="font-body-sm text-secondary">/ 5.0 Trust Score</span>
+</div>
+</div>
+<div class="flex flex-wrap justify-center gap-stack-sm">
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-tertiary-container text-tertiary-container px-3 py-1.5 rounded-full font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+                    ID Verified
+                </div>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface-variant px-3 py-1.5 rounded-full font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px]" data-icon="military_tech">military_tech</span>
+                    Top Seller
+                </div>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface-variant px-3 py-1.5 rounded-full font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px]" data-icon="bolt">bolt</span>
+                    Fast Responder
+                </div>
+</div>
+</section>
+<!-- Tabbed Navigation -->
+<section class="border-b border-surface-variant">
+<nav class="flex gap-stack-md">
+<button class="pb-2 border-b-2 border-on-secondary-fixed font-headline-md text-headline-md text-on-secondary-fixed">
+                    Active Listings
+                </button>
+<button class="pb-2 border-b-2 border-transparent font-headline-md text-headline-md text-secondary hover:text-on-secondary-fixed transition-colors">
+                    Reviews
+                </button>
+<button class="pb-2 border-b-2 border-transparent font-headline-md text-headline-md text-secondary hover:text-on-secondary-fixed transition-colors">
+                    Trade History
+                </button>
+</nav>
+</section>
+<!-- Active Listings Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Large Card -->
+<div class="md:col-span-7 bg-surface-container-lowest border border-surface-variant rounded-xl p-stack-md flex flex-col md:flex-row gap-stack-md relative overflow-hidden group hover:border-on-secondary-fixed transition-colors">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-8 bg-background rounded-r-full border-r border-y border-surface-variant -ml-px group-hover:border-on-secondary-fixed transition-colors"></div>
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-8 bg-background rounded-l-full border-l border-y border-surface-variant -mr-px group-hover:border-on-secondary-fixed transition-colors"></div>
+<div class="w-full md:w-32 h-32 rounded-lg bg-surface-container shrink-0 flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, minimalist 3D rendering of a generic gift card icon floating against a soft, high-key white background. The gift card has a subtle orange accent, fitting a modern fintech aesthetic. Soft ambient lighting, studio quality." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBss2A_mXm_gs_P_oLI-pPJpLTScgmEia9hOezaUHHWVoxW2mHXa3m9RxptD-MX_s-p9jZauBVYmH9eNZJZfEJjFfuTniqrA5gi52exVALJ_frr_WW0L4rd0zKoYEMjZygb9KmSeD1k6oSugFZx7Tcyy5uq39NduzwSeN-e5B3xjCA8rGjhSBGawNsOe8sP2KBw1iIRGgaWd1qSGeXaHxyvX4rrtONZdi-6l_PJ7vtnQsBmtrvlJciZHCWpiowAyxFz1uPON7n1QJo')"></div>
+</div>
+<div class="flex flex-col flex-grow justify-between">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed">Amazon Gift Card - $100</h3>
+<span class="font-price-display text-price-display text-primary-container">$85.00</span>
+</div>
+<p class="font-body-sm text-secondary">Instant digital delivery. Never used.</p>
+</div>
+<div class="flex justify-between items-center mt-4">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span> listed 2h ago
+                        </span>
+<button class="bg-primary-container text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps uppercase hover:bg-surface-tint transition-colors">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Smaller Stacked Cards -->
+<div class="md:col-span-5 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-stack-sm flex gap-stack-sm relative overflow-hidden group hover:border-on-secondary-fixed transition-colors">
+<div class="w-16 h-16 rounded-lg bg-surface-container shrink-0 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A sleek, minimalist icon of a coffee cup, stylized for a modern digital interface, isolated on a stark white background with very subtle gray shadows. Fintech app style, crisp edges." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCn2azX-4kV1GoM6qINr_7zfg_D0FWJJEqbIo4qc60s7NzEo_pb9DaqpfEIHwyACkVQeMbsqisgODVUfPtAYEFyjnKa4t8VPSbUovN6c1GtT8ZzaGBZYbE_Z9vqhLhNUmp6cJJJ01t5nJOE1yCOwLkpePefOaMCcDrsXzuxPolTUG4-OIKXesUUsIsFLsK5KcieBEVwn8bzOuWaxIkX_trRoeBaCJlgOclEbwCvdGmK-OpLsdgsjfHN0vyvhOPhOjR0wKdMaEpmNw4')"></div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div class="flex justify-between">
+<h4 class="font-body-lg text-body-lg font-medium text-on-secondary-fixed truncate w-32">Starbucks $25</h4>
+<span class="font-price-display text-[14px] font-medium text-primary-container">$20</span>
+</div>
+<div class="flex justify-end">
+<button class="text-on-secondary-fixed border border-surface-variant px-3 py-1 rounded-lg font-label-caps text-[10px] uppercase hover:bg-surface-container-low transition-colors">View</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-stack-sm flex gap-stack-sm relative overflow-hidden group hover:border-on-secondary-fixed transition-colors">
+<div class="w-16 h-16 rounded-lg bg-surface-container shrink-0 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, flat-design icon representing a streaming service subscription, composed of simple geometric shapes in dark navy and white. Placed in a bright, minimalist setting to match a premium marketplace app." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB7Cu7uncPRax3tZPLSNBoarikgjsl3MfyScOtaH9Gs4vXJKW1m3pl8uD5gTsLyQsFRNrdd-W3H__USSTUo-phhWUNh03rf-gcj3b8oipPjWNCV-uhSZcuQN7vNzULSamtTutvbwtJsLUCTD_kr8hlcHGJNZYj1oTcUEf-6TumqsyGydVNyOTeMHYyi4WuJla3C5jVGFC_Y7iAuVN5DEKo81vQIiS6oIF2-YIy834sXqUhECGbFqrnZhe_o9zvovpawLAy31_P-8iI')"></div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div class="flex justify-between">
+<h4 class="font-body-lg text-body-lg font-medium text-on-secondary-fixed truncate w-32">Netflix 1 Month</h4>
+<span class="font-price-display text-[14px] font-medium text-primary-container">$12</span>
+</div>
+<div class="flex justify-end">
+<button class="text-on-secondary-fixed border border-surface-variant px-3 py-1 rounded-lg font-label-caps text-[10px] uppercase hover:bg-surface-container-low transition-colors">View</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Reviews Section (Preview) -->
+<section class="mt-stack-lg border-t border-surface-variant pt-stack-md hidden">
+<!-- Placeholder for Reviews Tab Content -->
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-on-secondary-fixed border-t border-outline flat no shadows z-50">
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps uppercase mt-1 text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-caps text-label-caps uppercase mt-1 text-[10px]">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-label-caps text-label-caps uppercase mt-1 text-[10px]">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase mt-1 text-[10px]">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-caps text-label-caps uppercase mt-1 text-[10px]">Profile</span>
+</a>
+</nav>
+</body></html>

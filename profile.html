@@ -1,0 +1,1430 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --surface-muted: #f1f5f9;
+        --surface-border: #cbd5e1;
+        --surface-container: #ffffff;
+        --surface-container-low: #f8fafc;
+        --surface-container-high: #f1f5f9;
+        --surface-container-highest: #e2e8f0;
+        --surface-container-lowest: #ffffff;
+        --surface-variant: #cbd5e1;
+        --outline: #64748b;
+        --outline-variant: #cbd5e1;
+        --text: #0f172a;
+        --text-soft: #475569;
+        --text-muted: #64748b;
+        --text-variant: #334155;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --primary-container: #ff6b35;
+        --primary-fixed-dim: #ffb59d;
+        --primary-fixed: #ffdbd0;
+        --navy: #0f172a;
+        --navy-soft: #334155;
+        --error-text: #93000a;
+        --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 18px 40px rgba(0, 0, 0, 0.12);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #2563eb;
+        --secondary-container: #dbeafe;
+        --on-secondary-container: #1e40af;
+        --tertiary: #d97706;
+        --tertiary-container: #fef3c7;
+        --on-tertiary: #78350f;
+        --on-tertiary-container: #92400e;
+        --card-bg: #ffffff;
+        --card-border: #cbd5e1;
+        --badge-bg: #f1f5f9;
+        --on-secondary-fixed-variant: #334155;
+        --on-background: #0f172a;
+        --on-surface-variant: #475569;
+        --surface-bright: #ffffff;
+        --surface-dim: #f1f5f9;
+        --inverse-surface: #0f172a;
+        --inverse-on-surface: #f8fafc;
+        --inverse-primary: #ffb59d;
+        --surface-tint: #ff6b35;
+        --error: #dc2626;
+        --error-container: #fee2e2;
+        --on-error: #ffffff;
+        --on-error-container: #991b1b;
+      }
+
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: rgba(23, 31, 51, 0.94);
+        --surface-soft: rgba(13, 24, 45, 0.9);
+        --surface-muted: rgba(34, 42, 61, 0.92);
+        --surface-border: rgba(192, 193, 255, 0.3);
+        --surface-container: rgba(23, 31, 51, 0.94);
+        --surface-container-low: rgba(19, 27, 46, 0.9);
+        --surface-container-high: rgba(34, 42, 61, 0.92);
+        --surface-container-highest: rgba(45, 52, 73, 0.95);
+        --surface-container-lowest: rgba(18, 26, 47, 0.95);
+        --surface-variant: rgba(192, 193, 255, 0.3);
+        --outline: #94a3b8;
+        --outline-variant: rgba(192, 193, 255, 0.3);
+        --text: #f8fafc;
+        --text-soft: #cbd5e1;
+        --text-muted: #94a3b8;
+        --text-variant: #e2e8f0;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --primary-container: #ff6b35;
+        --primary-fixed-dim: #ffb59d;
+        --primary-fixed: rgba(255, 107, 53, 0.2);
+        --navy: #f8fafc;
+        --navy-soft: #cbd5e1;
+        --error-text: #ffb4ab;
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.45);
+        --shadow-hover: 0 32px 100px rgba(0, 0, 0, 0.6);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.2);
+        --on-secondary-container: #4ae176;
+        --tertiary: #ffb95f;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #4f3d00;
+        --on-tertiary-container: #ffb95f;
+        --card-bg: rgba(18, 26, 47, 0.95);
+        --card-border: rgba(192, 193, 255, 0.3);
+        --badge-bg: rgba(11, 19, 38, 0.9);
+        --on-secondary-fixed-variant: #e2e8f0;
+        --on-background: #f8fafc;
+        --on-surface-variant: #cbd5e1;
+        --surface-bright: rgba(34, 42, 61, 0.95);
+        --surface-dim: rgba(6, 14, 32, 0.95);
+        --inverse-surface: #fcf9f2;
+        --inverse-on-surface: #0f172a;
+        --inverse-primary: #ab3500;
+        --surface-tint: #ff6b35;
+        --error: #ffb4ab;
+        --error-container: rgba(255, 180, 171, 0.2);
+        --on-error: #690005;
+        --on-error-container: #ffb4ab;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      *::selection {
+        background: rgba(171, 53, 0, 0.16);
+        color: var(--navy);
+      }
+      html.theme-dark *::selection {
+        background: rgba(128, 131, 255, 0.25);
+        color: var(--text);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--on-background);
+        font-family:
+          Geist,
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a,
+      button {
+        color: inherit;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      /* === TOP APP BAR (matching coupon-detail) === */
+      .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--bg);
+        border-bottom: 1px solid var(--surface-variant);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 24px;
+        width: 100%;
+        height: 64px;
+      }
+      .top-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .top-bar-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--on-secondary-fixed-variant);
+      }
+      .top-bar-btn {
+        padding: 8px;
+        color: var(--on-secondary-fixed-variant);
+        border-radius: 999px;
+        transition:
+          background 180ms ease,
+          transform 100ms ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .top-bar-btn:hover {
+        background: var(--surface-container-high);
+      }
+      .top-bar-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* === MAIN LAYOUT (from stitch_remix) === */
+      .profile-page {
+        width: 100%;
+        padding: 32px 24px 120px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      @media (min-width: 1024px) {
+        .profile-page {
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+      }
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      @media (min-width: 1024px) {
+        .profile-grid {
+          grid-template-columns: 4fr 8fr;
+        }
+      }
+
+      /* === LEFT SIDEBAR (Profile Header) === */
+      .profile-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      @media (min-width: 1024px) {
+        .profile-sidebar {
+          position: sticky;
+          top: 88px;
+        }
+      }
+
+      .profile-header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .profile-avatar-wrap {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        flex-shrink: 0;
+      }
+      .profile-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--primary-container);
+        padding: 3px;
+        background: var(--surface-container-lowest);
+      }
+      .profile-verified-badge {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: var(--primary-container);
+        color: var(--on-primary);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--bg);
+      }
+      .profile-verified-badge .material-symbols-outlined {
+        font-size: 16px;
+        font-variation-settings: "FILL" 1;
+      }
+      .profile-name-lg {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      .profile-realname {
+        color: var(--on-surface-variant);
+        margin: 2px 0 0;
+        font-size: 1rem;
+      }
+
+      /* Stats Row */
+      .profile-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-top: 1px solid var(--surface-variant);
+        border-bottom: 1px solid var(--surface-variant);
+      }
+      .profile-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile-stat-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+      .profile-stat-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--secondary);
+      }
+      .profile-stat-border {
+        border-left: 1px solid var(--surface-variant);
+        border-right: 1px solid var(--surface-variant);
+        padding: 0 16px;
+      }
+
+      .profile-bio {
+        font-size: 0.9rem;
+        color: var(--on-surface-variant);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .profile-actions {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+      }
+      .profile-btn {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 180ms ease;
+        text-align: center;
+      }
+      .profile-btn:active {
+        transform: scale(0.97);
+      }
+      .profile-btn-primary {
+        background: var(--primary-container);
+        color: var(--on-primary);
+      }
+      .profile-btn-primary:hover {
+        opacity: 0.9;
+      }
+      .profile-btn-secondary {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--on-secondary-fixed-variant);
+        color: var(--on-secondary-fixed-variant);
+      }
+      .profile-btn-secondary:hover {
+        background: var(--surface-container-high);
+      }
+
+      /* === RIGHT COLUMN (Coupons Feed) === */
+      .coupons-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .feed-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .feed-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        border-left: 4px solid var(--primary-container);
+        padding-left: 12px;
+      }
+      .feed-view-all {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--primary);
+        cursor: pointer;
+      }
+      .feed-view-all:hover {
+        text-decoration: underline;
+      }
+
+      .coupons-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      /* Coupon Card (Ticket Notch) */
+      .coupon-card {
+        position: relative;
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--surface-variant);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        transition:
+          border-color 180ms ease,
+          transform 100ms ease;
+      }
+      .coupon-card:hover {
+        border-color: var(--on-secondary-fixed-variant);
+      }
+      .coupon-card:active {
+        transform: scale(0.98);
+      }
+      .coupon-card::before,
+      .coupon-card::after {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        background-color: var(--bg);
+        border-radius: 50%;
+        border: 1px solid var(--surface-variant);
+        z-index: 10;
+      }
+      .coupon-card::after {
+        left: auto;
+        right: -8px;
+      }
+      .coupon-card.featured {
+        border: 2px solid var(--tertiary-container);
+        padding: 0;
+        overflow: hidden;
+      }
+      .coupon-card.featured .coupon-card-inner {
+        padding: 16px;
+      }
+      .featured-tag {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: var(--tertiary-container);
+        color: var(--on-tertiary-container);
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 4px 10px;
+        border-radius: 0 0 0 8px;
+      }
+
+      .coupon-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--surface-container);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .coupon-icon .material-symbols-outlined {
+        font-size: 28px;
+        color: var(--secondary);
+      }
+      .coupon-card.featured .coupon-icon .material-symbols-outlined {
+        color: var(--tertiary);
+      }
+      .coupon-card.featured .coupon-icon {
+        background: var(--surface-container-high);
+      }
+
+      .coupon-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .coupon-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      .coupon-meta {
+        font-size: 0.85rem;
+        color: var(--on-surface-variant);
+        margin: 0;
+      }
+
+      .coupon-price {
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .coupon-discount {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+      .coupon-fixed {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--secondary);
+        margin: 2px 0 0;
+      }
+
+      /* Trust & Safety Section */
+      .trust-section {
+        background: var(--surface-container);
+        border: 1px solid var(--surface-variant);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .trust-section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .trust-section-header .material-symbols-outlined {
+        color: var(--tertiary);
+      }
+      .trust-section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0;
+      }
+      .trust-section-text {
+        font-size: 0.9rem;
+        color: var(--on-surface-variant);
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      /* Mobile Bottom Nav */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--surface-container-lowest);
+        border-top: 1px solid var(--surface-variant);
+        display: flex;
+        justify-content: space-around;
+        padding: 8px 0;
+        z-index: 50;
+      }
+      @media (min-width: 768px) {
+        .bottom-nav {
+          display: none;
+        }
+      }
+      .bottom-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 4px 12px;
+        color: var(--on-surface-variant);
+        font-size: 0.7rem;
+        font-weight: 600;
+        transition: color 180ms ease;
+      }
+      .bottom-link .material-symbols-outlined {
+        font-size: 24px;
+      }
+      .bottom-link.active {
+        color: var(--primary);
+      }
+      .bottom-link:hover {
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <!-- Main Content -->
+    <main class="profile-page" style="max-width:1200px; margin:0 auto; padding: 24px 16px 80px;">
+      <div class="profile-grid">
+        <!-- Left Sidebar: Profile Header -->
+        <aside class="profile-sidebar">
+          <div class="profile-header" style="background:var(--surface-container-lowest); border:1px solid var(--surface-variant); border-radius:16px; padding:24px;">
+            <div style="display:flex; align-items:center; gap:20px;">
+              <div class="profile-avatar-wrap" style="width:80px; height:80px;">
+                <img class="profile-avatar" id="profile-avatar" src="" alt="Avatar" />
+                <div class="profile-verified-badge" id="profile-verified-badge">
+                  <span class="material-symbols-outlined">verified</span>
+                </div>
+              </div>
+              <div>
+                <h1 class="profile-name-lg" id="profile-name" style="font-size:1.25rem;">User</h1>
+                <p class="profile-realname" id="profile-realname">@username</p>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="profile-stats" style="margin-top:16px;">
+              <div class="profile-stat">
+                <span class="profile-stat-value" id="profile-followers">12</span>
+                <span class="profile-stat-label">Followers</span>
+              </div>
+              <div class="profile-stat profile-stat-border">
+                <span class="profile-stat-value" id="profile-following">8</span>
+                <span class="profile-stat-label">Following</span>
+              </div>
+              <div class="profile-stat profile-stat-border">
+                <span class="profile-stat-value" id="profile-offered">0</span>
+                <span class="profile-stat-label">Sold</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat-value" id="profile-purchased">0</span>
+                <span class="profile-stat-label">Purchased</span>
+              </div>
+            </div>
+
+            <!-- Bio -->
+            <p class="profile-bio" id="profile-bio" style="margin-top:12px; font-size:0.875rem;">
+              CouponEx Verified Member.
+            </p>
+
+            <!-- Own Profile Actions (Edit Profile LEFT | Sell Coupon RIGHT) -->
+            <div class="profile-actions" id="own-profile-actions" style="display:flex; gap:12px; margin-top:16px;">
+              <button class="profile-btn profile-btn-secondary" onclick="location.href='edit-profile.html'" type="button" style="flex:1;">
+                <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">edit</span> EDIT PROFILE
+              </button>
+              <button class="profile-btn profile-btn-primary" onclick="location.href='sell.html'" type="button" style="flex:1;">
+                <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">add_circle</span> SELL COUPON
+              </button>
+            </div>
+
+            <!-- Other User Profile Action (Follow User ONLY) -->
+            <div class="profile-actions" id="other-profile-actions" style="display:none; margin-top:16px;">
+              <button class="profile-btn profile-btn-primary" id="follow-btn" type="button" style="width:100%;">
+                <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">person_add</span> FOLLOW USER
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Ecosystem Cards (Own Profile) & Public Feed (Other Seller) -->
+        <section class="coupons-feed" id="main-feed-container">
+          <!-- OWN PROFILE ECOSYSTEM CARDS -->
+          <div id="own-ecosystem-cards" style="display:flex; flex-direction:column; gap:24px;">
+            
+            <!-- WALLET SUMMARY -->
+            <div class="trust-section" style="background:var(--surface-container-lowest); border:1px solid var(--surface-variant); border-radius:16px; padding:24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--surface-variant); padding-bottom:12px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="material-symbols-outlined" style="color:var(--primary); font-size:24px;">account_balance_wallet</span>
+                  <h3 style="margin:0; font-size:1.1rem; font-weight:700;">Wallet Summary</h3>
+                </div>
+                <div style="display:flex; gap:8px;">
+                  <button class="admin-btn admin-btn-secondary" onclick="location.href='wallet.html'" style="padding:6px 12px; font-size:0.75rem;">View Wallet</button>
+                  <button class="admin-btn admin-btn-primary" onclick="location.href='seller-earnings.html'" style="padding:6px 12px; font-size:0.75rem;">View Earnings</button>
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
+                <div style="background:var(--surface-soft); padding:16px; border-radius:12px; border:1px solid var(--surface-variant);">
+                  <span style="font-size:0.7rem; font-weight:700; color:var(--text-soft); text-transform:uppercase;">CouponEx Credits</span>
+                  <div style="font-family:'JetBrains Mono', monospace; font-size:1.25rem; font-weight:700; color:var(--primary); margin-top:4px;" id="card-credits">0C</div>
+                </div>
+                <div style="background:var(--surface-soft); padding:16px; border-radius:12px; border:1px solid var(--surface-variant);">
+                  <span style="font-size:0.7rem; font-weight:700; color:var(--text-soft); text-transform:uppercase;">Available Earnings</span>
+                  <div style="font-family:'JetBrains Mono', monospace; font-size:1.25rem; font-weight:700; color:var(--success); margin-top:4px;" id="card-available-earnings">₹0</div>
+                </div>
+                <div style="background:var(--surface-soft); padding:16px; border-radius:12px; border:1px solid var(--surface-variant);">
+                  <span style="font-size:0.7rem; font-weight:700; color:var(--text-soft); text-transform:uppercase;">Pending Earnings</span>
+                  <div style="font-family:'JetBrains Mono', monospace; font-size:1.25rem; font-weight:700; color:var(--tertiary); margin-top:4px;" id="card-pending-earnings">₹0</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PAYMENT & PAYOUT DETAILS -->
+            <div class="trust-section" style="background:var(--surface-container-lowest); border:1px solid var(--surface-variant); border-radius:16px; padding:24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--surface-variant); padding-bottom:12px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="material-symbols-outlined" style="color:var(--secondary); font-size:24px;">credit_card</span>
+                  <h3 style="margin:0; font-size:1.1rem; font-weight:700;">Payment & Payout Details</h3>
+                </div>
+                <button class="admin-btn admin-btn-secondary" onclick="location.href='payout-details.html'" style="padding:6px 12px; font-size:0.75rem;">Manage Payout Details</button>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                  <span style="font-size:0.875rem; color:var(--text-soft);">Bank Payout Verification Status:</span>
+                  <div style="margin-top:6px;" id="payout-status-badge">
+                    <span style="display:inline-flex; align-items:center; gap:4px; padding:4px 12px; border-radius:20px; background:var(--surface-muted); color:var(--text-soft); font-size:0.75rem; font-weight:700;">
+                      <span class="material-symbols-outlined" style="font-size:14px;">hourglass_empty</span> PENDING VERIFICATION
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PURCHASES & SALES CARDS -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div style="background:var(--surface-container-lowest); border:1px solid var(--surface-variant); border-radius:16px; padding:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <h4 style="margin:0; font-size:1rem; font-weight:700;">My Purchases</h4>
+                    <p style="margin:4px 0 0; font-size:0.8rem; color:var(--text-soft);" id="card-purchases-sub">0 completed purchases</p>
+                  </div>
+                  <button class="admin-btn admin-btn-secondary" onclick="location.href='my-purchases.html'" style="padding:6px 12px; font-size:0.75rem;">View Purchases</button>
+                </div>
+              </div>
+              <div style="background:var(--surface-container-lowest); border:1px solid var(--surface-variant); border-radius:16px; padding:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <h4 style="margin:0; font-size:1rem; font-weight:700;">My Sales</h4>
+                    <p style="margin:4px 0 0; font-size:0.8rem; color:var(--text-soft);" id="card-sales-sub">0 completed sales</p>
+                  </div>
+                  <button class="admin-btn admin-btn-secondary" onclick="location.href='my-sales.html'" style="padding:6px 12px; font-size:0.75rem;">View Sales</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- RECENT TRANSACTIONS -->
+            <div class="trust-section" style="background:var(--surface-container-lowest); border:1px solid var(--surface-variant); border-radius:16px; padding:24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--surface-variant); padding-bottom:12px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="material-symbols-outlined" style="color:var(--primary); font-size:24px;">receipt_long</span>
+                  <h3 style="margin:0; font-size:1.1rem; font-weight:700;">Recent Transactions</h3>
+                </div>
+                <button class="admin-btn admin-btn-secondary" onclick="location.href='transactions.html'" style="padding:6px 12px; font-size:0.75rem;">View All Transactions</button>
+              </div>
+              <div id="recent-transactions-list" style="display:flex; flex-direction:column; gap:12px;">
+                <p style="font-size:0.875rem; color:var(--text-soft); margin:0;">No transactions recorded yet.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- PUBLIC SELLER FEED (For Other Seller Profiles) -->
+          <div id="public-seller-feed" style="display:none; flex-direction:column; gap:24px;">
+            <div class="feed-header">
+              <h2 class="feed-title">Offered Coupons</h2>
+            </div>
+            <div class="coupons-list" id="coupons-list">
+              <!-- Public coupons list -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a class="bottom-link" href="dashboard.html">
+        <span class="material-symbols-outlined">home</span>
+        <span>Home</span>
+      </a>
+      <a class="bottom-link" href="search.html">
+        <span class="material-symbols-outlined">search</span>
+        <span>Search</span>
+      </a>
+      <a class="bottom-link" href="sell.html">
+        <span class="material-symbols-outlined">add_circle</span>
+        <span>Sell</span>
+      </a>
+      <a class="bottom-link" href="wallet.html">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <span>Wallet</span>
+      </a>
+      <a class="bottom-link" href="verify-identity.html">
+        <span class="material-symbols-outlined">person</span>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+    <script>
+      // --- Complete seller database (shared with coupon-detail) ---
+      const sellers = {
+        arjundeals: {
+          name: "@ArjunDeals",
+          realname: "Arjun Sharma",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.9",
+          trades: "450+",
+          reviews: "128",
+          offered: "142",
+          purchased: "89",
+          brand: "Swiggy Instamart",
+          category: "Food & Dining",
+          discount: "50% OFF",
+          original: "₹250",
+          price: "₹100",
+          terms: "On orders above ₹500. Limited time offer.",
+          expiry: "Limited Time Offer: Expires in 48 hours",
+          sold: "5",
+          bio: "Premium seller focusing on Food & Grocery coupons. Verified user since 2022. Fast delivery and 100% success rate on redemptions.",
+          coupons: [
+            {
+              title: "Swiggy Instamart 50% OFF",
+              meta: "Expires in 2 days • Verified",
+              discount: "50% OFF",
+              fixed: "₹100 FIXED",
+              icon: "shopping_bag",
+            },
+            {
+              title: "Zomato Pro 3-Month",
+              meta: "Expires in 5 days • Verified",
+              discount: "30% OFF",
+              fixed: "₹140 FIXED",
+              icon: "restaurant",
+            },
+            {
+              title: "Blinkit ₹100 Cashback",
+              meta: "Min order ₹750 • Verified",
+              discount: "₹100 CB",
+              fixed: "₹40 FIXED",
+              icon: "local_grocery_store",
+            },
+            {
+              title: "Amazon Pay ₹50 CB",
+              meta: "Min order ₹500 • Verified",
+              discount: "₹50 CB",
+              fixed: "₹20 FIXED",
+              icon: "shopping_cart",
+            },
+          ],
+        },
+        dealmaster: {
+          name: "@DealMaster",
+          realname: "Rahul Verma",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.8",
+          trades: "320+",
+          reviews: "96",
+          offered: "98",
+          purchased: "67",
+          brand: "Zomato Pro",
+          category: "Food & Dining",
+          discount: "30% OFF",
+          original: "₹200",
+          price: "₹140",
+          terms: "Valid on min order ₹799. Expires in 2 days.",
+          expiry: "Limited Time Offer: Expires in 2 days",
+          sold: "3",
+          bio: "Foodie & deal hunter. Specializing in restaurant and food delivery coupons. Verified since 2023.",
+          coupons: [
+            {
+              title: "Zomato Pro 30% OFF",
+              meta: "Min order ₹799 • Verified",
+              discount: "30% OFF",
+              fixed: "₹140 FIXED",
+              icon: "restaurant",
+            },
+            {
+              title: "Swiggy One Membership",
+              meta: "Expires in 7 days • Verified",
+              discount: "₹200 OFF",
+              fixed: "₹99 FIXED",
+              icon: "delivery_dining",
+            },
+            {
+              title: "Domino's Pizza Combo",
+              meta: "Expires in 3 days • Verified",
+              discount: "40% OFF",
+              fixed: "₹120 FIXED",
+              icon: "local_pizza",
+            },
+            {
+              title: "McDonald's Meal Deal",
+              meta: "Expires in 10 days • Verified",
+              discount: "₹150 OFF",
+              fixed: "₹80 FIXED",
+              icon: "fastfood",
+            },
+          ],
+        },
+        priyasavings: {
+          name: "@PriyaSavings",
+          realname: "Priya Patel",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.6",
+          trades: "185+",
+          reviews: "64",
+          offered: "76",
+          purchased: "42",
+          brand: "Amazon Pay",
+          category: "E-commerce",
+          discount: "₹50 CB",
+          original: "₹50",
+          price: "₹20",
+          terms: "Cashback on Amazon Pay. Min order ₹500.",
+          expiry: "Limited Time Offer: Expires in 3 days",
+          sold: "8",
+          bio: "Savings expert! Best deals on e-commerce and online shopping coupons. Verified since 2023.",
+          coupons: [
+            {
+              title: "Amazon Pay ₹50 CB",
+              meta: "Min order ₹500 • Verified",
+              discount: "₹50 CB",
+              fixed: "₹20 FIXED",
+              icon: "shopping_cart",
+            },
+            {
+              title: "Flipkart Big Billion Deal",
+              meta: "Expires in 6 days • Verified",
+              discount: "₹200 OFF",
+              fixed: "₹50 FIXED",
+              icon: "inventory_2",
+            },
+            {
+              title: "Myntra Extra 10% OFF",
+              meta: "On seasonal sales • Verified",
+              discount: "10% OFF",
+              fixed: "₹80 FIXED",
+              icon: "checkroom",
+            },
+            {
+              title: "Ajio Fashion Voucher",
+              meta: "Expires in 12 days • Verified",
+              discount: "₹300 OFF",
+              fixed: "₹100 FIXED",
+              icon: "style",
+            },
+          ],
+        },
+        travelguru: {
+          name: "@TravelGuru",
+          realname: "Vikram Singh",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.7",
+          trades: "210+",
+          reviews: "82",
+          offered: "112",
+          purchased: "73",
+          brand: "MakeMyTrip",
+          category: "Travel",
+          discount: "₹1000 OFF",
+          original: "₹1500",
+          price: "₹750",
+          terms: "Flat discount on domestic flights. Min booking ₹5000.",
+          expiry: "Limited Time Offer: Expires in 5 days",
+          sold: "2",
+          bio: "Travel enthusiast sharing the best flight and hotel deals. Verified globetrotter since 2022.",
+          coupons: [
+            {
+              title: "MakeMyTrip Flight ₹1000 OFF",
+              meta: "Min booking ₹5000 • Verified",
+              discount: "₹1000 OFF",
+              fixed: "₹750 FIXED",
+              icon: "flight",
+            },
+            {
+              title: "Goibibo Hotel Voucher",
+              meta: "Expires in 8 days • Verified",
+              discount: "₹500 OFF",
+              fixed: "₹200 FIXED",
+              icon: "hotel",
+            },
+            {
+              title: "IRCTC Rail Discount",
+              meta: "Expires in 15 days • Verified",
+              discount: "₹100 OFF",
+              fixed: "₹30 FIXED",
+              icon: "train",
+            },
+            {
+              title: "Uber Ride 20% OFF",
+              meta: "Valid on premium rides • Verified",
+              discount: "20% OFF",
+              fixed: "₹15 FIXED",
+              icon: "directions_car",
+            },
+          ],
+        },
+        cityrider: {
+          name: "@CityRider",
+          realname: "Amit Joshi",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.5",
+          trades: "98+",
+          reviews: "38",
+          offered: "54",
+          purchased: "31",
+          brand: "Uber",
+          category: "Travel",
+          discount: "20% OFF",
+          original: "₹100",
+          price: "₹15",
+          terms: "Save on your next commute. Valid on premium rides.",
+          expiry: "Limited Time Offer: Expires in 24 hours",
+          sold: "12",
+          bio: "Your go-to for ride-sharing and commute deals. Fast delivery guaranteed!",
+          coupons: [
+            {
+              title: "Uber Ride 20% OFF",
+              meta: "Premium rides • Verified",
+              discount: "20% OFF",
+              fixed: "₹15 FIXED",
+              icon: "directions_car",
+            },
+            {
+              title: "Rapido Bike Discount",
+              meta: "Expires in 4 days • Verified",
+              discount: "₹30 OFF",
+              fixed: "₹10 FIXED",
+              icon: "pedal_bike",
+            },
+            {
+              title: "Ola Cab Voucher",
+              meta: "Expires in 6 days • Verified",
+              discount: "₹50 OFF",
+              fixed: "₹20 FIXED",
+              icon: "local_taxi",
+            },
+            {
+              title: "Metro Card Recharge",
+              meta: "Expires in 20 days • Verified",
+              discount: "₹20 CB",
+              fixed: "₹5 FIXED",
+              icon: "subway",
+            },
+          ],
+        },
+        flyhigh: {
+          name: "@FlyHigh",
+          realname: "Neha Gupta",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.3",
+          trades: "76+",
+          reviews: "28",
+          offered: "45",
+          purchased: "22",
+          brand: "Indigo Flights",
+          category: "Travel",
+          discount: "₹500 OFF",
+          original: "₹1000",
+          price: "₹250",
+          terms: "Flat discount on domestic flight bookings via Indigo.",
+          expiry: "Limited Time Offer: Expires in 4 days",
+          sold: "6",
+          bio: "Aviation deal specialist. Best flight discounts and travel coupons. Verified since 2024.",
+          coupons: [
+            {
+              title: "Indigo Flight ₹500 OFF",
+              meta: "Domestic flights • Verified",
+              discount: "₹500 OFF",
+              fixed: "₹250 FIXED",
+              icon: "flight",
+            },
+            {
+              title: "SpiceJet Discount Voucher",
+              meta: "Expires in 10 days • Verified",
+              discount: "₹400 OFF",
+              fixed: "₹200 FIXED",
+              icon: "flight_takeoff",
+            },
+            {
+              title: "Air India Express Deal",
+              meta: "Expires in 14 days • Verified",
+              discount: "₹300 OFF",
+              fixed: "₹150 FIXED",
+              icon: "flight_land",
+            },
+            {
+              title: "ClearTrip Hotel Voucher",
+              meta: "Expires in 7 days • Verified",
+              discount: "₹600 OFF",
+              fixed: "₹300 FIXED",
+              icon: "hotel",
+            },
+          ],
+        },
+        freshdeals: {
+          name: "@FreshDeals",
+          realname: "Sneha Reddy",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.4",
+          trades: "132+",
+          reviews: "52",
+          offered: "68",
+          purchased: "44",
+          brand: "Blinkit",
+          category: "Grocery",
+          discount: "₹100 CB",
+          original: "₹100",
+          price: "₹40",
+          terms: "Cashback on grocery refill. Min order ₹750.",
+          expiry: "Limited Time Offer: Expires in 2 days",
+          sold: "9",
+          bio: "Grocery & fresh produce coupon specialist. Helping you save on everyday essentials!",
+          coupons: [
+            {
+              title: "Blinkit ₹100 Cashback",
+              meta: "Min order ₹750 • Verified",
+              discount: "₹100 CB",
+              fixed: "₹40 FIXED",
+              icon: "local_grocery_store",
+            },
+            {
+              title: "Zepto Instant Discount",
+              meta: "Expires in 3 days • Verified",
+              discount: "₹75 OFF",
+              fixed: "₹25 FIXED",
+              icon: "fastfood",
+            },
+            {
+              title: "BigBasket Weekly Saver",
+              meta: "Expires in 8 days • Verified",
+              discount: "₹120 OFF",
+              fixed: "₹50 FIXED",
+              icon: "shopping_basket",
+            },
+            {
+              title: "Dunzo Daily Coupon",
+              meta: "Expires in 5 days • Verified",
+              discount: "₹60 OFF",
+              fixed: "₹20 FIXED",
+              icon: "delivery_dining",
+            },
+          ],
+        },
+        styleicon: {
+          name: "@StyleIcon",
+          realname: "Karan Mehta",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.2",
+          trades: "65+",
+          reviews: "22",
+          offered: "38",
+          purchased: "19",
+          brand: "Myntra",
+          category: "Fashion",
+          discount: "Extra 10% OFF",
+          original: "₹500",
+          price: "₹80",
+          terms: "Additional discount on top of ongoing seasonal sales.",
+          expiry: "Limited Time Offer: Expires in 6 days",
+          sold: "4",
+          bio: "Fashion-forward deal curator. Premium fashion & lifestyle coupons at unbeatable prices.",
+          coupons: [
+            {
+              title: "Myntra Extra 10% OFF",
+              meta: "On seasonal sales • Verified",
+              discount: "10% OFF",
+              fixed: "₹80 FIXED",
+              icon: "checkroom",
+            },
+            {
+              title: "Ajio Fashion ₹500 OFF",
+              meta: "Expires in 9 days • Verified",
+              discount: "₹500 OFF",
+              fixed: "₹200 FIXED",
+              icon: "style",
+            },
+            {
+              title: "Nykaa Beauty Voucher",
+              meta: "Expires in 11 days • Verified",
+              discount: "₹250 OFF",
+              fixed: "₹100 FIXED",
+              icon: "spa",
+            },
+            {
+              title: "Puma Sportswear Deal",
+              meta: "Expires in 14 days • Verified",
+              discount: "30% OFF",
+              fixed: "₹150 FIXED",
+              icon: "directions_run",
+            },
+          ],
+        },
+      };
+
+      // SVG Default Avatar Fallback
+      const DEFAULT_AVATAR = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f1f5f9"/><path d="M50 42 a 16 16 0 1 0 0 -32 a 16 16 0 1 0 0 32 Z M20 85 c 0 -18 14 -28 30 -28 s 30 10 30 28 Z" fill="%2394a3b8"/></svg>';
+
+      // Load profile data from URL parameters or logged-in user
+      const params = new URLSearchParams(window.location.search);
+      const sellerKey = params.get("seller");
+      const paramUserId = params.get("user") || params.get("id");
+      const storedUser = JSON.parse(localStorage.getItem("couponex_user") || "null") || { id: 1, username: "_pa_van_", fullName: "Pavan Raj N", balance: 1700 };
+
+      const avatarEl = document.getElementById("profile-avatar");
+      if (avatarEl) {
+        avatarEl.onerror = () => { avatarEl.src = DEFAULT_AVATAR; };
+      }
+
+      // Determine if viewing own profile
+      const isMyProfile = !sellerKey && (!paramUserId || String(paramUserId) === String(storedUser.id));
+
+      const ownActionsEl = document.getElementById("own-profile-actions");
+      const otherActionsEl = document.getElementById("other-profile-actions");
+      const ownEcosystemEl = document.getElementById("own-ecosystem-cards");
+      const publicFeedEl = document.getElementById("public-seller-feed");
+
+      if (isMyProfile) {
+        // --- OWN PROFILE ECOSYSTEM MODE ---
+        if (ownActionsEl) ownActionsEl.style.display = "flex";
+        if (otherActionsEl) otherActionsEl.style.display = "none";
+        if (ownEcosystemEl) ownEcosystemEl.style.display = "flex";
+        if (publicFeedEl) publicFeedEl.style.display = "none";
+
+        // Initial render from local stored user
+        document.getElementById("profile-name").textContent = "@" + (storedUser.username || "_pa_van_");
+        document.getElementById("profile-realname").textContent = storedUser.fullName || "Pavan Raj N";
+        document.getElementById("profile-avatar").src = storedUser.profilePhoto || DEFAULT_AVATAR;
+        document.getElementById("profile-bio").textContent = storedUser.bio || "CouponEx Verified Member. Managing coupons & seller earnings.";
+
+        // Fetch complete profile summary from backend
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        fetch(`${baseUrl}/api/profile/${storedUser.id}/summary`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              const u = data.user;
+              document.getElementById("profile-name").textContent = "@" + u.username;
+              document.getElementById("profile-realname").textContent = u.fullName;
+              document.getElementById("profile-avatar").src = u.profilePhoto || DEFAULT_AVATAR;
+              if (u.bio) document.getElementById("profile-bio").textContent = u.bio;
+
+              // Stats
+              document.getElementById("profile-followers").textContent = data.stats.followers || 12;
+              document.getElementById("profile-following").textContent = data.stats.following || 8;
+              document.getElementById("profile-offered").textContent = data.stats.couponsOffered || 0;
+              document.getElementById("profile-purchased").textContent = data.stats.couponsPurchased || 0;
+
+              // Wallet Summary
+              document.getElementById("card-credits").textContent = (data.wallet.credits || 0) + "C";
+              document.getElementById("card-available-earnings").textContent = "₹" + (data.wallet.availableEarnings || 0).toLocaleString("en-IN");
+              document.getElementById("card-pending-earnings").textContent = "₹" + (data.wallet.pendingEarnings || 0).toLocaleString("en-IN");
+
+              // Payment & Payout Status Badge
+              const badgeEl = document.getElementById("payout-status-badge");
+              if (badgeEl) {
+                const acc = data.payoutAccount;
+                const statusStr = acc ? acc.status : "PENDING VERIFICATION";
+                if (statusStr === "VERIFIED") {
+                  badgeEl.innerHTML = `
+                    <span style="display:inline-flex; align-items:center; gap:4px; padding:4px 12px; border-radius:20px; background:var(--success-container, #d1fae5); color:var(--success-dark, #065f46); font-size:0.75rem; font-weight:700;">
+                      <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span> ✓ VERIFIED
+                    </span>
+                  `;
+                } else if (statusStr === "REJECTED") {
+                  badgeEl.innerHTML = `
+                    <span style="display:inline-flex; align-items:center; gap:4px; padding:4px 12px; border-radius:20px; background:var(--error-container, #fee2e2); color:var(--error-text, #991b1b); font-size:0.75rem; font-weight:700;">
+                      <span class="material-symbols-outlined" style="font-size:14px;">cancel</span> ✕ REJECTED
+                    </span>
+                  `;
+                } else {
+                  badgeEl.innerHTML = `
+                    <span style="display:inline-flex; align-items:center; gap:4px; padding:4px 12px; border-radius:20px; background:var(--surface-muted); color:var(--text-soft); font-size:0.75rem; font-weight:700;">
+                      <span class="material-symbols-outlined" style="font-size:14px;">hourglass_empty</span> ⏳ PENDING VERIFICATION
+                    </span>
+                  `;
+                }
+              }
+
+              // Subtexts
+              document.getElementById("card-purchases-sub").textContent = `${data.purchasesCount || 0} completed purchases`;
+              document.getElementById("card-sales-sub").textContent = `${data.salesCount || 0} completed sales`;
+
+              // Recent Transactions List
+              const txnListEl = document.getElementById("recent-transactions-list");
+              if (txnListEl && Array.isArray(data.recentTransactions) && data.recentTransactions.length > 0) {
+                let html = "";
+                data.recentTransactions.forEach(t => {
+                  const isCredit = t.currency === 'C';
+                  const symbol = isCredit ? 'C' : '₹';
+                  const isAdd = t.type === 'CREDIT_PURCHASE' || t.type === 'SELLER_EARNING' || t.type === 'SELLER_CREDIT_CONVERSION';
+                  const sign = isAdd ? '+' : '-';
+                  const color = isAdd ? 'var(--success)' : 'var(--text)';
+                  html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px dashed var(--surface-variant);">
+                      <div>
+                        <strong style="font-size:0.875rem; color:var(--text);">${t.type.replace(/_/g, ' ')}</strong>
+                        <div style="font-size:0.75rem; color:var(--text-soft);">${t.description || ''}</div>
+                      </div>
+                      <span style="font-family:'JetBrains Mono', monospace; font-weight:700; color:${color};">
+                        ${sign}${isCredit ? t.amount + 'C' : '₹' + t.amount}
+                      </span>
+                    </div>
+                  `;
+                });
+                txnListEl.innerHTML = html;
+              }
+            }
+          })
+
+        const data = sellers[sellerKey] || sellers.arjundeals;
+
+        // Update seller profile header
+        document.getElementById("profile-name").textContent = data.name;
+        document.getElementById("profile-realname").textContent = data.realname;
+        document.getElementById("profile-avatar").src = data.avatar || DEFAULT_AVATAR;
+        document.getElementById("profile-avatar").alt = data.name;
+        document.getElementById("profile-rating").textContent = data.rating;
+        document.getElementById("profile-offered").textContent = data.offered;
+        document.getElementById("profile-purchased").textContent = data.purchased;
+        document.getElementById("profile-bio").textContent = data.bio;
+
+        document.title = data.name + " | CouponEx Profile";
+      }
+
+      // Render coupons
+      const couponsList = document.getElementById("coupons-list");
+
+      if (isMyProfile) {
+        const userCoupons = JSON.parse(
+          localStorage.getItem("couponex_coupons") || "[]",
+        ).filter((c) => c.userId === storedUser.id);
+
+        if (userCoupons.length > 0) {
+          document.getElementById("profile-offered").textContent = userCoupons.length;
+          userCoupons.forEach((coupon, index) => {
+            const isFeatured = index === 0;
+            const card = document.createElement("div");
+            card.className = "coupon-card" + (isFeatured ? " featured" : "");
+            const imageHtml = coupon.image
+              ? `<img src="${coupon.image}" alt="${coupon.brand}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--surface-variant);" />`
+              : `<div class="coupon-icon">
+                  <span class="material-symbols-outlined">confirmation_number</span>
+                </div>`;
+            card.innerHTML = `
+              ${isFeatured ? '<div class="featured-tag">LATEST</div>' : ""}
+              <div class="coupon-card-inner" style="display:flex;align-items:center;gap:16px;width:100%;${isFeatured ? "padding:16px;" : ""}">
+                ${imageHtml}
+                <div class="coupon-info">
+                  <h4 class="coupon-title">${coupon.brand}</h4>
+                  <p class="coupon-meta">${coupon.category || ""} • Listed</p>
+                </div>
+                <div class="coupon-price">
+                  <div class="coupon-discount">₹${coupon.askingPrice || 0}</div>
+                  <div class="coupon-fixed">₹${coupon.originalValue || 0} VALUE</div>
+                </div>
+              </div>
+            `;
+            card.addEventListener("click", () => {
+              location.href = "verify-identity.html";
+            });
+            couponsList.appendChild(card);
+          });
+        } else {
+          couponsList.innerHTML = `
+            <div class="text-center py-12" style="color: var(--on-surface-variant); width: 100%; padding: 48px 0; text-align: center;">
+              <span class="material-symbols-outlined text-4xl mb-2" style="display:block; font-size: 3rem;">inventory_2</span>
+              <p>No coupons listed yet. Start by listing your first coupon!</p>
+            </div>
+          `;
+        }
+      } else {
+        const data = sellers[sellerKey] || sellers.arjundeals;
+        data.coupons.forEach((coupon, index) => {
+          const isFeatured = index === 2; // Make the 3rd coupon featured
+          const card = document.createElement("div");
+          card.className = "coupon-card" + (isFeatured ? " featured" : "");
+          card.innerHTML = `
+            ${isFeatured ? '<div class="featured-tag">FEATURED</div>' : ""}
+            <div class="coupon-card-inner" style="display:flex;align-items:center;gap:16px;width:100%;${isFeatured ? "padding:16px;" : ""}">
+              <div class="coupon-icon">
+                <span class="material-symbols-outlined">${coupon.icon}</span>
+              </div>
+              <div class="coupon-info">
+                <h4 class="coupon-title">${coupon.title}</h4>
+                <p class="coupon-meta">${coupon.meta}</p>
+              </div>
+              <div class="coupon-price">
+                <div class="coupon-discount">${coupon.discount}</div>
+                <div class="coupon-fixed">${coupon.fixed}</div>
+              </div>
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            location.href = "coupon-detail.html?seller=" + (sellerKey || "arjundeals");
+          });
+          couponsList.appendChild(card);
+        });
+      }
+    </script>
+  </body>
+</html>

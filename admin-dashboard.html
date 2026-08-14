@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f6f3ec;
+        --surface-muted: #f0eee7;
+        --surface-border: #e5e2db;
+        --surface-container: #f0eee7;
+        --surface-container-low: #f6f3ec;
+        --surface-container-high: #ebe8e1;
+        --surface-container-highest: #e5e2db;
+        --surface-container-lowest: #ffffff;
+        --surface-variant: #e5e2db;
+        --outline: #8d7168;
+        --outline-variant: #e1bfb5;
+        --text: #1c1c18;
+        --text-soft: #4f5e80;
+        --text-muted: #7b675a;
+        --text-variant: #594139;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --primary-container: #ff6b35;
+        --primary-fixed-dim: #ffb59d;
+        --primary-fixed: #ffdbd0;
+        --navy: #0a1b39;
+        --navy-soft: #374667;
+        --error: #ba1a1a;
+        --error-container: #ffdad6;
+        --on-error-container: #93000a;
+        --success: #4ade80;
+        --shadow-soft: 0 10px 24px rgba(28, 28, 24, 0.06);
+        --shadow-hover: 0 18px 40px rgba(28, 28, 24, 0.1);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #4f5e80;
+        --secondary-container: #c8d7fe;
+        --on-secondary-container: #4e5d7f;
+        --tertiary: #755b00;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #ffffff;
+        --on-tertiary-container: #4f3d00;
+        --on-secondary-fixed: #0a1b39;
+        --on-secondary-fixed-variant: #374667;
+        --on-background: #1c1c18;
+        --on-surface-variant: #594139;
+        --card-bg: #ffffff;
+        --card-border: #e5e2db;
+        --badge-bg: rgba(255, 255, 255, 0.8);
+        --secondary-fixed-dim: #b7c6ed;
+        --hairline: #e7e2d8;
+      }
+
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: rgba(23, 31, 51, 0.78);
+        --surface-soft: rgba(13, 24, 45, 0.7);
+        --surface-muted: rgba(34, 42, 61, 0.88);
+        --surface-border: rgba(192, 193, 255, 0.18);
+        --surface-container: rgba(23, 31, 51, 0.78);
+        --surface-container-low: rgba(19, 27, 46, 0.7);
+        --surface-container-high: rgba(34, 42, 61, 0.88);
+        --surface-container-highest: rgba(45, 52, 73, 0.9);
+        --surface-container-lowest: rgba(6, 14, 32, 0.9);
+        --surface-variant: rgba(70, 69, 84, 0.8);
+        --outline: #8d7168;
+        --outline-variant: rgba(70, 69, 84, 0.8);
+        --text: #dae2fd;
+        --text-soft: #c7c4d7;
+        --text-muted: #98a2bd;
+        --text-variant: #c7c4d7;
+        --primary: #c0c1ff;
+        --primary-dark: #8083ff;
+        --primary-container: #8083ff;
+        --primary-fixed-dim: #8083ff;
+        --primary-fixed: rgba(192, 193, 255, 0.2);
+        --navy: #c0c1ff;
+        --navy-soft: #8083ff;
+        --error: #ffb4ab;
+        --error-container: rgba(255, 180, 171, 0.2);
+        --on-error-container: #ffb4ab;
+        --success: #4ade80;
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.38);
+        --shadow-hover: 0 32px 100px rgba(0, 0, 0, 0.5);
+        --on-primary: #0d0096;
+        --on-secondary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.15);
+        --on-secondary-container: #4ae176;
+        --tertiary: #ffb95f;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #4f3d00;
+        --on-tertiary-container: #ffb95f;
+        --on-secondary-fixed: #dae2fd;
+        --on-secondary-fixed-variant: #c7c4d7;
+        --on-background: #dae2fd;
+        --on-surface-variant: #c7c4d7;
+        --card-bg: rgba(23, 31, 51, 0.78);
+        --card-border: rgba(192, 193, 255, 0.18);
+        --badge-bg: rgba(11, 19, 38, 0.8);
+        --secondary-fixed-dim: rgba(74, 225, 118, 0.3);
+        --hairline: rgba(192, 193, 255, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      *::selection {
+        background: rgba(171, 53, 0, 0.16);
+        color: var(--navy);
+      }
+      html.theme-dark *::selection {
+        background: rgba(128, 131, 255, 0.25);
+        color: var(--text);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--on-background);
+        font-family:
+          Geist,
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a,
+      button {
+        color: inherit;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      /* === TOP NAV BAR === */
+      .admin-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 1px solid var(--surface-border);
+        backdrop-filter: blur(12px);
+      }
+      .admin-header .shell {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 72px;
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+      .admin-header-left {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .admin-brand {
+        font-family: Inter, sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--primary);
+      }
+      .admin-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-nav-link {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-variant);
+        transition: all 180ms ease;
+        cursor: pointer;
+      }
+      .admin-nav-link:hover {
+        background: var(--surface-container-low);
+        color: var(--text);
+      }
+      .admin-nav-link.active {
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+        border-radius: 0;
+        padding-bottom: 6px;
+      }
+      .admin-header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .admin-icon-btn {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        color: var(--text-variant);
+        transition: background 180ms ease;
+      }
+      .admin-icon-btn:hover {
+        background: var(--surface-container-low);
+      }
+      .admin-user-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px 4px 4px;
+        border: 1px solid var(--surface-border);
+        border-radius: 999px;
+        color: var(--text);
+        transition: background 180ms ease;
+      }
+      .admin-user-btn:hover {
+        background: var(--surface-container-low);
+      }
+      .admin-user-btn .material-symbols-outlined {
+        color: var(--primary);
+        font-variation-settings: "FILL" 1;
+      }
+      .admin-user-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .admin-settings-wrap {
+        position: relative;
+      }
+      .admin-settings-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-top: 8px;
+        width: 160px;
+        background: var(--surface-container);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--surface-border);
+        padding: 8px;
+        z-index: 60;
+      }
+      .admin-settings-menu.is-open {
+        display: block;
+      }
+      .admin-settings-opt {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+      .admin-settings-opt:hover {
+        background: var(--surface-container-high);
+      }
+
+      /* === MAIN LAYOUT === */
+      .admin-main {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+        padding: 32px 0 60px;
+      }
+      .admin-dash-header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      @media (min-width: 768px) {
+        .admin-dash-header {
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: space-between;
+        }
+      }
+      .admin-dash-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--tertiary);
+      }
+      .admin-dash-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 4px 0 0;
+      }
+      .admin-dash-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .admin-btn {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 180ms ease;
+        cursor: pointer;
+      }
+      .admin-btn:active {
+        transform: scale(0.95);
+      }
+      .admin-btn-secondary {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--hairline);
+        color: var(--on-secondary-fixed);
+      }
+      .admin-btn-secondary:hover {
+        background: var(--surface-container-high);
+      }
+      .admin-btn-primary {
+        background: var(--primary-container);
+        color: var(--on-primary);
+      }
+      .admin-btn-primary:hover {
+        opacity: 0.9;
+      }
+
+      /* === METRIC GRID === */
+      .metric-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      @media (min-width: 768px) {
+        .metric-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .metric-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 160px;
+        transition: box-shadow 300ms ease;
+      }
+      .metric-card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+      .metric-card.dispute {
+        border-left: 4px solid var(--error);
+      }
+      .metric-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .metric-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+      }
+      .metric-icon {
+        color: var(--tertiary);
+      }
+      .metric-icon.error {
+        color: var(--error);
+      }
+      .metric-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 3rem;
+        font-weight: 500;
+        line-height: 1;
+        color: var(--text);
+        margin-top: 16px;
+      }
+      .metric-value.error {
+        color: var(--error);
+      }
+      .metric-sub {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 8px;
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .metric-sub .material-symbols-outlined {
+        font-size: 16px;
+      }
+      .metric-sub.primary {
+        color: var(--primary);
+      }
+      .metric-sub.error {
+        color: var(--error);
+      }
+
+      /* === MAIN CONTENT GRID === */
+      .admin-content-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      @media (min-width: 1024px) {
+        .admin-content-grid {
+          grid-template-columns: 8fr 4fr;
+        }
+      }
+
+      /* === PRIORITY QUEUE === */
+      .priority-queue {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .priority-queue-header {
+        padding: 16px 24px;
+        background: var(--surface-container);
+        border-bottom: 1px solid var(--surface-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .priority-queue-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+      }
+      .priority-queue-badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 4px 12px;
+        background: var(--tertiary-container);
+        color: var(--on-tertiary-container);
+        border-radius: 999px;
+      }
+      .priority-queue-body {
+        padding: 48px 24px;
+        text-align: center;
+      }
+      .priority-empty-icon {
+        font-size: 3rem;
+        color: var(--text-variant);
+        opacity: 0.4;
+        margin-bottom: 12px;
+      }
+      .priority-empty-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 4px;
+      }
+      .priority-empty-desc {
+        font-size: 0.9rem;
+        color: var(--text-variant);
+        margin: 0;
+      }
+
+      /* === GROWTH TRENDS === */
+      .growth-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .growth-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 24px;
+      }
+      .chart-container {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        height: 192px;
+        margin-bottom: 24px;
+      }
+      .chart-bar-wrap {
+        flex: 1;
+        background: var(--surface-container-high);
+        border-radius: 8px 8px 0 0;
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+      }
+      .chart-bar {
+        width: 100%;
+        background: var(--primary-fixed-dim);
+        border-radius: 8px 8px 0 0;
+        transition: height 1s ease-in-out, background 180ms ease;
+        min-height: 4px;
+      }
+      .chart-bar-wrap:hover .chart-bar {
+        background: var(--primary);
+      }
+      .chart-bar-label {
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+        opacity: 0;
+        transition: opacity 180ms ease;
+        white-space: nowrap;
+      }
+      .chart-bar-wrap:hover .chart-bar-label {
+        opacity: 1;
+      }
+      .chart-bar.today {
+        background: var(--primary-container);
+      }
+      .growth-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .growth-stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--surface-border);
+      }
+      .growth-stat-row:last-child {
+        border-bottom: 0;
+      }
+      .growth-stat-label {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .growth-stat-value {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .growth-stat-value.trust {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--tertiary);
+      }
+      .growth-stat-value.trust .material-symbols-outlined {
+        font-size: 16px;
+      }
+
+      /* === SYSTEM STATUS === */
+      .system-status {
+        background: var(--on-secondary-fixed);
+        color: var(--on-secondary);
+        padding: 24px;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+      .system-status-content {
+        position: relative;
+        z-index: 10;
+      }
+      .system-status-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        opacity: 0.8;
+        margin-bottom: 8px;
+      }
+      .system-status-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--success);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .system-status-desc {
+        font-size: 0.875rem;
+        opacity: 0.7;
+        margin-bottom: 16px;
+      }
+      .system-status-btn {
+        width: 100%;
+        padding: 8px;
+        background: var(--secondary-fixed-dim);
+        color: var(--on-secondary-fixed);
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: background 180ms ease;
+      }
+      .system-status-btn:hover {
+        background: #ffffff;
+      }
+      .system-status-decor {
+        position: absolute;
+        right: -16px;
+        bottom: -16px;
+        opacity: 0.1;
+        font-size: 120px;
+        pointer-events: none;
+      }
+
+      /* === FOOTER === */
+      .admin-footer {
+        background: var(--surface-container-low);
+        border-top: 1px solid var(--surface-border);
+        padding: 32px 0;
+      }
+      .admin-footer .shell {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+      @media (min-width: 768px) {
+        .admin-footer .shell {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+      .admin-footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-footer-brand span {
+        font-family: Inter, sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .admin-footer-version {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .admin-footer-links {
+        display: flex;
+        gap: 24px;
+      }
+      .admin-footer-links a {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+        transition: color 180ms ease;
+      }
+      .admin-footer-links a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+      .admin-footer-copy {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+
+      /* === TOAST === */
+      .admin-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--on-background);
+        color: var(--on-surface-variant);
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 300ms ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 100;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .admin-toast .material-symbols-outlined {
+        color: var(--success);
+      }
+      .admin-toast span {
+        color: #ffffff;
+        font-size: 0.875rem;
+      }
+
+      /* === MOBILE RESPONSIVE === */
+      @media (max-width: 768px) {
+        .admin-nav {
+          display: none;
+        }
+        .admin-main {
+          width: min(100% - 20px, 1200px);
+        }
+        .admin-dash-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+        .admin-btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav Bar -->
+    <header class="admin-header">
+      <div class="shell">
+        <div class="admin-header-left">
+          <span class="admin-brand">CouponEx</span>
+          <nav class="admin-nav" aria-label="Admin navigation">
+            <a class="admin-nav-link active" href="admin-dashboard.html">Dashboard</a>
+            <a class="admin-nav-link" href="admin-identity.html">Identity</a>
+            <a class="admin-nav-link" href="admin-verifications.html">Verifications</a>
+            <a class="admin-nav-link" href="admin-payments.html">Payments</a>
+            <a class="admin-nav-link" href="admin-payout-verifications.html">Payout Accounts</a>
+          </nav>
+        </div>
+        <div class="admin-header-right">
+          <div class="admin-settings-wrap">
+            <button
+              id="settings-toggle"
+              class="admin-icon-btn"
+              type="button"
+              aria-label="Settings"
+            >
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div id="settings-menu" class="admin-settings-menu" role="menu">
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="setTheme('dark')"
+              >
+                Dark mode
+              </button>
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="setTheme('light')"
+              >
+                Light mode
+              </button>
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="logout()"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+          <button class="admin-user-btn" type="button" onclick="window.location.href='admin-profile.html'">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="admin-user-label">Admin</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Dashboard Header -->
+      <div class="admin-dash-header">
+        <div>
+          <span class="admin-dash-label">Administrative Suite</span>
+          <h1 class="admin-dash-title">Platform Overview</h1>
+        </div>
+        <div class="admin-dash-actions">
+          <button class="admin-btn admin-btn-secondary" type="button" onclick="showToast()">Export Report</button>
+          <button class="admin-btn admin-btn-primary" type="button" onclick="showToast()">Run Payouts</button>
+        </div>
+      </div>
+
+      <!-- Metric Grid -->
+      <div class="metric-grid">
+        <!-- Metric 1: Total Pending Coupons -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Total Pending Coupons</span>
+            <span class="material-symbols-outlined metric-icon">inventory_2</span>
+          </div>
+          <div>
+            <div class="metric-value" id="stat-pending-coupons">0</div>
+            <div class="metric-sub">
+              <span class="material-symbols-outlined">schedule</span>
+              <span id="stat-pending-coupons-sub">No coupons pending verification</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 2: Pending Payouts -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-label">Pending Payouts</span>
+            <span class="material-symbols-outlined metric-icon">payments</span>
+          </div>
+          <div>
+            <div class="metric-value" id="stat-pending-payouts">0</div>
+            <div class="metric-sub">
+              <span class="material-symbols-outlined">schedule</span>
+              <span id="stat-pending-payouts-sub">No payments queued</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 3: New Disputes -->
+        <div class="metric-card dispute">
+          <div class="metric-header">
+            <span class="metric-label">New Disputes</span>
+            <span class="material-symbols-outlined metric-icon error">gavel</span>
+          </div>
+          <div>
+            <div class="metric-value error" id="stat-disputes">0</div>
+            <div class="metric-sub error">
+              <span class="material-symbols-outlined" id="stat-disputes-icon">check_circle</span>
+              <span id="stat-disputes-sub">No disputes to resolve</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area: Asymmetric Layout -->
+      <div class="admin-content-grid">
+        <!-- Priority Queue (8 Columns) -->
+        <div class="priority-queue">
+          <div class="priority-queue-header">
+            <h2 class="priority-queue-title">Priority Queue</h2>
+            <span class="priority-queue-badge">Requires Action</span>
+          </div>
+          <div class="priority-queue-body" id="priority-queue-body" style="padding:0; min-height:200px;">
+            <div style="padding: 24px; text-align:center;">
+              <div class="priority-empty-icon">
+                <span class="material-symbols-outlined">task_alt</span>
+              </div>
+              <h3 class="priority-empty-title">No Requests or Disputes to Verify</h3>
+              <p class="priority-empty-desc">
+                All verifications, disputes, and KYC requests are up to date. New items will appear here.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column (4 Columns) -->
+        <div style="display: flex; flex-direction: column; gap: 32px;">
+          <!-- Growth Trends -->
+          <div class="growth-card">
+            <h3 class="growth-title">Growth Trends</h3>
+            <div class="chart-container">
+              <div class="chart-bar-wrap">
+                <div class="chart-bar" data-height="40%"></div>
+                <span class="chart-bar-label">Mon</span>
+              </div>
+              <div class="chart-bar-wrap">
+                <div class="chart-bar" data-height="65%"></div>
+                <span class="chart-bar-label">Tue</span>
+              </div>
+              <div class="chart-bar-wrap">
+                <div class="chart-bar" data-height="50%"></div>
+                <span class="chart-bar-label">Wed</span>
+              </div>
+              <div class="chart-bar-wrap">
+                <div class="chart-bar" data-height="85%"></div>
+                <span class="chart-bar-label">Thu</span>
+              </div>
+              <div class="chart-bar-wrap">
+                <div class="chart-bar" data-height="70%"></div>
+                <span class="chart-bar-label">Fri</span>
+              </div>
+              <div class="chart-bar-wrap">
+                <div class="chart-bar" data-height="95%"></div>
+                <span class="chart-bar-label">Sat</span>
+              </div>
+              <div class="chart-bar-wrap">
+                <div class="chart-bar today" data-height="80%"></div>
+                <span class="chart-bar-label">Today</span>
+              </div>
+            </div>
+            <div class="growth-stats">
+              <div class="growth-stat-row">
+                <span class="growth-stat-label">Active Sellers</span>
+                <span class="growth-stat-value" id="stat-active-sellers">0</span>
+              </div>
+              <div class="growth-stat-row">
+                <span class="growth-stat-label">Voucher Volume</span>
+                <span class="growth-stat-value" id="stat-voucher-volume">0</span>
+              </div>
+              <div class="growth-stat-row">
+                <span class="growth-stat-label">Trust Score</span>
+                <span class="growth-stat-value trust" id="stat-trust-score">
+                  <span class="material-symbols-outlined">verified_user</span> 100%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Status -->
+          <div class="system-status">
+            <div class="system-status-content">
+              <h4 class="system-status-label">System Status</h4>
+              <div class="system-status-title">
+                <div class="status-dot"></div>
+                <span>All Engines Green</span>
+              </div>
+              <p class="system-status-desc">
+                Next scheduled server maintenance in 4d 12h.
+              </p>
+              <button class="system-status-btn" type="button" onclick="showToast()">Server Logs</button>
+            </div>
+            <div class="system-status-decor">
+              <span class="material-symbols-outlined">terminal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="admin-footer">
+      <div class="shell">
+        <div class="admin-footer-brand">
+          <span>CouponEx</span>
+          <span class="admin-footer-version">Admin Dashboard v2.4.0</span>
+        </div>
+        <div class="admin-footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Support Internal</a>
+        </div>
+        <div class="admin-footer-copy">
+          &copy; 2026 CouponEx India. Secure 256-bit SSL Encrypted.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="admin-toast" id="admin-toast">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>Action completed successfully.</span>
+    </div>
+
+    <script>
+      const settingsToggle = document.getElementById("settings-toggle");
+      const settingsMenu = document.getElementById("settings-menu");
+
+      settingsToggle.addEventListener("click", () => {
+        settingsMenu.classList.toggle("is-open");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (
+          !settingsToggle.contains(e.target) &&
+          !settingsMenu.contains(e.target)
+        ) {
+          settingsMenu.classList.remove("is-open");
+        }
+      });
+
+      function setTheme(theme) {
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem("couponex-theme", theme);
+        settingsMenu.classList.remove("is-open");
+      }
+
+      function logout() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+
+      // Toast notification
+      function showToast(msg) {
+        const toast = document.getElementById("admin-toast");
+        if (msg) toast.querySelector("span:last-child").textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      // Load real admin statistics and Priority Queue
+      async function loadAdminDashboard() {
+        // 1. Initial synchronous computation from local storage
+        const localCoupons = JSON.parse(localStorage.getItem("couponex_coupons") || "[]");
+        const localTopups = JSON.parse(localStorage.getItem("couponex_topups") || "[]");
+        const localDisputes = JSON.parse(localStorage.getItem("couponex_disputes") || "[]");
+
+        let pendingCouponsList = localCoupons.filter(c => c && (c.status === "pending" || c.status === "Pending"));
+        let pendingPayoutsList = localTopups.filter(p => p && (p.requestStatus === "Pending" || p.status === "pending" || p.status === "Pending"));
+        let pendingDisputesList = localDisputes.filter(d => d && (d.status === "new" || d.status === "open" || d.status === "pending" || d.status === "Pending"));
+
+        const activeSellersSet = new Set(localCoupons.map(c => c ? c.userId : null).filter(Boolean));
+
+        let stats = {
+          pendingCoupons: pendingCouponsList.length,
+          pendingPayouts: pendingPayoutsList.length,
+          activeSellers: activeSellersSet.size,
+          voucherVolume: pendingCouponsList.length,
+          disputes: pendingDisputesList.length,
+          trustScore: 98,
+          dailyApprovedAmount: 0
+        };
+
+        // Render DOM immediately from local state (<1ms)
+        renderAdminStats(stats, pendingCouponsList, pendingPayoutsList);
+
+        // 2. Fetch live data from backend API
+        try {
+          const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+
+          // Fetch Stats
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1000);
+            const resStats = await fetch(`${baseUrl}/api/admin/stats`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (resStats.ok) {
+              const dataStats = await resStats.json();
+              if (dataStats.success && dataStats.stats) {
+                stats = dataStats.stats;
+              }
+            }
+          } catch (e) {}
+
+          // Fetch Pending Coupons
+          try {
+            const resVerif = await fetch(`${baseUrl}/api/admin/verifications`);
+            if (resVerif.ok) {
+              const dataVerif = await resVerif.json();
+              if (dataVerif.success && Array.isArray(dataVerif.queue)) {
+                pendingCouponsList = dataVerif.queue;
+                stats.pendingCoupons = pendingCouponsList.length;
+              }
+            }
+          } catch (e) {}
+
+          // Fetch Pending Topups/Payouts
+          try {
+            const resPay = await fetch(`${baseUrl}/api/admin/payments`);
+            if (resPay.ok) {
+              const dataPay = await resPay.json();
+              if (dataPay.success && Array.isArray(dataPay.queue)) {
+                pendingPayoutsList = dataPay.queue;
+                stats.pendingPayouts = pendingPayoutsList.length;
+              }
+            }
+          } catch (e) {}
+
+          // Re-render DOM with backend stats
+          renderAdminStats(stats, pendingCouponsList, pendingPayoutsList);
+        } catch (err) {
+          console.log("Offline dashboard mode active.");
+        }
+      }
+
+      function renderAdminStats(stats, pendingCouponsList, pendingPayoutsList) {
+        const pendingCouponsEl = document.getElementById("stat-pending-coupons");
+        if (pendingCouponsEl) pendingCouponsEl.textContent = stats.pendingCoupons;
+
+        const pendingCouponsSubEl = document.getElementById("stat-pending-coupons-sub");
+        if (pendingCouponsSubEl) {
+          pendingCouponsSubEl.textContent = stats.pendingCoupons > 0
+            ? `${stats.pendingCoupons} coupons await verification`
+            : "No coupons pending verification";
+        }
+
+        const pendingPayoutsEl = document.getElementById("stat-pending-payouts");
+        if (pendingPayoutsEl) pendingPayoutsEl.textContent = stats.pendingPayouts;
+
+        const pendingPayoutsSubEl = document.getElementById("stat-pending-payouts-sub");
+        if (pendingPayoutsSubEl) {
+          pendingPayoutsSubEl.textContent = stats.pendingPayouts > 0
+            ? `${stats.pendingPayouts} payment requests to verify`
+            : "No payments queued";
+        }
+
+        const disputesEl = document.getElementById("stat-disputes");
+        if (disputesEl) disputesEl.textContent = stats.disputes;
+
+        const disputeSub = document.getElementById("stat-disputes-sub");
+        const disputeIcon = document.getElementById("stat-disputes-icon");
+        if (disputeSub && disputeIcon) {
+          if (stats.disputes > 0) {
+            disputeSub.textContent = `${stats.disputes} disputes require resolution`;
+            disputeIcon.textContent = "warning";
+          } else {
+            disputeSub.textContent = "No disputes to resolve";
+            disputeIcon.textContent = "check_circle";
+          }
+        }
+
+        const activeSellersEl = document.getElementById("stat-active-sellers");
+        if (activeSellersEl) activeSellersEl.textContent = stats.activeSellers;
+
+        const voucherVolEl = document.getElementById("stat-voucher-volume");
+        if (voucherVolEl) voucherVolEl.textContent = stats.voucherVolume;
+
+        const trustScoreEl = document.getElementById("stat-trust-score");
+        if (trustScoreEl) trustScoreEl.innerHTML = `<span class="material-symbols-outlined">verified_user</span> ${stats.trustScore}%`;
+
+        // Render Priority Queue list
+        const queueBody = document.getElementById("priority-queue-body");
+        if (!queueBody) return;
+
+        const totalPending = pendingCouponsList.length + pendingPayoutsList.length;
+
+        if (totalPending === 0) {
+          queueBody.innerHTML = `
+            <div style="padding: 48px; text-align:center;">
+              <div class="priority-empty-icon">
+                <span class="material-symbols-outlined" style="font-size: 48px; color: var(--success);">task_alt</span>
+              </div>
+              <h3 class="priority-empty-title" style="margin-top: 16px;">No Requests or Disputes to Verify</h3>
+              <p class="priority-empty-desc" style="max-width: 400px; margin: 8px auto 0; color: var(--text-variant);">
+                All verifications, disputes, and KYC requests are up to date. New items will appear here.
+              </p>
+            </div>
+          `;
+        } else {
+          let queueHtml = '<div style="display:flex; flex-direction:column; divide-y divide-outline-variant;">';
+          
+          pendingCouponsList.forEach(c => {
+            queueHtml += `
+              <div style="padding: 24px; border-bottom: 1px solid var(--surface-border); display: flex; align-items: start; gap: 16px;">
+                <div style="width: 48px; height: 48px; background: var(--primary-fixed); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-dark);">
+                  <span class="material-symbols-outlined">receipt_long</span>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <strong style="color: var(--text);">${c.brand || 'Brand'} Coupon Verification</strong>
+                    <span style="font-size: 0.75rem; color: var(--text-variant);">Pending</span>
+                  </div>
+                  <p style="margin: 4px 0 12px; font-size: 0.875rem; color: var(--text-variant);">Asking Price: ₹${c.askingPrice} | Original Value: ₹${c.originalValue} by @${c.username || 'user'}</p>
+                  <button class="admin-btn admin-btn-primary" style="padding: 6px 16px; font-size:0.75rem;" onclick="location.href='admin-verifications.html'">Open Verification Suite</button>
+                </div>
+              </div>
+            `;
+          });
+
+          pendingPayoutsList.forEach(p => {
+            queueHtml += `
+              <div style="padding: 24px; border-bottom: 1px solid var(--surface-border); display: flex; align-items: start; gap: 16px;">
+                <div style="width: 48px; height: 48px; background: var(--secondary-container); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--on-secondary-container);">
+                  <span class="material-symbols-outlined">payments</span>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <strong style="color: var(--text);">Credit Top-up: ${p.requestedCredits || p.credits || p.amount} C</strong>
+                    <span style="font-size: 0.75rem; color: var(--text-variant);">Pending Approval</span>
+                  </div>
+                  <p style="margin: 4px 0 12px; font-size: 0.875rem; color: var(--text-variant);">Method: ${p.paymentMethod || p.method || 'UPI'} (${p.packageName || 'Package'}) by @${p.username || 'user'}</p>
+                  <button class="admin-btn admin-btn-secondary" style="padding: 6px 16px; font-size:0.75rem;" onclick="location.href='admin-payments.html'">Process Payment</button>
+                </div>
+              </div>
+            `;
+          });
+
+          queueHtml += '</div>';
+          queueBody.innerHTML = queueHtml;
+        }
+      }
+
+      // Initial direct execution
+      loadAdminDashboard();
+
+      // Cross-tab sync: reload dashboard when localStorage changes (e.g. admin-payments approves/rejects)
+      window.addEventListener("storage", (e) => {
+        if (e.key === "couponex_topups" || e.key === "couponex_coupons" || e.key === "couponex_disputes") {
+          loadAdminDashboard();
+        }
+      });
+
+      // Initialize chart animation
+      window.addEventListener("load", () => {
+        const bars = document.querySelectorAll(".chart-bar");
+        bars.forEach((bar) => {
+          const finalHeight = bar.dataset.height || "50%";
+          bar.style.height = "0%";
+          setTimeout(() => {
+            bar.style.height = finalHeight;
+          }, 100);
+        });
+        loadAdminDashboard();
+      });
+
+      // Check if user is admin, redirect if not
+      const userData = localStorage.getItem("couponex_user");
+      if (userData) {
+        const user = JSON.parse(userData);
+        if (user.role !== "admin") {
+          window.location.href = "dashboard.html";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sell Coupon | CouponEx</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem('couponex-theme');
+        const theme = savedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.classList.toggle('theme-light', theme === 'light');
+        document.documentElement.classList.toggle('theme-dark', theme === 'dark');
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          if (theme === "light") {
+            document.body.classList.add("theme-light");
+          }
+        });
+      })();
+    </script>
+    <style>
+      :root {
+        --card-bg: rgba(23, 31, 51, 0.94);
+        --card-border: rgba(192, 193, 255, 0.28);
+        --input-bg: rgba(11, 19, 38, 0.85);
+        --input-border: rgba(192, 193, 255, 0.3);
+        --text-heading: #f3f5ff;
+        --text-sub: #cbd5e1;
+        --text-input: #ffffff;
+        --label-text: #e2e8f0;
+        --shadow-block: 0 16px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      body.theme-light, html.theme-light {
+        --card-bg: #ffffff;
+        --card-border: #cbd5e1;
+        --input-bg: #f8fafc;
+        --input-border: #94a3b8;
+        --text-heading: #0f172a;
+        --text-sub: #475569;
+        --text-input: #0f172a;
+        --label-text: #1e293b;
+        --shadow-block: 0 12px 36px rgba(0, 0, 0, 0.08);
+      }
+
+      body {
+        background-color: var(--bg, #0b1326);
+        color: var(--text, #dae2fd);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .theme-block {
+        background: var(--card-bg);
+        border: 1.5px solid var(--card-border);
+        box-shadow: var(--shadow-block);
+        backdrop-filter: blur(16px);
+      }
+
+      .theme-input {
+        background-color: var(--input-bg) !important;
+        border: 1.5px solid var(--input-border) !important;
+        color: var(--text-input) !important;
+      }
+
+      .theme-input::placeholder {
+        color: var(--text-sub);
+        opacity: 0.7;
+      }
+
+      .theme-input:focus {
+        border-color: #ff6b35 !important;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.25) !important;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Shared Centralized Header -->
+    <div id="app-header"></div>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow max-w-3xl w-full mx-auto px-6 py-8">
+      <div class="mb-8">
+        <h2 class="text-3xl font-extrabold tracking-tight mb-2" style="color: var(--text-heading);">List a New Coupon</h2>
+        <p class="text-base font-medium" style="color: var(--text-sub);">Verify and list your unused digital coupon for sale in India's secure P2P coupon exchange.</p>
+      </div>
+
+      <div class="theme-block p-8 rounded-3xl">
+        <form id="sell-form" onsubmit="handleSubmit(event)" class="space-y-6">
+          <!-- Brand and Category -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">Brand / Platform Name</label>
+              <input id="brand-name" type="text" placeholder="e.g. Swiggy, Amazon, Myntra" required class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">Category</label>
+              <select id="category" class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all">
+                <option value="Food & Dining">Food & Dining</option>
+                <option value="Travel & Flights">Travel & Flights</option>
+                <option value="Fashion & Apparel">Fashion & Apparel</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Streaming & Entertainment">Streaming & Entertainment</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Coupon Code & Expiry -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">Coupon / Voucher Code</label>
+              <input id="coupon-code" type="text" placeholder="e.g. SWIGGY50OFF" required class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">Expiration Date</label>
+              <input id="expiry-date" type="date" required class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all" />
+            </div>
+          </div>
+
+          <!-- Price & Value -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">Original Voucher Value (INR)</label>
+              <input id="original-price" type="number" placeholder="e.g. 500" required class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all" />
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">Asking Price (Credits)</label>
+              <input id="asking-price" type="number" placeholder="e.g. 350" required class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all" />
+            </div>
+          </div>
+
+          <!-- Description / Terms -->
+          <div>
+            <label class="block text-sm font-bold mb-2" style="color: var(--label-text);">T&C / Description</label>
+            <textarea id="description" rows="4" placeholder="Mention minimum order value, valid items, or any specific constraints..." class="theme-input w-full px-4 py-3 rounded-2xl focus:outline-none transition-all"></textarea>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="w-full text-white py-4 rounded-2xl font-extrabold text-lg shadow-lg hover:opacity-95 transition-all transform active:scale-[0.99]" style="background: linear-gradient(135deg, #ff6b35 0%, #ab3500 100%);">Submit for Verification</button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="border-t py-8 px-6 text-center text-sm font-medium" style="background-color: var(--card-bg); border-color: var(--card-border); color: var(--text-sub);">
+      <p>&copy; 2026 CouponEx. India's P2P Digital Coupon Exchange. All rights reserved.</p>
+    </footer>
+
+    <script>
+      function handleSubmit(event) {
+        event.preventDefault();
+        const couponData = {
+          brand: document.getElementById('brand-name')?.value,
+          category: document.getElementById('category')?.value,
+          code: document.getElementById('coupon-code')?.value,
+          expiry: document.getElementById('expiry-date')?.value,
+          originalPrice: document.getElementById('original-price')?.value,
+          askingPrice: document.getElementById('asking-price')?.value,
+          description: document.getElementById('description')?.value,
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+
+        fetch('/api/coupons', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(couponData)
+        })
+        .then(res => res.json())
+        .catch(() => {
+          const pending = JSON.parse(localStorage.getItem('pending_coupons') || '[]');
+          pending.push(couponData);
+          localStorage.setItem('pending_coupons', JSON.stringify(pending));
+        })
+        .finally(() => {
+          alert('Listing submitted successfully! Sent for verification.');
+          location.href = 'dashboard.html';
+        });
+      }
+    </script>
+  </body>
+</html>

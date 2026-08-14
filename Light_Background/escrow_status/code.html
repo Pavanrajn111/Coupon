@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx - Escrow Transaction Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#832600",
+                      "surface-variant": "#e5e2db",
+                      "secondary-fixed": "#d8e2ff",
+                      "surface-dim": "#dcdad3",
+                      "secondary-container": "#c8d7fe",
+                      "on-error": "#ffffff",
+                      "surface-container": "#f0eee7",
+                      "on-secondary-container": "#4e5d7f",
+                      "on-secondary-fixed": "#0a1b39",
+                      "on-background": "#1c1c18",
+                      "on-primary-container": "#5f1900",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#31312c",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "primary-container": "#ff6b35",
+                      "tertiary": "#755b00",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#584400",
+                      "tertiary-container": "#cea62b",
+                      "background": "#fcf9f2",
+                      "on-tertiary-fixed": "#241a00",
+                      "secondary": "#4f5e80",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#ab3500",
+                      "surface-container-low": "#f6f3ec",
+                      "primary": "#ab3500",
+                      "tertiary-fixed": "#ffe08e",
+                      "on-surface": "#1c1c18",
+                      "surface-container-highest": "#e5e2db",
+                      "on-secondary-fixed-variant": "#374667",
+                      "inverse-primary": "#ffb59d",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#fcf9f2",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "surface-container-high": "#ebe8e1",
+                      "on-error-container": "#93000a",
+                      "outline": "#8d7168",
+                      "on-primary-fixed": "#390c00",
+                      "outline-variant": "#e1bfb5",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4f3d00",
+                      "on-surface-variant": "#594139",
+                      "inverse-on-surface": "#f3f0ea",
+                      "primary-fixed-dim": "#ffb59d",
+                      "primary-fixed": "#ffdbd0",
+                      "surface-bright": "#fcf9f2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "stack-md": "16px",
+                      "stack-sm": "8px",
+                      "container-max": "1200px",
+                      "gutter": "16px",
+                      "stack-lg": "32px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "price-display": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+            }
+        }
+        .hairline-border {
+            border: 1px solid #E7E2D8;
+        }
+        .cutout-card {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-sm min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-background border-b border-outline-variant flat no shadows docked full-width top-0 z-50 flex justify-between items-center px-gutter py-stack-sm w-full h-16 shrink-0 md:hidden">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-100 hover:bg-surface-container-high transition-colors p-2 rounded-full text-secondary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-display-lg-mobile text-display-lg-mobile font-bold text-secondary">CouponEx</span>
+</div>
+<button class="active:scale-95 duration-100 hover:bg-surface-container-high transition-colors p-2 rounded-full text-secondary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Desktop Nav (Hidden on Mobile) -->
+<header class="hidden md:flex bg-background border-b border-outline-variant flat no shadows docked full-width top-0 z-50 justify-between items-center px-margin-desktop py-stack-sm w-full h-16 shrink-0">
+<div class="flex items-center gap-8">
+<span class="font-display-lg text-display-lg font-bold text-secondary">CouponEx</span>
+<nav class="flex gap-6">
+<a class="font-label-caps text-label-caps uppercase text-secondary hover:text-primary transition-colors" href="#">Explore</a>
+<a class="font-label-caps text-label-caps uppercase text-primary font-bold" href="#">Transactions</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-100 hover:bg-surface-container-high transition-colors p-2 rounded-full text-secondary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">
+                JD
+            </div>
+</div>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col md:flex-row gap-8 pb-32 md:pb-stack-lg">
+<!-- Left Col: Status & Action -->
+<div class="w-full md:w-5/12 flex flex-col gap-stack-lg">
+<!-- Summary Card -->
+<section class="bg-surface-container-lowest hairline-border p-6 rounded-xl flex flex-col gap-4 relative">
+<div class="absolute top-0 right-0 p-4">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-tertiary-container text-tertiary-container font-label-caps text-[10px] uppercase">
+<span class="material-symbols-outlined text-[14px]">shield</span> Escrow Secured
+                    </span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-secondary-fixed mb-1">Transaction #CX-8924</h1>
+<p class="font-body-sm text-on-surface-variant text-surface-variant-text">Amazon $50 Gift Card</p>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Amount Locked</p>
+<p class="font-price-display text-display-lg-mobile text-on-background">$42.50</p>
+</div>
+</div>
+</section>
+<!-- Auto-Confirm Timer -->
+<section class="bg-surface-container hairline-border p-6 rounded-xl flex flex-col items-center justify-center text-center gap-3">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Auto-Confirmation In</p>
+<div class="font-price-display text-display-lg text-primary-container tracking-tight">
+                    23:45:12
+                </div>
+<p class="font-body-sm text-on-surface-variant text-xs max-w-[250px]">Funds will be automatically released to the seller if no action is taken.</p>
+</section>
+</div>
+<!-- Right Col: Timeline -->
+<div class="w-full md:w-7/12">
+<section class="bg-surface-container-lowest hairline-border p-6 md:p-8 rounded-xl h-full">
+<h2 class="font-headline-md text-headline-md text-on-secondary-fixed mb-8">Escrow Progress</h2>
+<div class="relative pl-4 border-l-2 border-surface-variant space-y-10">
+<!-- Step 1: Completed -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-6 h-6 rounded-full bg-on-secondary-fixed flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-white text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col gap-1 ml-4">
+<div class="flex justify-between items-baseline">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-secondary-fixed">Payment held in escrow</h3>
+<span class="font-price-display text-[12px] text-on-surface-variant">Oct 24, 10:42 AM</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Your funds are securely locked.</p>
+</div>
+</div>
+<!-- Step 2: Completed -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-6 h-6 rounded-full bg-on-secondary-fixed flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-white text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col gap-1 ml-4">
+<div class="flex justify-between items-baseline">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-secondary-fixed">Seller notified</h3>
+<span class="font-price-display text-[12px] text-on-surface-variant">Oct 24, 10:45 AM</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Seller instructed to deliver code.</p>
+</div>
+</div>
+<!-- Step 3: Active -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-6 h-6 rounded-full bg-primary-container pulse-ring flex items-center justify-center z-10 border-2 border-white">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+</div>
+<div class="flex flex-col gap-2 ml-4">
+<h3 class="font-body-lg text-body-lg font-semibold text-primary-container">Code released to you</h3>
+<div class="bg-surface-container-high p-4 rounded-lg hairline-border mt-2">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">Gift Card Code</p>
+<div class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant rounded p-3">
+<span class="font-price-display text-body-lg text-on-secondary-fixed tracking-widest">AMZN-8X2F-9P4W</span>
+<button class="text-primary-container hover:text-primary transition-colors">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 4: Pending -->
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-6 h-6 rounded-full bg-surface-variant flex items-center justify-center z-10 border-2 border-white">
+</div>
+<div class="flex flex-col gap-1 ml-4 opacity-50">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-secondary-fixed">Confirm &amp; release funds</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Awaiting your confirmation.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Contextual Action Bar (Fixed on Mobile, relative on desktop) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant p-4 md:p-6 z-40 md:relative md:border-t-0 md:bg-transparent md:max-w-container-max md:mx-auto md:px-margin-desktop md:pt-0">
+<div class="flex flex-col md:flex-row md:justify-end items-center gap-4">
+<button class="font-label-caps text-label-caps text-error opacity-70 hover:opacity-100 transition-opacity w-full md:w-auto py-2">
+                Report an issue
+            </button>
+<button class="w-full md:w-auto bg-primary-container text-on-primary font-label-caps text-label-caps uppercase py-4 px-8 rounded-lg hover:bg-primary transition-colors active:scale-95 duration-100 font-bold">
+                Confirm Code Works
+            </button>
+</div>
+</div>
+</body></html>

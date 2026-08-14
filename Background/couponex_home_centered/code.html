@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx | Premium Peer-to-Peer Coupon Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#dae2fd",
+                    "on-primary-container": "#0d0096",
+                    "on-primary": "#1000a9",
+                    "tertiary-container": "#ca8100",
+                    "background": "#0b1326",
+                    "surface-container-highest": "#2d3449",
+                    "surface-bright": "#31394d",
+                    "secondary-fixed": "#6bff8f",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "outline": "#908fa0",
+                    "inverse-on-surface": "#283044",
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#002109",
+                    "on-surface-variant": "#c7c4d7",
+                    "surface-container": "#171f33",
+                    "secondary": "#4ae176",
+                    "inverse-surface": "#dae2fd",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-secondary-fixed-variant": "#005321",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary": "#003915",
+                    "on-background": "#dae2fd",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "outline-variant": "#464554",
+                    "on-secondary-container": "#004119",
+                    "tertiary-fixed": "#ffddb8",
+                    "tertiary": "#ffb95f",
+                    "surface-container-lowest": "#060e20",
+                    "surface": "#0b1326",
+                    "primary-fixed": "#e1e0ff",
+                    "surface-variant": "#2d3449",
+                    "on-tertiary-fixed": "#2a1700",
+                    "error": "#ffb4ab",
+                    "on-tertiary-container": "#3e2400",
+                    "on-tertiary": "#472a00",
+                    "inverse-primary": "#494bd6",
+                    "surface-tint": "#c0c1ff",
+                    "surface-container-low": "#131b2e",
+                    "secondary-fixed-dim": "#4ae176",
+                    "primary": "#c0c1ff",
+                    "surface-dim": "#0b1326",
+                    "error-container": "#93000a",
+                    "secondary-container": "#00b954",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "surface-container-high": "#222a3d",
+                    "on-primary-fixed": "#07006c",
+                    "primary-container": "#8083ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "xl": "64px",
+                    "md": "24px",
+                    "lg": "40px",
+                    "gutter": "20px",
+                    "margin-desktop": "48px",
+                    "xs": "8px",
+                    "base": "4px",
+                    "sm": "16px"
+            },
+            "fontFamily": {
+                    "display": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .glow-primary {
+            box-shadow: 0 0 20px rgba(128, 131, 255, 0.3);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-container/80 backdrop-blur-md border-b border-surface-container-highest shadow-md">
+<nav class="flex justify-between items-center px-margin-desktop h-20 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-lg">
+<span class="font-display text-headline-md font-extrabold text-primary">CouponEx</span>
+<div class="hidden md:flex items-center gap-md">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md transition-colors duration-200" href="#">Explore</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Sell</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Activity</a>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary w-64 text-on-surface" placeholder="Search coupons..." type="text"/>
+</div>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors">account_balance_wallet</button>
+<button class="bg-primary text-on-primary-container px-sm py-2 rounded-lg font-label-md text-label-md font-bold active:scale-95 transition-transform">Connect Wallet</button>
+</div>
+</nav>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden px-margin-mobile md:px-margin-desktop py-xl">
+<div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 gap-xl items-center text-center">
+<div class="space-y-lg mx-auto">
+<div class="inline-flex items-center gap-xs bg-primary/10 border border-primary/20 px-sm py-1.5 rounded-full">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-primary font-label-sm text-label-sm uppercase tracking-wider">Live P2P Marketplace</span>
+</div>
+<h1 class="font-display text-headline-lg-mobile md:text-display text-on-surface leading-[1.1]">
+                        Turn Your Unused <br/>
+<span class="text-primary">Coupons</span> into <br/>
+                        Instant Cash
+                    </h1>
+<p class="font-body-lg text-on-surface-variant max-w-lg">
+                        The world's most secure peer-to-peer digital exchange for unused gift cards and promotional codes. Verified transactions, instant payouts.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-md pt-base justify-center">
+<button class="bg-primary hover:bg-primary-container text-on-primary-container font-label-md text-label-md px-xl py-4 rounded-xl font-bold glow-primary transition-all flex items-center justify-center gap-xs">
+                            Start Selling
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="border border-outline-variant hover:border-primary text-on-surface font-label-md text-label-md px-xl py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-xs backdrop-blur-sm">
+                            Browse Marketplace
+                        </button>
+</div>
+<div class="flex items-center gap-lg pt-md opacity-80 justify-center">
+<div class="flex flex-col">
+<span class="text-headline-md font-bold text-on-surface">$2.4M+</span>
+<span class="text-label-sm text-on-surface-variant uppercase">Traded Volume</span>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="text-headline-md font-bold text-on-surface">15k+</span>
+<span class="text-label-sm text-on-surface-variant uppercase">Active Sellers</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop bg-surface-container-lowest relative overflow-hidden">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-xl">
+<h2 class="font-display text-headline-lg text-on-surface mb-sm">Engineered for Trust</h2>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">Our infrastructure utilizes advanced cryptographic verification to ensure every trade is seamless and risk-free.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Feature 1 -->
+<div class="glass-card p-lg rounded-2xl group hover:border-primary transition-all duration-300">
+<div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl">shield_lock</span>
+</div>
+<h3 class="text-headline-md font-bold text-on-surface mb-sm">Secure P2P Trading</h3>
+<p class="text-on-surface-variant font-body-md">Advanced escrow system holds credits until digital codes are confirmed, protecting both buyers and sellers from fraud.</p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-card p-lg rounded-2xl group hover:border-primary transition-all duration-300">
+<div class="w-16 h-16 rounded-xl bg-secondary/10 flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary text-4xl">verified_user</span>
+</div>
+<h3 class="text-headline-md font-bold text-on-surface mb-sm">Verified Transactions</h3>
+<p class="text-on-surface-variant font-body-md">Each coupon undergoes an automated multi-step verification process to guarantee validity before listing on the marketplace.</p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-card p-lg rounded-2xl group hover:border-primary transition-all duration-300">
+<div class="w-16 h-16 rounded-xl bg-tertiary-container/10 flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-tertiary text-4xl">bolt</span>
+</div>
+<h3 class="text-headline-md font-bold text-on-surface mb-sm">Instant Credit Payouts</h3>
+<p class="text-on-surface-variant font-body-md">No waiting days for bank transfers. Receive internal Credits (C) instantly upon confirmation, redeemable for crypto or other cards.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Deals Grid -->
+<!-- Trust Section -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop">
+<div class="max-w-7xl mx-auto glass-card rounded-2xl p-xl flex flex-col md:flex-row items-center gap-xl">
+<div class="flex-1 space-y-md">
+<h2 class="font-display text-headline-lg text-on-surface">Trade with Absolute Confidence</h2>
+<p class="font-body-md text-on-surface-variant">Our Trust Score system calculates merchant reliability based on transaction volume, successful deliveries, and community feedback.</p>
+<div class="grid grid-cols-2 gap-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-label-md text-on-surface">KYC Verified Sellers</span>
+</div>
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<span class="font-label-md text-on-surface">Fraud Prevention</span>
+</div>
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+</div>
+<span class="font-label-md text-on-surface">99.9% Satisfaction</span>
+</div>
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+</div>
+<span class="font-label-md text-on-surface">Public Trade Logs</span>
+</div>
+</div>
+</div>
+<div class="flex-1 w-full bg-surface-container rounded-xl p-md border border-outline-variant/30 relative">
+<div class="flex items-center justify-between mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-full bg-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional profile headshot of a diverse digital entrepreneur, high contrast lighting, tech-forward aesthetic with a soft indigo background glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcbiiPQb4RuRzuX9WDTVqCMxC402nXS9mViUdnOwCn6yQU4X1R1Rywah79NdzK569y1q51NGU5QK8CqnETXRYSCMWH3XZAS-kxUP-3wDsgc9Y8GYRgSErC9_pgs-lhUie4MCf_t9MzxZKoMbv9sLLTTnGhP2D90JAMFV5_UP8T6yItSuKd7tXhmHf9KpMmSPTz1U07Ir6wPXARc7LomtHzBbdAF5xo6Z_s3Q6pZMy4c66q6ROK0ipX9xM1pw5sZi8kk68ePfKjjaGc"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">CryptoMerchant_X</p>
+<p class="text-label-sm text-secondary">Verified Power Seller</p>
+</div>
+</div>
+<div class="text-right">
+<div class="text-headline-md font-bold text-on-surface">98</div>
+<div class="text-label-sm text-on-surface-variant uppercase">Trust Score</div>
+</div>
+</div>
+<div class="h-2 w-full bg-background rounded-full overflow-hidden mb-sm">
+<div class="h-full bg-secondary rounded-full" style="width: 98%;"></div>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Total Trades</span>
+<span class="text-on-surface">4,208</span>
+</div>
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Dispute Rate</span>
+<span class="text-secondary">0.02%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop text-center relative overflow-hidden">
+<div class="absolute inset-0 -z-10">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/20 blur-[120px] rounded-full"></div>
+</div>
+<div class="max-w-3xl mx-auto space-y-md">
+<h2 class="font-display text-headline-lg md:text-display text-on-surface">Ready to Liquidate Your Unused Value?</h2>
+<p class="font-body-lg text-on-surface-variant">Join thousands of traders saving and earning more every day with CouponEx.</p>
+<div class="flex justify-center pt-md">
+<button class="bg-primary text-on-primary-container font-label-md text-label-md px-xl py-4 rounded-xl font-bold glow-primary hover:scale-105 active:scale-95 transition-all">Create Free Account</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-surface-container-highest">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg px-margin-desktop py-xl max-w-7xl mx-auto">
+<div class="col-span-2 md:col-span-1 space-y-md">
+<span class="font-display text-headline-md font-bold text-on-surface">CouponEx</span>
+<p class="text-on-surface-variant font-body-md">The premium, secure peer-to-peer digital value exchange platform.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="text-secondary font-semibold font-body-md">Marketplace</h4>
+<a class="text-on-surface-variant hover:text-secondary hover:underline transition-all" href="#">Browse Coupons</a>
+<a class="text-on-surface-variant hover:text-secondary hover:underline transition-all" href="#">Sell Coupon</a>
+<a class="text-on-surface-variant hover:text-secondary hover:underline transition-all" href="#">Verification Process</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="text-secondary font-semibold font-body-md">Support</h4>
+<a class="text-on-surface-variant hover:text-secondary hover:underline transition-all" href="#">Support Center</a>
+<a class="text-on-surface-variant hover:text-secondary hover:underline transition-all" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-secondary hover:underline transition-all" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="text-secondary font-semibold font-body-md">Connect</h4>
+<div class="flex gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">public</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">hub</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">send</button>
+</div>
+</div>
+</div>
+<div class="border-t border-surface-container-highest py-md text-center">
+<p class="text-on-surface-variant font-body-md">© 2024 CouponEx. Secure Peer-to-Peer Marketplace.</p>
+</div>
+</footer>
+<script>
+        // Micro-interactions and effects
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simple scroll reveal for cards
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(card);
+        });
+    </script>
+</body></html>

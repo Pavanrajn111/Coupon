@@ -1,0 +1,261 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CouponEx | User Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Geist:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    
+    /* Ticket Notch Effect */
+    .coupon-card {
+      position: relative;
+      background: white;
+      border: 1px solid #E7E2D8;
+    }
+    .coupon-card::before, .coupon-card::after {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      background-color: #FAF7F0; /* Matches Level 0 background */
+      border-radius: 50%;
+      border: 1px solid #E7E2D8;
+      z-index: 10;
+    }
+    .coupon-card::after {
+      left: auto;
+      right: -8px;
+    }
+
+    /* Hide scrollbar for clean UI */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-highest": "#e5e2db",
+            "surface": "#fcf9f2",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-tertiary-container": "#4f3d00",
+            "surface-container-high": "#ebe8e1",
+            "background": "#fcf9f2",
+            "primary-container": "#ff6b35",
+            "tertiary-fixed-dim": "#ecc246",
+            "error-container": "#ffdad6",
+            "inverse-primary": "#ffb59d",
+            "surface-dim": "#dcdad3",
+            "on-background": "#1c1c18",
+            "outline-variant": "#e1bfb5",
+            "inverse-on-surface": "#f3f0ea",
+            "tertiary-container": "#cea62b",
+            "on-primary-fixed": "#390c00",
+            "on-primary-fixed-variant": "#832600",
+            "on-tertiary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed": "#d8e2ff",
+            "tertiary": "#755b00",
+            "inverse-surface": "#31312c",
+            "on-secondary": "#ffffff",
+            "on-surface": "#1c1c18",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#b7c6ed",
+            "primary": "#ab3500",
+            "on-secondary-fixed-variant": "#374667",
+            "surface-variant": "#e5e2db",
+            "surface-bright": "#fcf9f2",
+            "tertiary-fixed": "#ffe08e",
+            "on-primary-container": "#5f1900",
+            "secondary": "#4f5e80",
+            "outline": "#8d7168",
+            "primary-fixed-dim": "#ffb59d",
+            "secondary-container": "#c8d7fe",
+            "on-tertiary-fixed": "#241a00",
+            "surface-tint": "#ab3500",
+            "primary-fixed": "#ffdbd0",
+            "on-surface-variant": "#594139",
+            "on-tertiary-fixed-variant": "#584400",
+            "on-secondary-fixed": "#0a1b39",
+            "surface-container-low": "#f6f3ec",
+            "on-secondary-container": "#4e5d7f",
+            "surface-container": "#f0eee7",
+            "on-primary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "stack-md": "16px",
+            "stack-sm": "8px",
+            "stack-lg": "32px",
+            "gutter": "16px",
+            "margin-mobile": "20px",
+            "margin-desktop": "40px",
+            "container-max": "1200px"
+          },
+          "fontFamily": {
+            "label-caps": ["Geist"],
+            "display-lg-mobile": ["Inter"],
+            "headline-md": ["Inter"],
+            "display-lg": ["Inter"],
+            "body-sm": ["Geist"],
+            "body-lg": ["Geist"],
+            "price-display": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen pb-24">
+<!-- Top App Bar (Shared Component Strategy) -->
+<header class="flex justify-between items-center px-gutter py-stack-sm w-full bg-background border-b border-outline-variant sticky top-0 z-40"><div class="max-w-[1200px] mx-auto w-full flex justify-between items-center px-margin-desktop py-4"><div class="flex items-center gap-8"><h1 class="font-display-lg-mobile text-display-lg-mobile font-bold text-secondary">CouponEx</h1><nav class="hidden md:flex gap-6"><a class="text-on-surface font-label-caps hover:text-primary transition-colors" href="#">HOME</a><a class="text-on-surface font-label-caps hover:text-primary transition-colors" href="#">EXPLORE</a><a class="text-on-surface font-label-caps hover:text-primary transition-colors" href="#">SELL</a></nav></div><div class="flex items-center gap-6"><div class="relative"><span class="material-symbols-outlined text-secondary">search</span></div><span class="material-symbols-outlined text-secondary">notifications</span><div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant"></div></div></div></header>
+<main class="max-w-[1200px] mx-auto px-margin-desktop grid grid-cols-12 gap-stack-lg mt-stack-lg flex flex-col md:grid">
+<!-- Profile Header Section -->
+<section class="col-span-4 sticky top-24 h-fit flex flex-col items-start text-left identity-sidebar"><div class="flex items-center gap-4 mb-stack-md w-full"><div class="relative flex-shrink-0"><div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary-container p-1 bg-surface-container-lowest"><img class="w-full h-full object-cover rounded-full" data-alt="A professional and friendly headshot of a young entrepreneur in a modern, light-filled office. The person is smiling confidently, wearing a clean navy blazer. The background is softly blurred with hints of ivory walls and minimalist decor, maintaining the high-trust, premium marketplace aesthetic of the app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_uinuVGbBriG-K758b_-qG0SusLonimMnUZiwcUBDcaZUe0sS1TS8jYD8Q9tZ5Cjrma-_jAsH_XBQ2Hc9SanYQjcNT18XdEnwySfwM0aBx6f0pVbJwFuSjRoYWNKR-bnXO_M9V_FJIn7iUtoQovsQL1hgH8jxmPb05MEj9fxV6yy2nLDWJVvu4fw5VQ0GxSPEu0MDUShq_plB-gbk85Nfk2AJORN6Pm6BGW0FjRcl1TExBTLWg--HFEt6vdW6Mmz_V42CKX3DPJU"></div><div class="absolute bottom-0 right-0 bg-primary-container text-white p-1 rounded-full border-2 border-background flex items-center justify-center"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span></div></div><div><h2 class="font-display-lg-mobile text-display-lg-mobile text-on-secondary-fixed font-extrabold tracking-tight">@ArjunDeals</h2><p class="font-body-lg text-secondary opacity-80">Arjun Sharma</p></div></div><div class="flex justify-between items-center w-full py-stack-md border-y border-outline-variant mb-stack-md"><div class="flex flex-col items-center"><span class="font-price-display text-price-display text-on-secondary-fixed">142</span><span class="font-label-caps text-[10px] text-secondary uppercase">Offered</span></div><div class="flex flex-col items-center border-x border-outline-variant px-4"><span class="font-price-display text-price-display text-on-secondary-fixed">89</span><span class="font-label-caps text-[10px] text-secondary uppercase">Purchased</span></div><div class="flex flex-col items-center"><span class="font-price-display text-price-display text-on-secondary-fixed">4.9</span><span class="font-label-caps text-[10px] text-secondary uppercase">Rating</span></div></div><div class="w-full text-left"><p class="font-body-sm text-on-surface-variant leading-relaxed">Premium seller focusing on Fashion &amp; Tech coupons. Verified user since 2022. Fast delivery and 100% success rate on redemptions.</p></div><div class="mt-stack-md w-full flex gap-2"><button class="flex-1 bg-primary-container text-on-primary font-label-caps text-label-caps py-3 rounded-lg hover:opacity-90 active:scale-95 transition-all">FOLLOW USER</button><button class="flex-1 bg-surface-container-lowest border border-on-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps py-3 rounded-lg hover:bg-surface-container-high active:scale-95 transition-all">MESSAGE</button></div></section>
+<!-- Coupons Feed Section -->
+<section class="mb-10 col-span-8 listings-feed">
+<div class="flex justify-between items-end mb-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed border-l-4 border-primary-container pl-3">Offered Coupons</h3>
+<span class="font-label-caps text-label-caps text-primary cursor-pointer">VIEW ALL</span>
+</div>
+<!-- Bento-style Grid of Coupons -->
+<div class="grid grid-cols-1 gap-stack-md">
+<!-- Coupon Card 1 -->
+<div class="coupon-card p-gutter flex items-center gap-4 group cursor-pointer hover:border-on-secondary-fixed transition-colors">
+<div class="w-16 h-16 bg-surface-container flex-shrink-0 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-3xl text-secondary">shopping_bag</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-headline-md text-on-surface text-base">Zomato Gold 3-Month</h4>
+<p class="font-body-sm text-on-surface-variant">Expires in 4 days • Verified</p>
+</div>
+<div class="text-right">
+<p class="font-price-display text-primary text-lg">50% OFF</p>
+<p class="font-label-caps text-[10px] text-secondary opacity-60">₹199 FIXED</p>
+</div>
+</div>
+<!-- Coupon Card 2 -->
+<div class="coupon-card p-gutter flex items-center gap-4 group cursor-pointer hover:border-on-secondary-fixed transition-colors">
+<div class="w-16 h-16 bg-surface-container flex-shrink-0 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-3xl text-secondary">flight</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-headline-md text-on-surface text-base">MakeMyTrip Flight Voucher</h4>
+<p class="font-body-sm text-on-surface-variant">Min booking ₹5000 • Verified</p>
+</div>
+<div class="text-right">
+<p class="font-price-display text-primary text-lg">₹750 OFF</p>
+<p class="font-label-caps text-[10px] text-secondary opacity-60">₹250 FIXED</p>
+</div>
+</div>
+<!-- Coupon Card 3 (Asymmetric Highlight) -->
+<div class="coupon-card p-0 overflow-hidden border-2 border-tertiary-container relative">
+<div class="absolute top-0 right-0 bg-tertiary-container text-on-tertiary-container font-label-caps text-[10px] px-2 py-1">FEATURED</div>
+<div class="p-gutter flex items-center gap-4">
+<div class="w-16 h-16 bg-surface-container-high flex-shrink-0 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-3xl text-tertiary">devices</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-headline-md text-on-surface text-base">Apple Store India Promo</h4>
+<p class="font-body-sm text-on-surface-variant">Instant discount on MacBooks</p>
+</div>
+<div class="text-right">
+<p class="font-price-display text-primary text-lg">₹5,000</p>
+<p class="font-label-caps text-[10px] text-secondary opacity-60">₹1,500 BID</p>
+</div>
+</div>
+</div>
+<!-- Coupon Card 4 -->
+<div class="coupon-card p-gutter flex items-center gap-4 group cursor-pointer hover:border-on-secondary-fixed transition-colors">
+<div class="w-16 h-16 bg-surface-container flex-shrink-0 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-3xl text-secondary">movie</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-headline-md text-on-surface text-base">BookMyShow Winpin</h4>
+<p class="font-body-sm text-on-surface-variant">Valid on any 2 tickets</p>
+</div>
+<div class="text-right">
+<p class="font-price-display text-primary text-lg">BUY 1 GET 1</p>
+<p class="font-label-caps text-[10px] text-secondary opacity-60">₹80 FIXED</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Badges Section -->
+<section class="mt-stack-lg p-stack-md bg-surface-container border border-outline-variant rounded-lg mb-stack-lg col-span-8">
+<div class="flex items-center gap-3 mb-stack-sm">
+<span class="material-symbols-outlined text-tertiary">verified_user</span>
+<h4 class="font-label-caps text-label-caps text-on-surface">TRUST &amp; SAFETY</h4>
+</div>
+<p class="font-body-sm text-on-surface-variant">
+        This seller has completed 100+ successful trades and is part of our Trusted Merchant program. Purchases are protected by CouponEx escrow.
+      </p>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Strategy) -->
+<script>
+    // Micro-interactions for coupon cards
+    document.querySelectorAll('.coupon-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.add('scale-[0.98]');
+        setTimeout(() => {
+          card.classList.remove('scale-[0.98]');
+        }, 100);
+      });
+    });
+
+    // Simple interaction for follow button
+    const followBtn = document.querySelector('button:first-of-type');
+    let following = false;
+    followBtn.addEventListener('click', () => {
+      following = !following;
+      if(following) {
+        followBtn.innerText = "FOLLOWING";
+        followBtn.classList.remove('bg-primary-container');
+        followBtn.classList.add('bg-secondary');
+      } else {
+        followBtn.innerText = "FOLLOW USER";
+        followBtn.classList.add('bg-primary-container');
+        followBtn.classList.remove('bg-secondary');
+      }
+    });
+  </script>
+
+
+</body></html>

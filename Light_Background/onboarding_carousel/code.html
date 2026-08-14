@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffdbd0",
+                        "primary-container": "#ff6b35",
+                        "surface-container-high": "#ebe8e1",
+                        "surface-container-highest": "#e5e2db",
+                        "outline": "#8d7168",
+                        "surface-variant": "#e5e2db",
+                        "on-secondary-fixed-variant": "#374667",
+                        "on-tertiary-fixed": "#241a00",
+                        "background": "#fcf9f2",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "on-primary-fixed": "#390c00",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#5f1900",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "secondary": "#4f5e80",
+                        "on-surface-variant": "#594139",
+                        "on-background": "#1c1c18",
+                        "on-surface": "#1c1c18",
+                        "surface": "#fcf9f2",
+                        "primary": "#ab3500",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#ab3500",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-container": "#cea62b",
+                        "surface-container": "#f0eee7",
+                        "secondary-container": "#c8d7fe",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#ffb59d",
+                        "outline-variant": "#e1bfb5",
+                        "on-secondary-container": "#4e5d7f",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#4f3d00",
+                        "surface-bright": "#fcf9f2",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#832600",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffe08e",
+                        "surface-container-low": "#f6f3ec",
+                        "primary-fixed-dim": "#ffb59d",
+                        "inverse-surface": "#31312c",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#755b00",
+                        "on-secondary-fixed": "#0a1b39",
+                        "surface-dim": "#dcdad3",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed-variant": "#584400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "stack-md": "16px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "price-display": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-sm": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "price-display": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .coupon-notch {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: theme('colors.background');
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 1px solid theme('colors.outline-variant');
+            z-index: 10;
+        }
+        .coupon-notch-left { left: -12px; border-left-color: transparent; border-top-color: transparent; transform: translateY(-50%) rotate(45deg); }
+        .coupon-notch-right { right: -12px; border-right-color: transparent; border-bottom-color: transparent; transform: translateY(-50%) rotate(45deg); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg w-full h-screen overflow-hidden flex flex-col antialiased">
+<!-- Carousel Container -->
+<div class="flex-1 flex overflow-x-auto snap-x snap-mandatory no-scrollbar pb-32" id="carousel">
+<!-- Slide 1 -->
+<div class="w-full h-full flex-shrink-0 snap-center flex flex-col items-center justify-center px-margin-mobile relative">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-secondary-fixed mb-stack-lg text-center">Buy coupons for less</h1>
+<div class="relative bg-surface-container-lowest border border-outline-variant w-full max-w-sm rounded-xl p-8 flex flex-col items-center justify-center shadow-sm">
+<!-- CSS Notches for Coupon Metaphor -->
+<div class="coupon-notch coupon-notch-left"></div>
+<div class="coupon-notch coupon-notch-right"></div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-on-secondary-fixed text-4xl">local_pizza</span>
+<span class="font-headline-md text-headline-md text-on-secondary-fixed">Swiggy</span>
+</div>
+<div class="flex flex-col items-center border-t border-dashed border-outline-variant pt-6 w-full">
+<span class="font-price-display text-price-display text-on-surface-variant line-through text-sm opacity-60">₹500</span>
+<span class="font-price-display text-price-display text-primary-container text-4xl mt-2">₹350</span>
+</div>
+</div>
+</div>
+<!-- Slide 2 -->
+<div class="w-full h-full flex-shrink-0 snap-center flex flex-col items-center justify-center px-margin-mobile relative">
+<div class="w-32 h-32 rounded-full border border-outline-variant bg-surface-container-lowest flex items-center justify-center mb-stack-lg">
+<span class="material-symbols-outlined text-on-secondary-fixed text-6xl" style="font-variation-settings: 'FILL' 0, 'wght' 200;">document_scanner</span>
+</div>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-secondary-fixed mb-stack-sm text-center">Sell what you won't use</h2>
+<p class="font-body-lg text-body-lg text-secondary text-center max-w-xs">Scan &amp; verify in seconds using intelligent OCR technology.</p>
+</div>
+<!-- Slide 3 -->
+<div class="w-full h-full flex-shrink-0 snap-center flex flex-col items-center justify-center px-margin-mobile relative">
+<div class="w-32 h-32 rounded-full border border-tertiary-container bg-surface-container-lowest flex items-center justify-center mb-stack-lg">
+<span class="material-symbols-outlined text-tertiary-container text-6xl" style="font-variation-settings: 'FILL' 1, 'wght' 400;">lock</span>
+</div>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-secondary-fixed mb-stack-sm text-center">Every rupee is protected</h2>
+<p class="font-body-lg text-body-lg text-secondary text-center max-w-xs">Escrow-secured payments via Razorpay.</p>
+<button class="mt-stack-lg w-full max-w-xs bg-primary-container text-on-primary py-3 rounded-lg font-headline-md text-sm tracking-wide">
+                Get Started
+            </button>
+</div>
+</div>
+<!-- Persistent Overlay: Dots Navigation -->
+<div class="absolute bottom-24 left-0 w-full flex justify-center items-center gap-3 z-10 pb-4">
+<div class="w-2.5 h-2.5 rounded-full bg-on-secondary-fixed"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant"></div>
+</div>
+<!-- BottomNavBar JSON Render -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-on-secondary-fixed dark:bg-on-secondary-fixed z-50 md:hidden">
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold active:scale-90 duration-200 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 active:scale-90 duration-200 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">search</span>
+<span class="font-label-caps text-label-caps uppercase">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 active:scale-90 duration-200 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">add_circle</span>
+<span class="font-label-caps text-label-caps uppercase">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 active:scale-90 duration-200 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 active:scale-90 duration-200 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-caps text-label-caps uppercase">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple script to update dots based on scroll position
+        const carousel = document.getElementById('carousel');
+        const dots = document.querySelectorAll('.absolute.bottom-24 div');
+
+        carousel.addEventListener('scroll', () => {
+            const scrollLeft = carousel.scrollLeft;
+            const slideWidth = carousel.clientWidth;
+            const activeIndex = Math.round(scrollLeft / slideWidth);
+
+            dots.forEach((dot, index) => {
+                if (index === activeIndex) {
+                    dot.classList.replace('bg-outline-variant', 'bg-on-secondary-fixed');
+                } else {
+                    dot.classList.replace('bg-on-secondary-fixed', 'bg-outline-variant');
+                }
+            });
+        });
+    </script>
+</body></html>

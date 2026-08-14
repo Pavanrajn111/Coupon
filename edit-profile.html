@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme = savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.classList.toggle("theme-dark", theme === "dark");
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-muted: #f4efe8;
+        --surface-border: #e7e2d8;
+        --text: #1d1d1d;
+        --text-soft: #5e5b56;
+        --primary: #ff6b35;
+        --primary-container: #ff6b35;
+        --on-primary: #ffffff;
+        --secondary: #4f5e80;
+        --secondary-container: #c8d7fe;
+        --on-secondary-container: #4e5d7f;
+        --warning: #ffb95f;
+        --error: #b3261e;
+        --success: #2e7d32;
+        --shadow: 0 18px 40px rgba(13, 20, 38, 0.08);
+      }
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: #161f35;
+        --surface-muted: #1e2742;
+        --surface-border: rgba(192, 193, 255, 0.2);
+        --text: #f2f5ff;
+        --text-soft: #c0c7dc;
+        --primary: #ff6b35;
+        --primary-container: #ff6b35;
+        --on-primary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.16);
+        --on-secondary-container: #4ae176;
+        --warning: #ffb95f;
+        --error: #ffb4ab;
+        --success: #85e09b;
+        --shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Geist, Inter, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      a { color: inherit; text-decoration: none; }
+      button, input, textarea { font: inherit; }
+      button { cursor: pointer; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .page-shell { width: min(1180px, calc(100% - 32px)); margin: 32px auto 60px; }
+      .hero-card {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 28px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .hero-card h1 { margin: 0 0 6px; font-size: 1.8rem; font-weight: 700; color: var(--text); }
+      .hero-card p { margin: 0; color: var(--text-soft); font-size: 0.95rem; }
+      
+      .grid { display: grid; gap: 24px; margin-top: 24px; grid-template-columns: 320px 1fr; }
+      @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 28px;
+      }
+      .avatar-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+      .avatar-preview {
+        position: relative;
+        width: 140px; height: 140px; border-radius: 50%; overflow: hidden; border: 3px solid var(--primary-container); background: var(--surface-muted);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      }
+      .avatar-preview img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+      }
+      .photo-btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+      
+      .photo-btn, .save-btn, .cancel-btn {
+        border: 0; border-radius: 10px; padding: 12px 24px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; transition: all 180ms ease;
+      }
+      .photo-btn { background: var(--secondary-container); color: var(--on-secondary-container); }
+      .photo-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+      .save-btn { background: var(--primary-container); color: var(--on-primary); }
+      .save-btn:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
+      .save-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+      .cancel-btn { background: var(--surface-muted); color: var(--text); border: 1px solid var(--surface-border); }
+      .cancel-btn:hover { background: var(--surface-border); }
+      
+      .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+      .field label { font-size: 0.85rem; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+      
+      .input-group { display: flex; align-items: center; width: 100%; }
+      .input-prefix {
+        padding: 12px 14px;
+        background: var(--surface-muted);
+        border: 1px solid var(--surface-border);
+        border-right: 0;
+        border-radius: 12px 0 0 12px;
+        color: var(--text-soft);
+        font-weight: 600;
+      }
+      .input-group input { border-radius: 0 12px 12px 0 !important; }
+
+      .field input, .field textarea {
+        width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-muted); color: var(--text); font-size: 1rem; transition: border-color 160ms ease, box-shadow 160ms ease;
+      }
+      .field input:focus, .field textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+      }
+      .field input.is-invalid {
+        border-color: var(--error) !important;
+        box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.15) !important;
+      }
+      .hint { font-size: 0.82rem; color: var(--text-soft); }
+      
+      .status {
+        margin-top: 14px;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 0.92rem;
+        font-weight: 500;
+        display: none;
+      }
+      .status.error { display: flex; align-items: center; gap: 8px; background: rgba(179,38,30,0.12); color: var(--error); border: 1px solid rgba(179,38,30,0.25); }
+      .status.success { display: flex; align-items: center; gap: 8px; background: rgba(46,125,50,0.12); color: var(--success); border: 1px solid rgba(46,125,50,0.25); }
+      .hidden-file-input { display: none; }
+      
+      .char-count { font-size: 0.8rem; color: var(--text-soft); text-align: right; margin-top: 4px; }
+      
+      .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page-shell">
+      <section class="hero-card">
+        <div>
+          <h1>Edit Profile</h1>
+          <p>Keep your profile details up to date for marketplace buyers and sellers.</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <button class="cancel-btn" type="button" onclick="window.location.href='profile.html'">Cancel</button>
+          <button class="save-btn" form="profileForm" type="submit" id="topSaveBtn">Save Changes</button>
+        </div>
+      </section>
+
+      <section class="grid">
+        <!-- Sidebar Avatar Panel -->
+        <aside class="panel">
+          <div class="avatar-wrap">
+            <div class="avatar-preview" id="avatarPreviewFrame">
+              <img id="avatarPreview" src="" alt="Profile preview" />
+            </div>
+            <div class="photo-btn-wrap">
+              <button id="changePhotoBtn" class="photo-btn" type="button">
+                <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle; margin-right:4px;">photo_camera</span>
+                Change Photo
+              </button>
+              <input id="photoInput" class="hidden-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/jpg" />
+              <div class="hint">Recommended square JPG, PNG, or WEBP image.</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Form Panel -->
+        <section class="panel">
+          <form id="profileForm">
+            <div class="field">
+              <label for="fullName">Full Name</label>
+              <input id="fullName" name="fullName" type="text" placeholder="Enter your full name" required />
+            </div>
+            
+            <div class="field">
+              <label for="username">Username</label>
+              <div class="input-group">
+                <span class="input-prefix">@</span>
+                <input id="username" name="username" type="text" placeholder="username" required autocomplete="off" />
+              </div>
+              <div id="usernameHelp" class="hint">Your unique CouponEx identity handle.</div>
+            </div>
+            
+            <div class="field">
+              <label for="phoneNumber">Phone Number</label>
+              <input id="phoneNumber" name="phoneNumber" type="tel" placeholder="Enter phone number" />
+            </div>
+            
+            <div class="field">
+              <label for="bio">Bio</label>
+              <textarea id="bio" name="bio" rows="4" maxlength="200" placeholder="Tell buyers about your trading focus or background..."></textarea>
+              <div class="char-count" id="bioCharCount">0 / 200 characters</div>
+            </div>
+            
+            <div id="profileStatus" class="status" role="status"></div>
+            
+            <div class="form-actions">
+              <button class="cancel-btn" type="button" onclick="window.location.href='profile.html'">Cancel</button>
+              <button class="save-btn" type="submit" id="bottomSaveBtn">Save Changes</button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const DEFAULT_AVATAR = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f1f5f9"/><path d="M50 42 a 16 16 0 1 0 0 -32 a 16 16 0 1 0 0 32 Z M20 85 c 0 -18 14 -28 30 -28 s 30 10 30 28 Z" fill="%2394a3b8"/></svg>';
+
+      const state = {
+        user: null,
+        selectedPhoto: "",
+        usernameAvailable: true,
+        checkTimeout: null,
+      };
+
+      const avatarPreview = document.getElementById("avatarPreview");
+      const photoInput = document.getElementById("photoInput");
+      const changePhotoBtn = document.getElementById("changePhotoBtn");
+      const fullNameInput = document.getElementById("fullName");
+      const usernameInput = document.getElementById("username");
+      const phoneInput = document.getElementById("phoneNumber");
+      const bioInput = document.getElementById("bio");
+      const bioCharCount = document.getElementById("bioCharCount");
+      const statusEl = document.getElementById("profileStatus");
+      const form = document.getElementById("profileForm");
+      const topSaveBtn = document.getElementById("topSaveBtn");
+      const bottomSaveBtn = document.getElementById("bottomSaveBtn");
+
+      avatarPreview.onerror = () => {
+        avatarPreview.src = DEFAULT_AVATAR;
+      };
+
+      function setSaveButtonsDisabled(disabled) {
+        topSaveBtn.disabled = disabled;
+        bottomSaveBtn.disabled = disabled;
+      }
+
+      function showStatus(message, isError = false) {
+        if (!message) {
+          statusEl.style.display = "none";
+          statusEl.textContent = "";
+          return;
+        }
+        statusEl.innerHTML = `<span class="material-symbols-outlined">${isError ? 'error' : 'check_circle'}</span><span>${message}</span>`;
+        statusEl.className = `status ${isError ? "error" : "success"}`;
+        statusEl.style.display = "flex";
+      }
+
+      function updateBioCharCount() {
+        const len = bioInput.value ? bioInput.value.length : 0;
+        bioCharCount.textContent = `${len} / 200 characters`;
+      }
+
+      bioInput.addEventListener("input", updateBioCharCount);
+
+      function setUserData(user) {
+        state.user = user;
+        fullNameInput.value = user.fullName || "";
+        usernameInput.value = user.username || "";
+        phoneInput.value = user.phoneNumber || "";
+        bioInput.value = user.bio || "";
+        avatarPreview.src = user.profilePhoto || DEFAULT_AVATAR;
+        updateBioCharCount();
+      }
+
+      function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      changePhotoBtn.addEventListener("click", () => photoInput.click());
+      photoInput.addEventListener("change", async () => {
+        const file = photoInput.files && photoInput.files[0];
+        if (!file) return;
+        try {
+          const dataUrl = await readFileAsDataUrl(file);
+          state.selectedPhoto = dataUrl;
+          avatarPreview.src = dataUrl;
+          showStatus("Photo selected. Save changes to update your profile photo.", false);
+        } catch (error) {
+          showStatus("Unable to read image file. Please try another image.", true);
+        }
+      });
+
+      async function checkUsernameAvailability(rawUsername) {
+        const username = rawUsername.trim().toLowerCase();
+        if (!username) {
+          usernameInput.classList.remove("is-invalid");
+          state.usernameAvailable = false;
+          setSaveButtonsDisabled(true);
+          showStatus("Username is required.", true);
+          return;
+        }
+
+        // Current username exception (Requirement #18)
+        if (state.user && username === state.user.username.toLowerCase()) {
+          usernameInput.classList.remove("is-invalid");
+          state.usernameAvailable = true;
+          setSaveButtonsDisabled(false);
+          showStatus("");
+          return;
+        }
+
+        try {
+          const userIdParam = state.user && state.user.id ? `&userId=${state.user.id}` : "";
+          const apiEndpoint = (window.location.protocol === "file:" ? "http://localhost:8000" : "") + `/api/profile/check-username?username=${encodeURIComponent(username)}${userIdParam}`;
+          
+          const response = await fetch(apiEndpoint);
+          const data = await response.json();
+          
+          if (data.success && data.available) {
+            usernameInput.classList.remove("is-invalid");
+            state.usernameAvailable = true;
+            setSaveButtonsDisabled(false);
+            showStatus("");
+          } else {
+            usernameInput.classList.add("is-invalid");
+            state.usernameAvailable = false;
+            setSaveButtonsDisabled(true);
+            showStatus("Username already exists. Please try other names.", true);
+          }
+        } catch (err) {
+          console.warn("Unable to check username availability offline:", err);
+        }
+      }
+
+      usernameInput.addEventListener("input", () => {
+        clearTimeout(state.checkTimeout);
+        state.checkTimeout = setTimeout(() => {
+          checkUsernameAvailability(usernameInput.value);
+        }, 300);
+      });
+
+      usernameInput.addEventListener("blur", () => {
+        clearTimeout(state.checkTimeout);
+        checkUsernameAvailability(usernameInput.value);
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const username = usernameInput.value.trim();
+        if (!username) {
+          showStatus("Username is required.", true);
+          usernameInput.classList.add("is-invalid");
+          return;
+        }
+        if (!state.usernameAvailable) {
+          showStatus("Username already exists. Please try other names.", true);
+          usernameInput.classList.add("is-invalid");
+          return;
+        }
+
+        const userData = JSON.parse(localStorage.getItem("couponex_user") || "null");
+        if (!userData) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const payload = {
+          fullName: fullNameInput.value.trim(),
+          username: username.toLowerCase(),
+          phoneNumber: phoneInput.value.trim(),
+          bio: bioInput.value.trim(),
+          profilePhoto: state.selectedPhoto || state.user?.profilePhoto || userData.profilePhoto || "",
+        };
+
+        const originalText = bottomSaveBtn.textContent;
+        topSaveBtn.textContent = "Saving...";
+        bottomSaveBtn.textContent = "Saving...";
+        setSaveButtonsDisabled(true);
+
+        try {
+          const apiEndpoint = (window.location.protocol === "file:" ? "http://localhost:8000" : "") + `/api/profile/${userData.id}`;
+          const response = await fetch(apiEndpoint, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          
+          const data = await response.json();
+          if (!response.ok || !data.success) {
+            const message = data.errors?.username || data.error || "Unable to save changes.";
+            if (data.errors?.username) {
+              usernameInput.classList.add("is-invalid");
+            }
+            showStatus(message, true);
+            topSaveBtn.textContent = originalText;
+            bottomSaveBtn.textContent = originalText;
+            setSaveButtonsDisabled(false);
+            return;
+          }
+
+          // Successfully updated in database
+          const updatedUser = { ...userData, ...data.user };
+          localStorage.setItem("couponex_user", JSON.stringify(updatedUser));
+          
+          if (window.updateHeaderProfile) {
+            window.updateHeaderProfile(updatedUser);
+          }
+
+          showStatus("Profile updated successfully! Redirecting...", false);
+          
+          setTimeout(() => {
+            window.location.href = "profile.html";
+          }, 600);
+        } catch (error) {
+          console.error("Save profile error:", error);
+          showStatus("Unable to reach the server. Please try again.", true);
+          topSaveBtn.textContent = originalText;
+          bottomSaveBtn.textContent = originalText;
+          setSaveButtonsDisabled(false);
+        }
+      });
+
+      (function init() {
+        const userData = JSON.parse(localStorage.getItem("couponex_user") || "null");
+        if (!userData) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        setUserData(userData);
+
+        // Fetch fresh profile from API to initialize form
+        const apiEndpoint = (window.location.protocol === "file:" ? "http://localhost:8000" : "") + `/api/profile/${userData.id}`;
+        fetch(apiEndpoint)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success && data.user) {
+              const updatedUser = { ...userData, ...data.user };
+              localStorage.setItem("couponex_user", JSON.stringify(updatedUser));
+              setUserData(updatedUser);
+              if (window.updateHeaderProfile) {
+                window.updateHeaderProfile(updatedUser);
+              }
+            }
+          })
+          .catch((err) => console.warn("Using cached profile data for edit form:", err));
+      })();
+    </script>
+  </body>
+</html>

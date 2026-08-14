@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Swiggy Coupons - CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#ffdbd0",
+                      "primary-container": "#ff6b35",
+                      "surface-container-high": "#ebe8e1",
+                      "surface-container-highest": "#e5e2db",
+                      "outline": "#8d7168",
+                      "surface-variant": "#e5e2db",
+                      "on-secondary-fixed-variant": "#374667",
+                      "on-tertiary-fixed": "#241a00",
+                      "background": "#fcf9f2",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "on-primary-fixed": "#390c00",
+                      "error": "#ba1a1a",
+                      "on-primary-container": "#5f1900",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "secondary": "#4f5e80",
+                      "on-surface-variant": "#594139",
+                      "on-background": "#1c1c18",
+                      "on-surface": "#1c1c18",
+                      "surface": "#fcf9f2",
+                      "primary": "#ab3500",
+                      "error-container": "#ffdad6",
+                      "surface-tint": "#ab3500",
+                      "inverse-on-surface": "#f3f0ea",
+                      "tertiary-container": "#cea62b",
+                      "surface-container": "#f0eee7",
+                      "secondary-container": "#c8d7fe",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-primary": "#ffb59d",
+                      "outline-variant": "#e1bfb5",
+                      "on-secondary-container": "#4e5d7f",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-container": "#4f3d00",
+                      "surface-bright": "#fcf9f2",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#832600",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ffe08e",
+                      "surface-container-low": "#f6f3ec",
+                      "primary-fixed-dim": "#ffb59d",
+                      "inverse-surface": "#31312c",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#755b00",
+                      "on-secondary-fixed": "#0a1b39",
+                      "surface-dim": "#dcdad3",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-tertiary-fixed-variant": "#584400"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-lg": "32px",
+                      "gutter": "16px",
+                      "margin-desktop": "40px",
+                      "stack-md": "16px",
+                      "container-max": "1200px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "price-display": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .coupon-notch {
+            mask-image: radial-gradient(circle at left center, transparent 8px, black 9px),
+                        radial-gradient(circle at right center, transparent 8px, black 9px);
+            mask-size: 51% 100%;
+            mask-repeat: no-repeat;
+            mask-position: left, right;
+            -webkit-mask-image: radial-gradient(circle at left center, transparent 8px, black 9px),
+                                radial-gradient(circle at right center, transparent 8px, black 9px);
+            -webkit-mask-size: 51% 100%;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: left, right;
+        }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen pb-20 md:pb-0">
+<!-- Top Navigation -->
+<header class="bg-background dark:bg-background docked full-width top-0 border-b border-outline-variant flat no shadows flex justify-between items-center px-gutter py-stack-sm w-full sticky z-40">
+<div class="flex items-center gap-4">
+<button class="text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-secondary dark:text-secondary-fixed">Swiggy Offers</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center lg:hidden" onclick="document.getElementById('filterDrawer').classList.toggle('translate-x-full')">
+<span class="material-symbols-outlined">tune</span>
+</button>
+<button class="text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col lg:flex-row gap-gutter">
+<!-- Filter Sidebar / Drawer -->
+<aside class="fixed inset-y-0 right-0 w-80 bg-surface-container-lowest border-l border-surface-variant z-50 transform translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-1/4 lg:border-none lg:bg-transparent p-6 lg:p-0 flex flex-col gap-stack-lg shadow-xl lg:shadow-none" id="filterDrawer">
+<div class="flex justify-between items-center lg:hidden mb-4">
+<h2 class="font-headline-md text-headline-md">Filters</h2>
+<button class="p-2" onclick="document.getElementById('filterDrawer').classList.toggle('translate-x-full')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Price Range -->
+<div class="flex flex-col gap-stack-sm">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Price Range (₹)</h3>
+<div class="flex items-center gap-2">
+<input class="w-full bg-surface-container-lowest border border-surface-variant rounded focus:border-on-secondary-fixed outline-none px-3 py-2 font-body-sm text-body-sm text-on-surface" placeholder="Min" type="number"/>
+<span class="text-on-surface-variant">-</span>
+<input class="w-full bg-surface-container-lowest border border-surface-variant rounded focus:border-on-secondary-fixed outline-none px-3 py-2 font-body-sm text-body-sm text-on-surface" placeholder="Max" type="number"/>
+</div>
+<input class="w-full mt-2 accent-primary-container" max="2000" min="0" type="range" value="500"/>
+</div>
+<!-- Expiry Window -->
+<div class="flex flex-col gap-stack-sm">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Expiry</h3>
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-primary-container focus:ring-primary-container bg-surface-container-lowest border-surface-variant" name="expiry" type="radio"/>
+<span class="font-body-sm text-body-sm">Anytime</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-primary-container focus:ring-primary-container bg-surface-container-lowest border-surface-variant" name="expiry" type="radio"/>
+<span class="font-body-sm text-body-sm">Ends in &lt; 24h</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-primary-container focus:ring-primary-container bg-surface-container-lowest border-surface-variant" name="expiry" type="radio"/>
+<span class="font-body-sm text-body-sm">Ends in &lt; 3 Days</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-primary-container focus:ring-primary-container bg-surface-container-lowest border-surface-variant" name="expiry" type="radio"/>
+<span class="font-body-sm text-body-sm">Ends in &lt; 1 Week</span>
+</label>
+</div>
+</div>
+<!-- Discount % -->
+<div class="flex flex-col gap-stack-sm">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Discount %</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1 border border-surface-variant rounded-full font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">10%+</button>
+<button class="px-3 py-1 border border-on-secondary-fixed bg-surface-container-highest rounded-full font-body-sm text-body-sm transition-colors">20%+</button>
+<button class="px-3 py-1 border border-surface-variant rounded-full font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">50%+</button>
+</div>
+</div>
+<!-- Seller Rating -->
+<div class="flex flex-col gap-stack-sm">
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Seller Rating</h3>
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-primary-container rounded focus:ring-primary-container bg-surface-container-lowest border-surface-variant" type="checkbox"/>
+<div class="flex items-center text-tertiary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star_border</span>
+<span class="font-body-sm text-body-sm text-on-surface ml-1">4+ Stars</span>
+</div>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-primary-container rounded focus:ring-primary-container bg-surface-container-lowest border-surface-variant" type="checkbox"/>
+<div class="flex items-center text-tertiary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-body-sm text-body-sm text-on-surface ml-1">Verified Sellers Only</span>
+</div>
+</label>
+</div>
+</div>
+<button class="mt-auto lg:mt-4 w-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase py-3 rounded-lg hover:bg-surface-tint transition-colors">
+                Apply Filters
+            </button>
+</aside>
+<!-- Main Content Canvas -->
+<div class="flex-1 flex flex-col gap-stack-md">
+<!-- Sort Bar -->
+<div class="hidden lg:flex items-center justify-between pb-4 border-b border-surface-variant">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Showing <span class="font-semibold text-on-surface">42</span> coupons for Swiggy</p>
+<div class="flex items-center gap-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sort by:</span>
+<select class="bg-transparent border-none font-body-sm text-body-sm text-on-surface font-semibold focus:ring-0 cursor-pointer outline-none">
+<option>Recommended</option>
+<option>Price: Low to High</option>
+<option>Discount: High to Low</option>
+<option>Expiring Soon</option>
+</select>
+</div>
+</div>
+<!-- Bento Grid of Coupons -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- High Value Coupon (Spans 2 cols on md/xl if needed, keeping simple grid for now) -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg flex flex-col overflow-hidden hover:border-on-secondary-fixed transition-colors coupon-notch relative group cursor-pointer">
+<div class="p-4 border-b border-surface-variant border-dashed flex justify-between items-start bg-gradient-to-r from-surface-container-lowest to-surface-container-high">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm overflow-hidden border border-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist logo of a food delivery app, focusing on high contrast vibrant orange against a pure white background. The image is rendered in a flat, modern digital aesthetic suitable for a sleek UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8nrX9CE4mkZUW7iu32OAKnmkbmWWKpvCEigf30LJ1Z-LjIz1sNCax1zJmtfFAIVSQNWAlgIwXvDigCguLUIysqv06l-wiD076ISwOtuZRcfY4DVi-oOHcrrvHiyBdchC316MfNcvu00WmCyPubr9hNb9pC7U3_bxdBuI6WefJlOQaUCnAxK36Wplcl5l3Lw-SCkkSKzp2OrQSbolB5P_dNowuCRk6QQaGmV80Rplct-RSEA87aEFerunT564zwT--Jjxd-ftxFFA"/>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface leading-tight">Swiggy</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Food Delivery</span>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-tertiary-fixed text-on-tertiary-fixed px-2 py-1 rounded font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+<span>Ends 2h</span>
+</div>
+</div>
+<div class="p-6 flex flex-col items-center justify-center gap-2 flex-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider">Flat Discount</span>
+<div class="font-price-display text-price-display text-4xl text-primary-container font-bold">₹150 OFF</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">On orders above ₹499</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border-t border-surface-variant border-dashed flex justify-between items-center">
+<div class="flex items-center gap-1 text-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">98% Success</span>
+</div>
+<div class="font-price-display text-price-display text-lg text-on-surface font-bold">₹45</div>
+</div>
+<!-- Hover Overlay -->
+<div class="absolute inset-0 bg-on-secondary-fixed/5 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary-container text-on-primary font-label-caps text-label-caps uppercase px-6 py-2 rounded-lg shadow-sm">View Details</button>
+</div>
+</div>
+<!-- Standard Coupon -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg flex flex-col overflow-hidden hover:border-on-secondary-fixed transition-colors coupon-notch relative group cursor-pointer">
+<div class="p-4 border-b border-surface-variant border-dashed flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm overflow-hidden border border-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A simple abstract graphic representing food or groceries in a minimal, geometric style. It uses deep navy and subtle ivory tones to create a premium, clean look fitting for a modern marketplace interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrfRq8nsFlK59RLr7KCNvc4FwjyGBo6_eXqQYJk0k_9XI6DXGfIE_04YLQuoJrx5WTpGwHAdlBuTK2LgjjxRvdGCEY4RJvtYFymOSD3prAYqb_Vy3Efb6HfR7Hhb8S4WHHpI6IZjDXkE9ndbpTjk1Jlpx8gy26UsJZiCPq3fjgyVPAaOv_T17uvBW5Ou0tmJDSsQYpRmzcqdMNKfJAWDP8xJ62yEFcWHjwxzkhasShRLSEXTrFwgEOwMDB1I4_QIhUlVbVZ75yYEA"/>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface leading-tight">Swiggy Instamart</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Groceries</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex flex-col items-center justify-center gap-2 flex-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider">Percentage</span>
+<div class="font-price-display text-price-display text-4xl text-on-surface font-bold">60% OFF</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">Up to ₹120 on first order</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border-t border-surface-variant border-dashed flex justify-between items-center">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-body-sm text-body-sm">3 Days left</span>
+</div>
+<div class="font-price-display text-price-display text-lg text-on-surface font-bold">₹30</div>
+</div>
+<!-- Hover Overlay -->
+<div class="absolute inset-0 bg-on-secondary-fixed/5 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary-container text-on-primary font-label-caps text-label-caps uppercase px-6 py-2 rounded-lg shadow-sm">View Details</button>
+</div>
+</div>
+<!-- Another Standard Coupon -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg flex flex-col overflow-hidden hover:border-on-secondary-fixed transition-colors coupon-notch relative group cursor-pointer">
+<div class="p-4 border-b border-surface-variant border-dashed flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm overflow-hidden border border-surface-variant">
+<img class="w-full h-full object-cover" data-alt="A stylized illustration of a restaurant cloche or plate, drawn with precise, 2px thin hairlines in deep navy blue on a pure white background. The image evokes a sense of high-end dining and structured design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0DDLgIbdKwPQlxTGLzY-rsJeJ0lRClBobOW8f76SKMoAtoclGQ0d1tdfYjvEVuSBkEsItNYj05fS3iSaPPU5z7a9GiL4SyNXAftZHt_Z0YpQSVY_EwzWb8MNtUVh4M_zMwvN3PvGXcLDZmYclZINbb71xzB9fLqXTQrf8VsNQs64PR2-FRAcO0WfhlWHxvuMdtDpEtDFHEavq1oUWsKWrSJyyZ_Rj9FETIOxU8GOwfLdSg1pwMr4YP_npYCvWVz_Z5IZ9WfCXsxo"/>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface leading-tight">Swiggy Dineout</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Dining</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex flex-col items-center justify-center gap-2 flex-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider">Cashback</span>
+<div class="font-price-display text-price-display text-4xl text-on-surface font-bold">20% CB</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">On paying bill via app</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border-t border-surface-variant border-dashed flex justify-between items-center">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-body-sm text-body-sm">1 Week left</span>
+</div>
+<div class="font-price-display text-price-display text-lg text-on-surface font-bold">₹25</div>
+</div>
+<!-- Hover Overlay -->
+<div class="absolute inset-0 bg-on-secondary-fixed/5 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary-container text-on-primary font-label-caps text-label-caps uppercase px-6 py-2 rounded-lg shadow-sm">View Details</button>
+</div>
+</div>
+<!-- Another Standard Coupon -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-lg flex flex-col overflow-hidden hover:border-on-secondary-fixed transition-colors coupon-notch relative group cursor-pointer opacity-70">
+<div class="p-4 border-b border-surface-variant border-dashed flex justify-between items-start bg-surface-container">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm overflow-hidden border border-surface-variant grayscale">
+<img class="w-full h-full object-cover" data-alt="A minimalist grey icon representing a generic fast food item like a burger or pizza slice. The style is flat and utilitarian, using subtle ivory and light grey tones, fitting for a clean UI marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCew7h5OiuMKOuRV-nH6KYbbH-zHZOqcYPNphs_xItNELPhMweQcojcTubbQq-MztsV5uSt6ivKxqhWzKf-WjeJxJN542TMfsqiN8lblSsjA0bWcJYgmoxrItnm-YVgvvXSCng2eDazHvk5ltBpOxFGBciOQC-UGIv0tQ-n0XUp44jOpiGxAm2lr4Zl-jYxfyIubp54YIZtAEYZ64PW4Z-QIP0f1KFhsyRNY6lVDbkUvbAGo39T4RXtN3mucowj0XfTAW3_Y86WeUs"/>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface leading-tight">Swiggy</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Food Delivery</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex flex-col items-center justify-center gap-2 flex-1 bg-surface-container">
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider">Free Delivery</span>
+<div class="font-price-display text-price-display text-4xl text-on-surface font-bold">₹0 Del</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">Distance up to 5km</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border-t border-surface-variant border-dashed flex justify-between items-center">
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[16px]">error</span>
+<span class="font-body-sm text-body-sm">Expired</span>
+</div>
+<div class="font-price-display text-price-display text-lg text-on-surface font-bold line-through text-on-surface-variant">₹10</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-on-secondary-fixed dark:bg-on-secondary-fixed border-t border-outline z-50">
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

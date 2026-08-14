@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchase Credits | CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Geist:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-low": "#f6f3ec",
+                "tertiary-fixed-dim": "#ecc246",
+                "on-tertiary-fixed": "#241a00",
+                "tertiary": "#755b00",
+                "surface-container-high": "#ebe8e1",
+                "on-primary-fixed-variant": "#832600",
+                "on-background": "#1c1c18",
+                "on-primary": "#ffffff",
+                "surface": "#fcf9f2",
+                "inverse-on-surface": "#f3f0ea",
+                "on-tertiary-fixed-variant": "#584400",
+                "tertiary-fixed": "#ffe08e",
+                "background": "#fcf9f2",
+                "surface-bright": "#fcf9f2",
+                "on-secondary-fixed": "#0a1b39",
+                "secondary-container": "#c8d7fe",
+                "primary-container": "#ff6b35",
+                "on-primary-container": "#5f1900",
+                "surface-dim": "#dcdad3",
+                "secondary-fixed-dim": "#b7c6ed",
+                "surface-variant": "#e5e2db",
+                "secondary": "#4f5e80",
+                "primary": "#ab3500",
+                "error-container": "#ffdad6",
+                "inverse-primary": "#ffb59d",
+                "primary-fixed": "#ffdbd0",
+                "outline-variant": "#e1bfb5",
+                "on-secondary-container": "#4e5d7f",
+                "on-surface": "#1c1c18",
+                "surface-container-highest": "#e5e2db",
+                "surface-tint": "#ab3500",
+                "primary-fixed-dim": "#ffb59d",
+                "error": "#ba1a1a",
+                "outline": "#8d7168",
+                "on-error": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#594139",
+                "tertiary-container": "#cea62b",
+                "surface-container": "#f0eee7",
+                "on-tertiary-container": "#4f3d00",
+                "on-secondary": "#ffffff",
+                "inverse-surface": "#31312c",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed-variant": "#374667",
+                "on-primary-fixed": "#390c00",
+                "secondary-fixed": "#d8e2ff",
+                "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "stack-md": "16px",
+                "gutter": "16px",
+                "stack-lg": "32px",
+                "container-max": "1200px",
+                "margin-mobile": "20px",
+                "margin-desktop": "40px",
+                "stack-sm": "8px"
+            },
+            "fontFamily": {
+                "display-lg": ["Inter", "sans-serif"],
+                "body-lg": ["Geist", "sans-serif"],
+                "price-display": ["JetBrains Mono", "monospace"],
+                "headline-md": ["Inter", "sans-serif"],
+                "label-caps": ["Geist", "sans-serif"],
+                "body-sm": ["Geist", "sans-serif"]
+            },
+            "fontSize": {
+                "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #FAF7F0;
+            color: #1C1C18;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .coupon-card-notch {
+            position: relative;
+            background: #FFFFFF;
+            border: 1px solid #E7E2D8;
+        }
+        .coupon-card-notch::before, .coupon-card-notch::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #FAF7F0;
+            border: 1px solid #E7E2D8;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .coupon-card-notch::after {
+            left: auto;
+            right: -8px;
+        }
+        .selection-ring {
+            transition: all 0.2s ease-in-out;
+        }
+        .selected-pack {
+            border-color: #0B1C3A !important;
+            border-width: 2px !important;
+            background-color: #F0F4F8 !important;
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline z-40">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop py-stack-sm w-full max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-bold text-primary">CouponEx</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant ml-2 tracking-widest">SELLER HUB</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-price-display text-price-display text-on-secondary-fixed">100C</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full">notifications</button>
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center border border-outline">
+<span class="material-symbols-outlined text-on-secondary-fixed text-sm">person</span>
+</div>
+</div>
+</div>
+</header>
+<div class="max-w-container-max mx-auto flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="hidden md:flex flex-col w-64 border-r border-outline-variant/30 py-stack-lg sticky top-16 h-[calc(100vh-64px)] overflow-y-auto px-margin-desktop">
+<nav class="space-y-2">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4 px-3">ACCOUNT SETTINGS</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-sm text-body-sm">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined">security</span>
+<span class="font-body-sm text-body-sm">Security</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-sm text-body-sm">Payouts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface-container-highest text-primary font-bold transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_card</span>
+<span class="font-body-sm text-body-sm">Purchase Credits</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-body-sm text-body-sm">Notifications</span>
+</a>
+<div class="pt-8 mt-8 border-t border-outline-variant/20">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-sm text-body-sm">Help Center</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile md:px-margin-desktop py-stack-lg">
+<header class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-secondary-fixed mb-2 tracking-tight">Purchase Credits</h1>
+<p class="font-body-lg text-on-surface-variant max-w-xl">Credits are used to list items, boost visibility, and unlock premium seller insights on the CouponEx marketplace.</p>
+</div>
+<!-- Current Balance Card -->
+<div class="bg-white border border-outline-variant p-stack-md rounded-xl flex flex-col items-center justify-center min-w-[180px] text-center shadow-md transition-shadow">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Current Balance</span>
+<div class="flex items-center gap-1">
+<span class="font-display-lg text-display-lg text-primary-container">100</span>
+<span class="font-display-lg text-display-lg text-primary-container font-price-display">C</span>
+</div>
+</div>
+</header>
+<section class="mb-stack-lg">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-2">
+                    Select a Pack
+                    <span class="h-px flex-1 bg-outline-variant/30 ml-4"></span>
+</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch"><!-- Custom Amount Pack (Now First) -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">CUSTOM AMOUNT</span>
+<div class="w-full mb-4">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-center font-price-display text-on-secondary-fixed focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" min="10" oninput="event.stopPropagation()" placeholder="Enter credits (min. 10)" type="number"/>
+</div>
+<div class="flex items-center justify-center gap-2 py-2 px-4 bg-surface-container-high rounded-full mb-6">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Rate:</span>
+<span class="font-price-display text-sm text-primary">1C = ₹1</span>
+</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 1: 100C -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">STARTER PACK</span>
+<div class="font-display-lg text-display-lg mb-4 text-on-secondary-fixed">100<span class="font-price-display">C</span></div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹100</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 2: 200C -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">REGULAR PACK</span>
+<div class="font-display-lg text-display-lg mb-4 text-on-secondary-fixed">200<span class="font-price-display">C</span></div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹200</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 3: 550C (BEST VALUE) -->
+<div class="coupon-card-notch group cursor-pointer border-2 border-tertiary-container shadow-md p-6 flex flex-col items-center text-center relative overflow-hidden bg-white/50" onclick="selectPack(this)">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 bg-tertiary-container text-on-tertiary px-4 py-1 font-label-caps text-[10px] font-bold rounded-b-lg shadow-sm">BEST VALUE</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">POPULAR PACK</span>
+<div class="flex flex-col items-center mb-4">
+<div class="font-display-lg text-display-lg text-on-secondary-fixed">550<span class="font-price-display">C</span></div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold mt-1">10% BONUS INCLUDED</span>
+</div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹500</div>
+<button class="mt-auto w-full py-2 bg-primary-container text-white font-bold rounded-lg active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-sm shadow-primary/20 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 4: 1100C -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">PRO PACK</span>
+<div class="flex flex-col items-center mb-4">
+<div class="font-display-lg text-display-lg text-on-secondary-fixed">1100<span class="font-price-display">C</span></div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold mt-1">10% BONUS INCLUDED</span>
+</div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹1000</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 5: 2750C (2500 + 10% Bonus) -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">ELITE PACK</span>
+<div class="flex flex-col items-center mb-4">
+<div class="font-display-lg text-display-lg text-on-secondary-fixed">2750<span class="font-price-display">C</span></div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold mt-1">10% BONUS INCLUDED</span>
+</div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹2500</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 6: 5500C (5000 + 10% Bonus) -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">MASTER PACK</span>
+<div class="flex flex-col items-center mb-4">
+<div class="font-display-lg text-display-lg text-on-secondary-fixed">5500<span class="font-price-display">C</span></div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold mt-1">10% BONUS INCLUDED</span>
+</div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹5000</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div>
+<!-- Pack 7: 11000C (10000 + 10% Bonus) -->
+<div class="coupon-card-notch group cursor-pointer hover:border-on-secondary-fixed transition-all p-6 flex flex-col items-center text-center relative overflow-hidden" onclick="selectPack(this)">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-2">ULTIMATE PACK</span>
+<div class="flex flex-col items-center mb-4">
+<div class="font-display-lg text-display-lg text-on-secondary-fixed">11000<span class="font-price-display">C</span></div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold mt-1">10% BONUS INCLUDED</span>
+</div>
+<div class="font-headline-md text-headline-md text-primary mb-6">₹10000</div>
+<button class="mt-auto w-full py-2 border border-outline text-on-secondary-fixed font-bold rounded-lg hover:bg-on-secondary-fixed hover:text-white transition-colors flex items-center justify-center gap-2 h-11">
+<span class="material-symbols-outlined text-sm">add</span> Select
+    </button>
+</div></div>
+</section>
+<!-- Checkout Section -->
+<section class="mt-12 bg-white border border-outline-variant p-8 rounded-xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-md">
+<div class="flex items-center gap-6">
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/50">
+<img class="h-8 grayscale opacity-70" data-alt="A clean, minimalist logo for Razorpay payments in deep navy and bright blue, set against a pristine white background. The style is modern fintech, high trust, and utilitarian." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEr-_ntP-oXOUNv2pduF_MM453TXioeuIWRL4gDIYdZgxhHdnP0KaplbUhoWdj1NYQ2eF-S27iVbREfSoQYWehErgpxVnyoMqNWp2Tq-MVRuczlZ214mFfYcpJea1oLxodCVIHs_EQsLPJicD-HldEqII2Jtv20Kg4EqitmzAdfubjYHu0spqQZdkRY9fsTflE9nh3gMx7uk2BTorsocQXrdCjYggZrZWuvzjrEcgUCjf2lwQEhX3l"/>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed">Secure Checkout</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Payments are processed securely via Razorpay. Support for UPI, Cards, and Netbanking.</p>
+</div>
+</div>
+<div class="flex flex-col items-center md:items-end gap-4">
+<div class="hidden text-right" id="selection-summary">
+<span class="font-body-sm text-on-surface-variant">Selected Pack: <strong class="text-on-secondary-fixed" id="selected-pack-name">-</strong></span>
+<div class="text-display-lg text-on-secondary-fixed" id="selected-total">₹0.00</div>
+</div>
+<button class="px-12 py-4 bg-outline-variant text-on-surface-variant font-bold rounded-lg cursor-not-allowed transition-all flex items-center gap-3" disabled="" id="purchase-btn">
+<span class="material-symbols-outlined">lock</span>
+                        Purchase Now
+                    </button>
+</div>
+</section>
+<!-- Trust Badges & T&C -->
+<div class="mt-8 flex flex-wrap justify-center gap-8 py-8 border-t border-outline-variant/20">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary">verified_user</span>
+<span class="font-label-caps text-label-caps">PCI-DSS COMPLIANT</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary">history</span>
+<span class="font-label-caps text-label-caps">INSTANT CREDIT REFLECT</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary">support_agent</span>
+<span class="font-label-caps text-label-caps">24/7 MERCHANT SUPPORT</span>
+</div>
+</div>
+<footer class="mt-4 text-center max-w-2xl mx-auto">
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-60">
+                    By clicking "Purchase Now", you agree to the CouponEx Terms of Service and Merchant Agreement. 
+                    Credits are non-refundable and expire after 12 months of inactivity. GST inclusive where applicable.
+                </p>
+</footer>
+</main>
+</div>
+<!-- Bottom Navigation Bar (Mobile Viewport Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-margin-mobile bg-secondary dark:bg-on-secondary-fixed border-t border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="font-label-caps text-[10px]">Listings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-[10px]">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-fixed font-bold transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-caps text-[10px]">Payouts</span>
+</a>
+</nav>
+<script>
+        function selectPack(element) {
+            // Clear previous selection
+            document.querySelectorAll('.coupon-card-notch').forEach(card => {
+                card.classList.remove('selected-pack');
+                const btn = card.querySelector('button');
+                if (!card.classList.contains('border-tertiary-container')) {
+                    btn.classList.remove('bg-on-secondary-fixed', 'text-white');
+                    btn.classList.add('border-outline', 'text-on-secondary-fixed');
+                }
+            });
+
+            // Apply active styles
+            element.classList.add('selected-pack');
+            const btn = element.querySelector('button');
+            btn.classList.remove('border-outline');
+            btn.classList.add('bg-on-secondary-fixed', 'text-white');
+
+            // Update Summary
+            const packName = element.querySelector('.font-label-caps').innerText;
+            const packPrice = element.querySelector('.text-primary').innerText;
+            
+            const summary = document.getElementById('selection-summary');
+            const purchaseBtn = document.getElementById('purchase-btn');
+            const packNameEl = document.getElementById('selected-pack-name');
+            const totalEl = document.getElementById('selected-total');
+
+            summary.classList.remove('hidden');
+            packNameEl.innerText = packName;
+            totalEl.innerText = packPrice;
+
+            // Enable Purchase Button
+            purchaseBtn.disabled = false;
+            purchaseBtn.classList.remove('bg-outline-variant', 'text-on-surface-variant', 'cursor-not-allowed');
+            purchaseBtn.classList.add('bg-primary-container', 'text-white', 'hover:opacity-90', 'active:scale-95');
+            purchaseBtn.querySelector('span').innerText = 'lock_open';
+        }
+
+        // Pulse effect for the Best Value badge
+        setInterval(() => {
+            const badge = document.querySelector('.bg-tertiary-container');
+            badge.style.opacity = badge.style.opacity === '0.8' ? '1' : '0.8';
+        }, 800);
+    </script>
+</body></html>

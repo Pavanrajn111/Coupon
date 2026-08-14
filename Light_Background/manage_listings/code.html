@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Listings Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "tertiary-container": "#cea62b",
+                      "surface-variant": "#e5e2db",
+                      "inverse-on-surface": "#f3f0ea",
+                      "secondary-container": "#c8d7fe",
+                      "on-tertiary-container": "#4f3d00",
+                      "inverse-primary": "#ffb59d",
+                      "surface-container": "#f0eee7",
+                      "tertiary": "#755b00",
+                      "surface-dim": "#dcdad3",
+                      "outline-variant": "#e1bfb5",
+                      "on-primary-fixed-variant": "#832600",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#f6f3ec",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-container": "#4e5d7f",
+                      "on-tertiary-fixed": "#241a00",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "on-surface-variant": "#594139",
+                      "error-container": "#ffdad6",
+                      "on-surface": "#1c1c18",
+                      "inverse-surface": "#31312c",
+                      "on-primary": "#ffffff",
+                      "surface-container-high": "#ebe8e1",
+                      "surface-bright": "#fcf9f2",
+                      "surface": "#fcf9f2",
+                      "on-tertiary-fixed-variant": "#584400",
+                      "on-primary-fixed": "#390c00",
+                      "surface-container-highest": "#e5e2db",
+                      "on-secondary-fixed": "#0a1b39",
+                      "on-error-container": "#93000a",
+                      "secondary": "#4f5e80",
+                      "primary-fixed": "#ffdbd0",
+                      "on-tertiary": "#ffffff",
+                      "on-background": "#1c1c18",
+                      "surface-tint": "#ab3500",
+                      "outline": "#8d7168",
+                      "on-primary-container": "#5f1900",
+                      "primary": "#ab3500",
+                      "on-error": "#ffffff",
+                      "background": "#fcf9f2",
+                      "secondary-fixed": "#d8e2ff",
+                      "primary-container": "#ff6b35",
+                      "primary-fixed-dim": "#ffb59d",
+                      "on-secondary-fixed-variant": "#374667",
+                      "tertiary-fixed": "#ffe08e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-lg": "32px",
+                      "margin-desktop": "40px",
+                      "margin-mobile": "20px",
+                      "stack-sm": "8px",
+                      "gutter": "16px",
+                      "stack-md": "16px",
+                      "container-max": "1200px"
+              },
+              "fontFamily": {
+                      "price-display": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body { background-color: #FAF7F0; color: #1c1c18; }
+        .hairline-border { border: 1px solid #E7E2D8; }
+        .focus-border:focus-within { border-color: #0B1C3A; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop py-stack-sm w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-gutter">
+<img class="w-8 h-8 rounded-full hairline-border object-cover" data-alt="A small, stylized profile avatar of a generic user in a minimalist style. The avatar features clean lines, a simple geometric face, and is set against a subtle, warm ivory background. The color palette primarily uses soft, muted tones to fit a premium fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClkjUDZ8rRxPfM5bdDIgp-qBOVxMJS3EMVExC4s5cqlGAQSPIz34-6NVQ1sztMFm3dYoJ8bv6LjzCBKep7aXZmVbBNtQjgJym6RiHPG0PBLBhbiCCi0qEed-abKL1u2-qKa9m33D8Gv8EG4ObiVTV6pjuqd2YX_VkNkh1jFCR4Qt3xyNos2CR7vA56IsM7eXs3u5V9E-h58SSJmnHDuNR0CUherClF7RvAIf4pvzJxh2JS092Rwdn7cxFqdgIPSjvTr55qyM0vqOQ"/>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Seller Hub</h1>
+</div>
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg mb-20">
+<div class="flex justify-between items-end mb-stack-md">
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background">Your Listings</h2>
+<button class="bg-primary-container text-on-primary font-label-caps text-label-caps px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">add</span>
+                NEW
+            </button>
+</div>
+<div class="flex flex-col gap-stack-sm">
+<!-- Listing 1 (Active) -->
+<div class="bg-surface-container-lowest hairline-border rounded-lg p-stack-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md transition-colors hover:bg-surface-container-low">
+<div class="flex items-center gap-gutter w-full md:w-auto">
+<img class="w-12 h-12 rounded hairline-border object-contain bg-white" data-alt="A sleek, minimalist logo for a generic electronics brand. The logo uses a clean, modern sans-serif font in a deep navy blue, set against a pure white background. It conveys a sense of high-end technology and precision, fitting a premium digital marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM9gEdJ7HevWB_cUfS0AhQ-7gyDrws_NIcl_NRqby3IJeNAss6jU1O2RQ2gnQBf9TCsRaNsaSxWRPIjSrdhWyDTRuH1StbMKIAfHEzQAZnK__QWF4lZmCp7SFRDGmJb-I-Bwcj-EEGuBc8vWyu_aQq8NVxq2bDeoKWAFkhqFFnjVcCEJKutHTW64yelXO-e10i5T3bM6W4PVQojWcz10QUTqV3Ta5OAXdVGca0WE4SbORwnbaKt_fphffBHZF_PaNMLDfgKVqaoNI"/>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">TechBazaar Promo Code</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Valid until Oct 31, 2023</span>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-gutter md:gap-stack-lg">
+<div class="flex flex-col items-start md:items-end">
+<span class="font-price-display text-price-display text-primary-container">-20%</span>
+<div class="flex items-center gap-1 mt-1">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="font-label-caps text-label-caps text-on-surface">Active</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant" title="Withdraw">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Listing 2 (Sold) -->
+<div class="bg-surface-container-lowest hairline-border rounded-lg p-stack-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md opacity-75">
+<div class="flex items-center gap-gutter w-full md:w-auto">
+<img class="w-12 h-12 rounded hairline-border object-contain bg-white" data-alt="A simple, elegant logo for a fashion retailer. The design features a stylized hanger icon in a warm ivory color on a dark navy background. The overall aesthetic is minimalist and high-trust, suitable for a premium peer-to-peer marketplace context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADiTMU0pEGo0gEuw0VJYH3euCie3AyZ8cgdOo5fzFkikRai5wnGWwCB5xxRyTk-d2ueg5c3EcTYHXgBTGdgO9I1KVeK3M7po8DQIJHLATQtLxTJApkCNk1_U-yeBxYe4faCXC_bCCwWV2bdlF85R5viihezldrgM6bTu1U3xhY6M1Mzwg6jMftECrKu8Q_6YJCnxgTdAz_hayMtLfojzIWzzRwI_4dkaqLvptglL-mYOxmQ6qIEIfiyN2m1QZkmvGeCXFb1AUPqt0"/>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">StyleAvenue Gift Card</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sold on Sep 15, 2023</span>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-gutter md:gap-stack-lg">
+<div class="flex flex-col items-start md:items-end">
+<span class="font-price-display text-price-display text-on-surface">₹5,000</span>
+<div class="flex items-center gap-1 mt-1">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="font-label-caps text-label-caps text-on-surface">Sold</span>
+</div>
+</div>
+<div class="flex gap-2 invisible md:visible">
+<button class="p-2 opacity-0 pointer-events-none text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-2 opacity-0 pointer-events-none text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">cancel</span></button>
+</div>
+</div>
+</div>
+<!-- Listing 3 (Expired) -->
+<div class="bg-surface-container-lowest hairline-border rounded-lg p-stack-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md opacity-50 grayscale">
+<div class="flex items-center gap-gutter w-full md:w-auto">
+<img class="w-12 h-12 rounded hairline-border object-contain bg-white" data-alt="A clean, geometric logo for a generic food delivery service. The logo features a simple line-art bowl and chopsticks in deep navy on a white background. It is designed to look professional, trustworthy, and visually clear for a digital platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACGiouoq-uPQsjqdY0yLHe8yIv03G1P5w6Dj2rBJARv96IwzokAPxc_4gmfKnUb1ei8ZkEka5ZB7R6dCSEnMPYs-l6zWuIA2CbCHI7yG_fZQAGSiZduhjiEYOq4sH8qEEetx-BC2S5cggrit4YLzwwKoY6hfAcAeN_F6np8y5MjazuAD5zrS31EBMX2KeSgr0T2U_0gOOKzMM8UU9DtwGtObzD6h7UPjGffzfSFdwUVkhZ-YOKDbaw26cjtnX1BxyROOf8MESvAn8"/>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">FoodExpress Discount</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Expired Aug 01, 2023</span>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-gutter md:gap-stack-lg">
+<div class="flex flex-col items-start md:items-end">
+<span class="font-price-display text-price-display text-on-surface line-through">₹200</span>
+<div class="flex items-center gap-1 mt-1">
+<span class="w-2 h-2 rounded-full bg-surface-variant"></span>
+<span class="font-label-caps text-label-caps text-on-surface">Expired</span>
+</div>
+</div>
+<div class="flex gap-2 invisible md:visible">
+<button class="p-2 opacity-0 pointer-events-none text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-2 opacity-0 pointer-events-none text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">cancel</span></button>
+</div>
+</div>
+</div>
+<!-- Listing 4 (Disputed) -->
+<div class="bg-surface-container-lowest border border-error-container rounded-lg p-stack-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md">
+<div class="flex items-center gap-gutter w-full md:w-auto">
+<img class="w-12 h-12 rounded hairline-border object-contain bg-white" data-alt="A minimalist logo for a generic travel booking site. The design uses a simple outlined airplane icon in a muted red tone, placed on a white background with a thin hairline border. The style is utilitarian and high-contrast, fitting a structured design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1hxlIinFbQNRqLiSCMxBOdINDntACfwtXE1yxVNOoA4nsk3s5l6Xder5LtwBwFBwFhol93GuzP-ARVDLjTwX_tc_c31tWzXl9tkB_z4XvGl2JxX8CNfm6uPu62qrBSLcJ965TSfQYZGUIwgROOQOeDOnH_21JC-0kNDMgwjTcxMuJMfO52YGRELMnGkBZwu_NyFJWFAumh5JryosVXqbFBAP6KFjBAsfBHcFfXAOh_VQS5NrTIcfJUlXvVZ1txDjOYYdYY9FcPgQ"/>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">TravelNow Voucher</span>
+<span class="font-body-sm text-body-sm text-error">Requires attention</span>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-gutter md:gap-stack-lg">
+<div class="flex flex-col items-start md:items-end">
+<span class="font-price-display text-price-display text-on-surface">₹10,000</span>
+<div class="flex items-center gap-1 mt-1 px-2 py-0.5 bg-error-container rounded border border-error">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-caps text-label-caps text-error">Disputed</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant" title="View Details">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-margin-mobile bg-secondary dark:bg-on-secondary-fixed border-t border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant hover:bg-on-secondary-container/10 transition-all active:scale-95 transition-transform duration-150 p-2 rounded" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-fixed font-bold hover:bg-on-secondary-container/10 transition-all active:scale-95 transition-transform duration-150 p-2 rounded" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">list_alt</span>
+<span class="font-label-caps text-label-caps mt-1">Listings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant hover:bg-on-secondary-container/10 transition-all active:scale-95 transition-transform duration-150 p-2 rounded" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant hover:bg-on-secondary-container/10 transition-all active:scale-95 transition-transform duration-150 p-2 rounded" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-caps text-label-caps mt-1">Payouts</span>
+</a>
+</nav>
+<!-- Top Navigation (Desktop) - Hidden on mobile, appended to header structurally in a real app, simplified here -->
+<nav class="hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 z-50 gap-stack-lg">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">HOME</a>
+<a class="font-label-caps text-label-caps text-primary font-bold border-b-2 border-primary" href="#">LISTINGS</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">SELL</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">PAYOUTS</a>
+</nav>
+</body></html>

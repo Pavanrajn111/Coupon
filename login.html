@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | CouponEx</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-light",
+          theme === "light",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "rgb(var(--primary-rgb) / <alpha-value>)",
+              "primary-container":
+                "rgb(var(--primary-container-rgb) / <alpha-value>)",
+              secondary: "rgb(var(--secondary-rgb) / <alpha-value>)",
+              background: "rgb(var(--background-rgb) / <alpha-value>)",
+              surface: "rgb(var(--surface-rgb) / <alpha-value>)",
+              "surface-container":
+                "rgb(var(--surface-container-rgb) / <alpha-value>)",
+              "surface-container-low":
+                "rgb(var(--surface-container-low-rgb) / <alpha-value>)",
+              "surface-container-high":
+                "rgb(var(--surface-container-high-rgb) / <alpha-value>)",
+              "surface-container-highest":
+                "rgb(var(--surface-container-highest-rgb) / <alpha-value>)",
+              "surface-container-lowest":
+                "rgb(var(--surface-container-lowest-rgb) / <alpha-value>)",
+              "outline-variant":
+                "rgb(var(--outline-variant-rgb) / <alpha-value>)",
+              "on-surface": "rgb(var(--on-surface-rgb) / <alpha-value>)",
+              "on-surface-variant":
+                "rgb(var(--on-surface-variant-rgb) / <alpha-value>)",
+              "on-primary": "rgb(var(--on-primary-rgb) / <alpha-value>)",
+              "on-primary-container":
+                "rgb(var(--on-primary-container-rgb) / <alpha-value>)",
+              "on-secondary": "rgb(var(--on-secondary-rgb) / <alpha-value>)",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --primary-rgb: 192 193 255;
+        --primary-container-rgb: 128 131 255;
+        --secondary-rgb: 74 225 118;
+        --background-rgb: 11 19 38;
+        --surface-rgb: 11 19 38;
+        --surface-container-rgb: 23 31 51;
+        --surface-container-low-rgb: 19 27 46;
+        --surface-container-high-rgb: 34 42 61;
+        --surface-container-highest-rgb: 45 52 73;
+        --surface-container-lowest-rgb: 6 14 32;
+        --outline-variant-rgb: 70 69 84;
+        --on-surface-rgb: 218 226 253;
+        --on-surface-variant-rgb: 199 196 215;
+        --on-primary-rgb: 16 0 169;
+        --on-primary-container-rgb: 13 0 150;
+        --on-secondary-rgb: 0 57 21;
+        --border-rgb: 192 193 255;
+        --border-strong-rgb: 192 193 255;
+        --error-rgb: 255 180 171;
+        --error-border-rgb: 255 180 171;
+        --error-bg-rgb: 147 0 10;
+        --success-border-rgb: 192 193 255;
+        --success-bg-rgb: 192 193 255;
+        --card-shadow: 0 25px 60px -18px rgba(0, 0, 0, 0.65);
+        --glow-rgb: 128 131 255;
+      }
+
+      html.theme-light {
+        --primary-rgb: 171 53 0;
+        --primary-container-rgb: 255 107 53;
+        --secondary-rgb: 79 94 128;
+        --background-rgb: 252 249 242;
+        --surface-rgb: 252 249 242;
+        --surface-container-rgb: 255 255 255;
+        --surface-container-low-rgb: 246 243 236;
+        --surface-container-high-rgb: 255 255 255;
+        --surface-container-highest-rgb: 231 226 216;
+        --surface-container-lowest-rgb: 245 239 229;
+        --outline-variant-rgb: 141 113 104;
+        --on-surface-rgb: 11 28 58;
+        --on-surface-variant-rgb: 89 65 57;
+        --on-primary-rgb: 255 255 255;
+        --on-primary-container-rgb: 255 255 255;
+        --on-secondary-rgb: 255 255 255;
+        --border-rgb: 141 113 104;
+        --border-strong-rgb: 231 226 216;
+        --card-shadow: 0 16px 44px rgba(53, 29, 12, 0.08);
+        --glow-rgb: 255 107 53;
+      }
+
+      body {
+        background-color: rgb(var(--background-rgb));
+        color: rgb(var(--on-surface-rgb));
+        background-image: linear-gradient(
+          180deg,
+          rgb(var(--background-rgb)) 0%,
+          rgb(var(--surface-container-lowest-rgb)) 100%
+        );
+        overflow-x: hidden;
+      }
+
+      .glass-card {
+        background: rgba(var(--surface-container-rgb), 0.82);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(var(--border-strong-rgb), 0.7);
+        box-shadow: var(--card-shadow);
+      }
+
+      .glow-effect {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(var(--glow-rgb), 0.2) 0%,
+          rgba(var(--background-rgb), 0) 70%
+        );
+        z-index: 0;
+        filter: blur(50px);
+      }
+
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      .auth-header {
+        border-color: rgba(var(--border-rgb), 0.16) !important;
+        background: rgba(var(--surface-container-rgb), 0.88) !important;
+      }
+
+      .auth-page {
+        min-height: calc(100vh - 4rem);
+        padding: 2rem 1rem 3rem;
+      }
+
+      .auth-shell {
+        width: min(100%, 28rem);
+      }
+
+      .auth-card {
+        width: 100%;
+        padding: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .auth-card {
+          padding: 2rem;
+        }
+      }
+
+      .auth-divider-line {
+        background: rgba(var(--border-rgb), 0.18);
+      }
+
+      .hero-badge {
+        background: rgba(var(--primary-rgb), 0.12);
+        color: rgb(var(--primary-rgb));
+      }
+
+      .secondary-action {
+        background: rgba(var(--surface-container-low-rgb), 1);
+        border-color: rgba(var(--border-rgb), 0.34);
+      }
+
+      .secondary-action:hover {
+        border-color: rgba(var(--primary-rgb), 0.45);
+        background: rgba(var(--surface-container-rgb), 1);
+      }
+
+      .primary-action {
+        background: rgb(var(--primary-container-rgb));
+        color: rgb(var(--on-primary-container-rgb));
+        box-shadow: 0 16px 38px rgba(var(--glow-rgb), 0.2);
+      }
+
+      .primary-action:hover {
+        background: rgb(var(--primary-rgb));
+      }
+
+      .auth-input {
+        background: rgba(var(--surface-container-low-rgb), 1);
+        border-color: rgba(var(--border-rgb), 0.34);
+      }
+
+      .auth-input:focus {
+        border-color: rgba(var(--primary-rgb), 0.7);
+        box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.14);
+      }
+
+      html.theme-light .glass-card {
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      html.theme-light .auth-header {
+        box-shadow: 0 10px 24px rgba(53, 29, 12, 0.05);
+      }
+
+      .field-error {
+        color: rgb(var(--error-rgb));
+      }
+      .status-message.is-error {
+        border-color: rgba(var(--error-border-rgb), 0.24);
+        background: rgba(var(--error-bg-rgb), 0.1);
+        color: rgb(var(--error-rgb));
+      }
+      .status-message.is-success {
+        border-color: rgba(var(--success-border-rgb), 0.2);
+        background: rgba(var(--success-bg-rgb), 0.1);
+        color: rgb(var(--primary-rgb));
+      }
+      input::placeholder {
+        color: rgba(var(--on-surface-variant-rgb), 0.8);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen font-sans">
+
+
+    <main
+      class="auth-page relative flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8"
+    >
+      <div class="glow-effect left-[-5rem] top-16"></div>
+      <div class="glow-effect bottom-[-2rem] right-[-2rem]"></div>
+
+      <div class="auth-shell relative z-10">
+        <div class="auth-card glass-card rounded-[28px]">
+          <div class="mb-8 text-center">
+            <div
+              class="hero-badge mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/15 text-primary"
+            >
+              <span class="material-symbols-outlined text-3xl">lock_open</span>
+            </div>
+            <h1 class="text-3xl font-bold text-on-surface">Welcome back</h1>
+            <p class="mt-2 text-sm text-on-surface-variant">
+              Sign in to your verified CouponEx seller dashboard
+            </p>
+          </div>
+
+          <div
+            id="loginMessage"
+            class="status-message mb-4 hidden rounded-2xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary"
+          ></div>
+
+          <form id="login-form" class="space-y-5">
+            <div>
+              <label
+                for="identity"
+                class="mb-2 block text-sm font-medium text-on-surface-variant"
+                >Email or username</label
+              >
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant"
+                  >person</span
+                >
+                <input
+                  id="identity"
+                  type="text"
+                  placeholder="Enter your email"
+                  class="auth-input w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 pl-11 pr-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                />
+              </div>
+              <p id="identityError" class="field-error mt-2 text-sm"></p>
+            </div>
+
+            <div>
+              <div class="mb-2 flex items-center justify-between">
+                <label
+                  for="password"
+                  class="text-sm font-medium text-on-surface-variant"
+                  >Password</label
+                >
+                <a href="#" class="text-sm text-primary hover:underline"
+                  >Forgot password?</a
+                >
+              </div>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant"
+                  >lock</span
+                >
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  class="auth-input w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 pl-11 pr-12 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                />
+                <button
+                  type="button"
+                  onclick="togglePassword()"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant transition hover:text-on-surface"
+                  aria-label="Toggle password visibility"
+                >
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
+              <p id="passwordError" class="field-error mt-2 text-sm"></p>
+            </div>
+
+            <button
+              type="submit"
+              class="primary-action w-full rounded-2xl bg-primary-container px-4 py-3 font-semibold text-on-primary-container transition hover:bg-primary active:scale-[0.99]"
+            >
+              Sign in
+            </button>
+          </form>
+
+          <div class="my-7 flex items-center gap-3">
+            <div class="auth-divider-line h-px flex-1 bg-white/10"></div>
+            <span
+              class="text-xs uppercase tracking-[0.24em] text-on-surface-variant"
+              >or continue with</span
+            >
+            <div class="auth-divider-line h-px flex-1 bg-white/10"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              class="secondary-action flex items-center justify-center gap-2 rounded-2xl border border-outline-variant bg-surface-container-low px-3 py-2.5 text-sm text-on-surface transition hover:border-primary"
+            >
+              <svg
+                class="h-4 w-4"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              Google
+            </button>
+            <button
+              type="button"
+              class="secondary-action flex items-center justify-center gap-2 rounded-2xl border border-outline-variant bg-surface-container-low px-3 py-2.5 text-sm text-on-surface transition hover:border-primary"
+            >
+              <svg
+                class="h-4 w-4"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.671-1.48 3.671-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.039 2.48-4.5 2.597-4.571-1.428-2.09-3.601-2.325-4.381-2.376-2.028-.168-3.325 1.103-4.013 1.103zM15.21 4.24c.87-1.065 1.454-2.545 1.299-4.013-1.26.052-2.792.844-3.701 1.91-.818.935-1.532 2.455-1.338 3.883 1.403.117 2.844-.727 3.74-1.78z"
+                />
+              </svg>
+              Apple
+            </button>
+          </div>
+
+          <p class="mt-7 text-center text-sm text-on-surface-variant">
+            New to CouponEx?
+            <a
+              href="register.html"
+              class="ml-1 font-semibold text-primary hover:underline"
+              >Create an account</a
+            >
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function togglePassword() {
+        const input = document.getElementById("password");
+        if (!input) return;
+        input.type = input.type === "password" ? "text" : "password";
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const prefillValue = params.get("username") || params.get("email") || "";
+      if (prefillValue) {
+        document.getElementById("identity").value = prefillValue;
+      }
+
+      const showMessage = (message, isError = false) => {
+        const msgEl = document.getElementById("loginMessage");
+        msgEl.textContent = message;
+        msgEl.className = `status-message mb-4 rounded-2xl border px-4 py-3 text-sm ${isError ? "is-error" : "is-success"}`;
+        msgEl.classList.remove("hidden");
+      };
+
+      document
+        .getElementById("login-form")
+        ?.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const button = event.currentTarget.querySelector(
+            'button[type="submit"]',
+          );
+          if (!button) return;
+          const originalText = button.innerHTML;
+          const identity = document.getElementById("identity").value.trim();
+          const password = document.getElementById("password").value;
+
+          // Clear previous errors
+          document.getElementById("identityError").textContent = "";
+          document.getElementById("passwordError").textContent = "";
+          document.getElementById("loginMessage").classList.add("hidden");
+
+          // Client-side validation
+          if (!identity) {
+            document.getElementById("identityError").textContent =
+              "Please enter your email or username";
+            button.innerHTML = originalText;
+            button.removeAttribute("disabled");
+            return;
+          }
+          if (!password) {
+            document.getElementById("passwordError").textContent =
+              "Please enter your password";
+            button.innerHTML = originalText;
+            button.removeAttribute("disabled");
+            return;
+          }
+
+          button.innerHTML =
+            '<span class="flex items-center justify-center gap-2"><span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span> Verifying...</span>';
+          button.setAttribute("disabled", "true");
+          try {
+            const apiEndpoint =
+              window.location.protocol === "file:"
+                ? "http://localhost:8000/api/auth/login"
+                : "/api/auth/login";
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+            const response = await fetch(apiEndpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ usernameOrEmail: identity, password }),
+              signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              const message =
+                data.error || "Login failed. Please check your credentials.";
+              showMessage(message, true);
+              if (response.status === 401) {
+                window.alert("Invalid user id/password");
+              }
+              button.innerHTML = originalText;
+              button.removeAttribute("disabled");
+              return;
+            }
+
+            localStorage.setItem("couponex_user", JSON.stringify(data.user));
+            // Redirect admin users to admin dashboard, regular users to regular dashboard
+            if (data.user.role === "admin") {
+              window.location.href = "admin-dashboard.html";
+            } else {
+              window.location.href = "dashboard.html";
+            }
+            return;
+          } catch (error) {
+            showMessage(
+              "Unable to reach the authentication server. Please start the backend and try again.",
+              true,
+            );
+            button.innerHTML = originalText;
+            button.removeAttribute("disabled");
+          }
+        });
+    </script>
+  </body>
+</html>

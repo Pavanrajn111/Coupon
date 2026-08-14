@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Dashboard Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#cea62b",
+                        "surface-variant": "#e5e2db",
+                        "inverse-on-surface": "#f3f0ea",
+                        "secondary-container": "#c8d7fe",
+                        "on-tertiary-container": "#4f3d00",
+                        "inverse-primary": "#ffb59d",
+                        "surface-container": "#f0eee7",
+                        "tertiary": "#755b00",
+                        "surface-dim": "#dcdad3",
+                        "outline-variant": "#e1bfb5",
+                        "on-primary-fixed-variant": "#832600",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f3ec",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#4e5d7f",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "on-surface-variant": "#594139",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1c1c18",
+                        "inverse-surface": "#31312c",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#ebe8e1",
+                        "surface-bright": "#fcf9f2",
+                        "surface": "#fcf9f2",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-primary-fixed": "#390c00",
+                        "surface-container-highest": "#e5e2db",
+                        "on-secondary-fixed": "#0a1b39",
+                        "on-error-container": "#93000a",
+                        "secondary": "#4f5e80",
+                        "primary-fixed": "#ffdbd0",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1c1c18",
+                        "surface-tint": "#ab3500",
+                        "outline": "#8d7168",
+                        "on-primary-container": "#5f1900",
+                        "primary": "#ab3500",
+                        "on-error": "#ffffff",
+                        "background": "#fcf9f2",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary-container": "#ff6b35",
+                        "primary-fixed-dim": "#ffb59d",
+                        "on-secondary-fixed-variant": "#374667",
+                        "tertiary-fixed": "#ffe08e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "price-display": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-lg": ["Geist"],
+                        "body-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Minimal scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-variant');
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+        
+        .bento-card {
+            background-color: theme('colors.surface-container-lowest');
+            border: 1px solid theme('colors.surface-variant');
+            border-radius: theme('borderRadius.xl');
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .bento-card:hover {
+            border-color: theme('colors.on-secondary-fixed');
+        }
+        
+        .chart-bar {
+            background-color: theme('colors.primary-container');
+            border-radius: theme('borderRadius.DEFAULT') theme('borderRadius.DEFAULT') 0 0;
+            transition: height 0.8s ease-out;
+        }
+        
+        .chart-bar:hover {
+            background-color: theme('colors.primary');
+            opacity: 0.9;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col pt-16 pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline w-full top-0 sticky z-40">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop py-stack-sm w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex items-center justify-center">
+<span class="font-label-caps text-label-caps text-on-surface">SP</span>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight">
+                    Seller Hub
+                </h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors active:opacity-80 text-primary dark:text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<div class="mb-stack-lg">
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-secondary-fixed mb-2">Dashboard</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Here is a summary of your recent activity and earnings.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-4 md:grid-cols-12 gap-gutter md:gap-margin-mobile">
+<!-- Earnings Summary - Spans full width mobile, 8 cols desktop -->
+<div class="bento-card col-span-4 md:col-span-8 p-stack-md flex flex-col justify-between min-h-[200px]">
+<div class="flex justify-between items-start mb-stack-md">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-1">Total Earnings</span>
+<h3 class="font-price-display text-price-display text-on-secondary-fixed text-4xl md:text-5xl font-bold tracking-tighter">₹42,500.00</h3>
+</div>
+<div class="bg-surface-container px-3 py-1 border border-surface-variant rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary-container">trending_up</span>
+<span class="font-label-caps text-label-caps text-on-surface">+12%</span>
+</div>
+</div>
+<div class="flex items-center gap-4 mt-auto">
+<button class="bg-primary-container text-on-primary hover:opacity-90 px-4 py-2 rounded-lg font-label-caps text-label-caps transition-opacity active:scale-95">
+                        Withdraw Funds
+                    </button>
+<button class="bg-surface-container-lowest text-on-secondary-fixed border border-on-secondary-fixed hover:bg-surface-container-low px-4 py-2 rounded-lg font-label-caps text-label-caps transition-colors active:scale-95">
+                        View Statement
+                    </button>
+</div>
+</div>
+<!-- Active Listings - Mobile 2 cols, Desktop 4 cols -->
+<div class="bento-card col-span-2 md:col-span-4 p-stack-md flex flex-col justify-center items-center text-center">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-stack-sm border border-surface-variant">
+<span class="material-symbols-outlined text-on-secondary-fixed icon-fill" data-icon="list_alt">list_alt</span>
+</div>
+<h4 class="font-display-lg text-display-lg text-on-surface mb-1">24</h4>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Active Listings</span>
+</div>
+<!-- Pending Escrow - Mobile 2 cols, Desktop 4 cols -->
+<div class="bento-card col-span-2 md:col-span-4 p-stack-md flex flex-col justify-center items-center text-center">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-stack-sm border border-surface-variant">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="lock_clock">lock_clock</span>
+</div>
+<h4 class="font-price-display text-price-display text-on-surface text-xl mb-1">₹8,450</h4>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Pending Escrow</span>
+</div>
+<!-- Weekly Sales Chart - Spans full width mobile, 8 cols desktop -->
+<div class="bento-card col-span-4 md:col-span-8 p-stack-md">
+<div class="flex justify-between items-center mb-stack-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface">Weekly Sales</h3>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Mon - Sun</span>
+</div>
+<div class="h-48 flex items-end justify-between gap-2 md:gap-4 px-2">
+<!-- Mon -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 40%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹1k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">M</span>
+</div>
+<!-- Tue -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 65%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹2k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">T</span>
+</div>
+<!-- Wed -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 30%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹.8k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">W</span>
+</div>
+<!-- Thu -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 85%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹3k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">T</span>
+</div>
+<!-- Fri -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 50%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹1.5k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">F</span>
+</div>
+<!-- Sat -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 20%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹.5k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">S</span>
+</div>
+<!-- Sun -->
+<div class="flex flex-col items-center gap-2 flex-1 group">
+<div class="w-full relative h-full flex items-end">
+<div class="chart-bar w-full" style="height: 10%"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 font-price-display text-[10px] text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">₹.2k</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">S</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity - Full width -->
+<div class="col-span-4 md:col-span-12 mt-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Recent Transactions</h3>
+<div class="bento-card overflow-hidden">
+<ul class="divide-y divide-surface-variant">
+<li class="p-4 flex items-center justify-between hover:bg-surface-bright transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center border border-surface-variant">
+<span class="material-symbols-outlined text-tertiary-container text-[20px]" data-icon="check_circle">check_circle</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface font-medium">Payout Processed</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Today, 10:24 AM</p>
+</div>
+</div>
+<span class="font-price-display text-price-display text-on-surface text-sm">+₹4,500</span>
+</li>
+<li class="p-4 flex items-center justify-between hover:bg-surface-bright transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center border border-surface-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-on-surface font-medium">Item Sold: Vintage Lamp</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Yesterday, 03:45 PM</p>
+</div>
+</div>
+<span class="font-price-display text-price-display text-on-surface text-sm">+₹1,200 <span class="text-on-surface-variant text-[10px]">(Escrow)</span></span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only based on requirements for responsiveness) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-margin-mobile bg-secondary dark:bg-on-secondary-fixed border-t border-outline-variant/20 md:hidden">
+<!-- Home (Active) -->
+<button class="flex flex-col items-center justify-center text-primary-container dark:text-primary-fixed font-bold hover:bg-on-secondary-container/10 transition-all active:scale-95 duration-150 p-2 rounded-lg flex-1">
+<span class="material-symbols-outlined icon-fill mb-1" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-[10px] tracking-wider uppercase">Home</span>
+</button>
+<!-- Listings (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant hover:bg-on-secondary-container/10 transition-all active:scale-95 duration-150 p-2 rounded-lg flex-1">
+<span class="material-symbols-outlined mb-1" data-icon="list_alt">list_alt</span>
+<span class="font-label-caps text-[10px] tracking-wider uppercase opacity-80">Listings</span>
+</button>
+<!-- Sell (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant hover:bg-on-secondary-container/10 transition-all active:scale-95 duration-150 p-2 rounded-lg flex-1">
+<span class="material-symbols-outlined mb-1" data-icon="add_circle">add_circle</span>
+<span class="font-label-caps text-[10px] tracking-wider uppercase opacity-80">Sell</span>
+</button>
+<!-- Payouts (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary-fixed-variant hover:bg-on-secondary-container/10 transition-all active:scale-95 duration-150 p-2 rounded-lg flex-1">
+<span class="material-symbols-outlined mb-1" data-icon="payments">payments</span>
+<span class="font-label-caps text-[10px] tracking-wider uppercase opacity-80">Payouts</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Profile | CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: #FAF7F0; /* Level 0 Background from Style Guidance */
+        }
+        .coupon-cutout {
+            position: relative;
+        }
+        .coupon-cutout::before, .coupon-cutout::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #FAF7F0;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .coupon-cutout::before { left: -9px; border-right: 1px solid #E7E2D8; }
+        .coupon-cutout::after { right: -9px; border-left: 1px solid #E7E2D8; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f3f0ea",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "secondary": "#4f5e80",
+                        "on-secondary-fixed": "#0a1b39",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eee7",
+                        "primary-fixed-dim": "#ffb59d",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1c1c18",
+                        "surface-container-low": "#f6f3ec",
+                        "on-error": "#ffffff",
+                        "primary-container": "#ff6b35",
+                        "on-tertiary-container": "#4f3d00",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "on-primary-fixed-variant": "#832600",
+                        "on-secondary-fixed-variant": "#374667",
+                        "on-surface-variant": "#594139",
+                        "secondary-container": "#c8d7fe",
+                        "on-surface": "#1c1c18",
+                        "tertiary-container": "#cea62b",
+                        "on-primary-container": "#5f1900",
+                        "tertiary-fixed": "#ffe08e",
+                        "surface-bright": "#fcf9f2",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdbd0",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dcdad3",
+                        "secondary-fixed": "#d8e2ff",
+                        "outline-variant": "#e1bfb5",
+                        "surface": "#fcf9f2",
+                        "background": "#fcf9f2",
+                        "surface-tint": "#ab3500",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#755b00",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-primary-fixed": "#390c00",
+                        "surface-container-highest": "#e5e2db",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#ffb59d",
+                        "surface-variant": "#e5e2db",
+                        "surface-container-high": "#ebe8e1",
+                        "primary": "#ab3500",
+                        "outline": "#8d7168",
+                        "on-secondary-container": "#4e5d7f",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#31312c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "gutter": "16px",
+                        "stack-lg": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "price-display": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "display-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "price-display": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-background border-b border-outline-variant flex justify-between items-center px-gutter py-stack-sm w-full sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-secondary hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-100">menu</button>
+<h1 class="font-display-lg text-display-lg font-bold text-secondary">CouponEx</h1>
+</div>
+<div class="flex items-center gap-6">
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 mr-8">
+<a class="text-secondary font-label-caps text-label-caps uppercase hover:text-primary transition-colors" href="#">Marketplace</a>
+<a class="text-secondary font-label-caps text-label-caps uppercase hover:text-primary transition-colors" href="#">How it Works</a>
+<a class="text-primary font-label-caps text-label-caps uppercase font-bold border-b-2 border-primary" href="#">Dashboard</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-secondary hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-100">notifications</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuBx1-CZtXidOSJxogh_MrkxUF7o0SXmu2_8hRZPvTSVW7965Rp6yy4dsaMkgbvdJlKNcNcVivsz5z7XcuvKTSIKsblv11AMpERTYZXdV7w9mogQkgcAu3FwkJzbnUklYRmhPdU5o_eaB9W5upGSS5kchSuordV67DliUKFImjakLTIaES_CoZBSN-UrsKHcj4qzh2Gh61QrbPaWCflD5obQ2dUj-WnQhlYglQaKaXnULzH5uWm3rakqQ"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Layout -->
+<main class="flex-grow max-w-container-max mx-auto w-full flex px-gutter py-stack-lg gap-gutter">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 hidden md:block">
+<nav class="space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-caps text-label-caps uppercase">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-lg transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">security</span>
+<span class="font-label-caps text-label-caps uppercase">Security</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-lg transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase">Payouts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-lg transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-caps text-label-caps uppercase">Notifications</span>
+</a>
+<div class="pt-8 mt-8 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high rounded-lg transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps uppercase">Help Center</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- Content Area -->
+<section class="flex-grow">
+<!-- Content Header -->
+<div class="flex justify-between items-end mb-stack-lg">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-secondary-fixed">Edit Profile</h2>
+<p class="text-secondary font-body-sm text-body-sm">Manage your public identity and marketplace settings.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 border border-on-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps uppercase rounded hover:bg-surface-container-high transition-colors active:scale-95">Cancel</button>
+<button class="px-6 py-2 bg-primary-container text-white font-label-caps text-label-caps uppercase rounded hover:opacity-90 transition-opacity active:scale-95">Save Changes</button>
+</div>
+</div>
+<!-- Form Container -->
+<div class="bg-white border border-outline-variant rounded-lg overflow-hidden">
+<!-- Profile Photo Section -->
+<div class="p-8 border-b border-outline-variant flex items-center gap-8">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full border-2 border-outline-variant overflow-hidden">
+<img alt="Profile Headshot" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuBx1-CZtXidOSJxogh_MrkxUF7o0SXmu2_8hRZPvTSVW7965Rp6yy4dsaMkgbvdJlKNcNcVivsz5z7XcuvKTSIKsblv11AMpERTYZXdV7w9mogQkgcAu3FwkJzbnUklYRmhPdU5o_eaB9W5upGSS5kchSuordV67DliUKFImjakLTIaES_CoZBSN-UrsKHcj4qzh2Gh61QrbPaWCflD5obQ2dUj-WnQhlYglQaKaXnULzH5uWm3rakqQ"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-on-secondary-fixed text-white p-2 rounded-full border-2 border-white material-symbols-outlined text-sm">edit</button>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-1">Profile Photo</h3>
+<p class="text-secondary font-body-sm text-body-sm mb-4">Recommended: Square JPG or PNG, at least 400x400px.</p>
+<button class="px-4 py-2 border border-outline text-secondary font-label-caps text-label-caps uppercase rounded hover:bg-surface-container transition-colors">Change Photo</button>
+</div>
+</div>
+<!-- Identity Section -->
+<div class="p-8 border-b border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps uppercase text-secondary">Full Name</label>
+<input class="w-full px-4 py-3 bg-surface border border-outline-variant focus:border-on-secondary-fixed outline-none transition-colors rounded font-body-lg text-body-lg" type="text" value="Arjun Malhotra"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps uppercase text-secondary">Username</label>
+<div class="flex">
+<span class="bg-surface-container-high px-4 py-3 border border-r-0 border-outline-variant text-secondary font-body-lg">@</span>
+<input class="w-full px-4 py-3 bg-surface border border-outline-variant focus:border-on-secondary-fixed outline-none transition-colors rounded-r font-body-lg text-body-lg" type="text" value="arjun_trades"/>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg space-y-2">
+<label class="font-label-caps text-label-caps uppercase text-secondary">Bio</label>
+<textarea class="w-full px-4 py-3 bg-surface border border-outline-variant focus:border-on-secondary-fixed outline-none transition-colors rounded font-body-lg text-body-lg resize-none" rows="4">P2P Marketplace Enthusiast | Trading digital assets since 2019. Committed to fast, secure, and transparent transactions on CouponEx.</textarea>
+<p class="text-right text-secondary font-body-sm text-body-sm">124 / 200 characters</p>
+</div>
+</div>
+<!-- Professional Information -->
+<div class="p-8 border-b border-outline-variant bg-surface-container-low">
+<div class="flex items-start justify-between">
+<div class="space-y-4">
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed">Professional Information</h3>
+<div class="flex items-center gap-2 px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full w-fit">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-caps text-label-caps uppercase font-bold">Gold Merchant Status</span>
+</div>
+<p class="text-secondary font-body-sm text-body-sm max-w-md">Your merchant status is verified. This badge is displayed on all your active coupon listings to build trust with buyers.</p>
+</div>
+<button class="flex items-center gap-2 text-on-secondary-fixed font-label-caps text-label-caps uppercase font-bold group">
+                            Seller Settings
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Private Information -->
+<div class="p-8 border-b border-outline-variant">
+<div class="flex items-center gap-2 mb-stack-md text-on-secondary-fixed">
+<span class="material-symbols-outlined">lock</span>
+<h3 class="font-headline-md text-headline-md">Private Information</h3>
+</div>
+<p class="text-secondary font-body-sm text-body-sm mb-stack-lg">This information is strictly private and used only for verification and account recovery. It will never be shared publicly.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+<div class="space-y-2 opacity-80">
+<label class="font-label-caps text-label-caps uppercase text-secondary">Email Address</label>
+<div class="relative">
+<input class="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded font-body-lg text-body-lg cursor-not-allowed" disabled="" type="email" value="arjun.m@example.com"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-sm">lock</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps uppercase text-secondary">Phone Number</label>
+<div class="flex gap-2">
+<input class="w-full px-4 py-3 bg-surface border border-outline-variant focus:border-on-secondary-fixed outline-none transition-colors rounded font-body-lg text-body-lg" type="text" value="+91 98765 43210"/>
+<button class="px-4 py-3 border border-outline-variant text-secondary font-label-caps text-label-caps uppercase rounded hover:bg-surface-container transition-colors">Verify</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone -->
+<div class="p-8 bg-error-container/10">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-label-caps text-label-caps uppercase text-error font-bold mb-1">Danger Zone</h3>
+<p class="text-secondary font-body-sm text-body-sm">Permanently delete your profile data and transaction history.</p>
+</div>
+<button class="px-6 py-2 border border-error text-error font-label-caps text-label-caps uppercase rounded hover:bg-error/5 transition-colors active:scale-95">Delete Profile Data</button>
+</div>
+</div>
+</div>
+<!-- Bottom Spacer for better scroll experience -->
+<div class="h-16"></div>
+</section>
+</main>
+<!-- Simple Footer for Desktop -->
+<footer class="bg-on-secondary-fixed text-white/60 py-stack-md mt-auto hidden md:block">
+<div class="max-w-container-max mx-auto px-gutter flex justify-between items-center">
+<p class="font-label-caps text-label-caps uppercase">© 2024 CouponEx India. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="font-label-caps text-label-caps uppercase hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps uppercase hover:text-white transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<!-- Mobile Navigation Shell (Suppressed on Desktop via Tailwind) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-on-secondary-fixed z-50 border-t border-outline">
+<div class="flex flex-col items-center justify-center text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps uppercase">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-caps text-label-caps uppercase">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps uppercase">Sell</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase">Wallet</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary-container font-bold transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-caps text-label-caps uppercase">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple interaction for input fields
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.parentElement.querySelector('label')?.classList.add('text-on-secondary-fixed');
+            });
+            el.addEventListener('blur', () => {
+                el.parentElement.querySelector('label')?.classList.remove('text-on-secondary-fixed');
+            });
+        });
+    </script>
+</body></html>

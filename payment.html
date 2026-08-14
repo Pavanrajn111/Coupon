@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout & Payment | CouponEx</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="payment-core.js"></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme = savedTheme || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.classList.toggle("theme-light", theme === "light");
+        document.documentElement.classList.toggle("theme-dark", theme === "dark");
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          if (theme === "light") {
+            document.body.classList.add("theme-light");
+          }
+        });
+      })();
+    </script>
+    <style>
+      :root {
+        --card-bg: rgba(23, 31, 51, 0.94);
+        --card-border: rgba(192, 193, 255, 0.28);
+        --input-bg: rgba(11, 19, 38, 0.85);
+        --input-border: rgba(192, 193, 255, 0.3);
+        --text-heading: #f3f5ff;
+        --text-sub: #cbd5e1;
+        --text-input: #ffffff;
+        --label-text: #e2e8f0;
+        --shadow-block: 0 16px 40px rgba(0, 0, 0, 0.45);
+        --sidebar-active-bg: rgba(255, 107, 53, 0.18);
+        --sidebar-active-border: #ff6b35;
+      }
+
+      body.theme-light, html.theme-light {
+        --card-bg: #ffffff;
+        --card-border: #cbd5e1;
+        --input-bg: #f8fafc;
+        --input-border: #94a3b8;
+        --text-heading: #0f172a;
+        --text-sub: #475569;
+        --text-input: #0f172a;
+        --label-text: #1e293b;
+        --shadow-block: 0 12px 36px rgba(0, 0, 0, 0.08);
+        --sidebar-active-bg: rgba(255, 107, 53, 0.12);
+        --sidebar-active-border: #ff6b35;
+      }
+
+      body {
+        background-color: var(--bg, #0b1326);
+        color: var(--text, #dae2fd);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .theme-block {
+        background: var(--card-bg);
+        border: 1.5px solid var(--card-border);
+        box-shadow: var(--shadow-block);
+        backdrop-filter: blur(16px);
+      }
+
+      .theme-input {
+        background-color: var(--input-bg) !important;
+        border: 1.5px solid var(--input-border) !important;
+        color: var(--text-input) !important;
+      }
+
+      .theme-input::placeholder {
+        color: var(--text-sub);
+        opacity: 0.7;
+      }
+
+      .theme-input:focus {
+        border-color: #ff6b35 !important;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.25) !important;
+      }
+
+      .sidebar-method-btn.active-method {
+        background: var(--sidebar-active-bg);
+        border-color: var(--sidebar-active-border) !important;
+        color: #ff6b35 !important;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Shared Centralized Header -->
+    <div id="app-header"></div>
+
+    <!-- Main Payment Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8">
+      <!-- Title & Back Button -->
+      <div class="mb-8 flex items-center justify-between">
+        <div>
+          <button type="button" onclick="location.href='purchase-credits.html'" class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider mb-2 text-orange-500 hover:underline">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            <span>Back to Purchase Credits</span>
+          </button>
+          <h1 class="text-3xl font-extrabold tracking-tight" style="color: var(--text-heading);">Complete Payment</h1>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Sidebar: Payment Methods (4 Cols) -->
+        <aside class="lg:col-span-4 space-y-3">
+          <h2 class="text-sm font-extrabold uppercase tracking-wider mb-3" style="color: var(--label-text);">Payment Methods</h2>
+
+          <!-- UPI Option -->
+          <button id="method-btn-upi" type="button" onclick="switchPaymentMethod('upi')" class="sidebar-method-btn active-method theme-block w-full p-4 rounded-2xl flex items-center justify-between text-left transition-all border">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-500 flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined">qr_code_scanner</span>
+              </div>
+              <div>
+                <span class="font-extrabold block text-sm" style="color: var(--text-heading);">UPI (PhonePe, GPay, QR)</span>
+                <span class="text-xs font-medium" style="color: var(--text-sub);">Instant & Zero Gateway Fee</span>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-sm" style="color: var(--text-sub);">chevron_right</span>
+          </button>
+
+          <!-- Cards Option -->
+          <button id="method-btn-cards" type="button" onclick="switchPaymentMethod('cards')" class="sidebar-method-btn theme-block w-full p-4 rounded-2xl flex items-center justify-between text-left transition-all border">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-500 flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined">credit_card</span>
+              </div>
+              <div>
+                <span class="font-extrabold block text-sm" style="color: var(--text-heading);">Credit / Debit Cards</span>
+                <span class="text-xs font-medium" style="color: var(--text-sub);">Visa, Mastercard, RuPay</span>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-sm" style="color: var(--text-sub);">chevron_right</span>
+          </button>
+
+          <!-- Netbanking Option -->
+          <button id="method-btn-netbanking" type="button" onclick="switchPaymentMethod('netbanking')" class="sidebar-method-btn theme-block w-full p-4 rounded-2xl flex items-center justify-between text-left transition-all border">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-500 flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined">account_balance</span>
+              </div>
+              <div>
+                <span class="font-extrabold block text-sm" style="color: var(--text-heading);">Netbanking</span>
+                <span class="text-xs font-medium" style="color: var(--text-sub);">All Indian Banks Supported</span>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-sm" style="color: var(--text-sub);">chevron_right</span>
+          </button>
+
+          <!-- EMI REMOVED PERMANENTLY AS REQUIRED -->
+        </aside>
+
+        <!-- Center: Payment Content Area (5 Cols) -->
+        <section class="lg:col-span-5">
+          <!-- VIEW 1: UPI Payment (Default) -->
+          <div id="view-upi" class="theme-block p-6 rounded-3xl space-y-6">
+            <div class="flex items-center justify-between border-b pb-4" style="border-color: var(--card-border);">
+              <h2 class="text-lg font-extrabold flex items-center gap-2" style="color: var(--text-heading);">
+                <span class="material-symbols-outlined text-orange-500">qr_code_2</span>
+                <span>UPI Payment</span>
+              </h2>
+              <div class="flex gap-2">
+                <button id="upi-tab-phonepe" type="button" onclick="switchUpiSubTab('phonepe')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-orange-500 text-white shadow-sm">PhonePe / GPay</button>
+                <button id="upi-tab-qr" type="button" onclick="switchUpiSubTab('qr')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold border hover:bg-gray-100 transition-colors" style="border-color: var(--card-border); color: var(--text-heading);">QR Code</button>
+              </div>
+            </div>
+
+            <!-- Sub-view A: PhonePe / GPay Enter UPI ID -->
+            <div id="upi-subview-phonepe" class="space-y-5">
+              <p class="text-xs font-medium" style="color: var(--text-sub);">Enter your VPA / UPI ID (e.g. mobile@upi, name@okaxis, user@ybl) to approve payment.</p>
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color: var(--label-text);">Virtual Payment Address (VPA / UPI ID)</label>
+                <input id="upi-id-input" type="text" placeholder="e.g. 9876543210@paytm" class="theme-input w-full px-4 py-3 rounded-2xl font-bold focus:outline-none transition-all" />
+              </div>
+              <button type="button" onclick="processPayment('UPI ID')" class="w-full text-white py-4 rounded-2xl font-extrabold text-base shadow-xl flex items-center justify-center gap-2 hover:opacity-95 transition-all" style="background: linear-gradient(135deg, #ff6b35 0%, #ab3500 100%);">
+                <span>Pay <span class="sync-payable-amount">₹100</span> via UPI</span>
+              </button>
+            </div>
+
+            <!-- Sub-view B: QR Code View -->
+            <div id="upi-subview-qr" class="space-y-5 hidden text-center">
+              <p class="text-xs font-medium" style="color: var(--text-sub);">Scan this QR Code using any UPI App (PhonePe, GPay, Paytm, BHIM) to complete your payment.</p>
+              <div class="bg-white p-4 rounded-2xl inline-block border-2 border-orange-500 shadow-md">
+                <!-- SVG QR Code Visual Representation -->
+                <svg class="w-48 h-48 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="100" height="100" fill="white"/>
+                  <path d="M10 10H40V40H10V10ZM15 15V35H35V15H15Z" fill="#0F172A"/>
+                  <path d="M20 20H30V30H20V20Z" fill="#FF6B35"/>
+                  <path d="M60 10H90V40H60V10ZM65 15V35H85V15H65Z" fill="#0F172A"/>
+                  <path d="M70 20H80V30H70V20Z" fill="#FF6B35"/>
+                  <path d="M10 60H40V90H10V60ZM15 65V85H35V65H15Z" fill="#0F172A"/>
+                  <path d="M20 70H30V80H20V70Z" fill="#FF6B35"/>
+                  <path d="M50 10H55V25H50V10ZM50 35H55V55H50V35ZM60 50H75V55H60V50ZM80 50H90V65H80V50ZM60 65H70V75H60V65ZM75 75H90V90H75V75ZM50 80H65V90H50V80Z" fill="#0F172A"/>
+                </svg>
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider block" style="color: var(--text-sub);">Amount to Pay</span>
+                <span class="text-2xl font-black text-orange-500 sync-payable-amount">₹100</span>
+              </div>
+              <button type="button" onclick="processPayment('QR Code')" class="w-full text-white py-3.5 rounded-2xl font-extrabold text-sm shadow-md hover:opacity-95 transition-all" style="background: linear-gradient(135deg, #ff6b35 0%, #ab3500 100%);">
+                <span>Confirm QR Payment Done</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- VIEW 2: Cards Payment -->
+          <div id="view-cards" class="theme-block p-6 rounded-3xl space-y-6 hidden">
+            <h2 class="text-lg font-extrabold flex items-center gap-2 border-b pb-4" style="border-color: var(--card-border); color: var(--text-heading);">
+              <span class="material-symbols-outlined text-blue-500">credit_card</span>
+              <span>Credit / Debit Card</span>
+            </h2>
+
+            <form onsubmit="event.preventDefault(); processPayment('Card');" class="space-y-4">
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider mb-1.5" style="color: var(--label-text);">Cardholder Name</label>
+                <input id="card-name" type="text" placeholder="Name as printed on card" required class="theme-input w-full px-4 py-3 rounded-2xl font-bold focus:outline-none transition-all" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider mb-1.5" style="color: var(--label-text);">Card Number</label>
+                <input id="card-number" type="text" placeholder="4532 •••• •••• 8901" required maxlength="19" class="theme-input w-full px-4 py-3 rounded-2xl font-bold focus:outline-none transition-all" />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-extrabold uppercase tracking-wider mb-1.5" style="color: var(--label-text);">Expiry Date</label>
+                  <input id="card-expiry" type="text" placeholder="MM/YY" required maxlength="5" class="theme-input w-full px-4 py-3 rounded-2xl font-bold focus:outline-none transition-all" />
+                </div>
+                <div>
+                  <label class="block text-xs font-extrabold uppercase tracking-wider mb-1.5" style="color: var(--label-text);">CVV</label>
+                  <input id="card-cvv" type="password" placeholder="•••" required maxlength="4" class="theme-input w-full px-4 py-3 rounded-2xl font-bold focus:outline-none transition-all" />
+                </div>
+              </div>
+
+              <button type="submit" class="w-full text-white py-4 rounded-2xl font-extrabold text-base shadow-xl flex items-center justify-center gap-2 hover:opacity-95 transition-all mt-4" style="background: linear-gradient(135deg, #ff6b35 0%, #ab3500 100%);">
+                <span>Pay <span class="sync-payable-amount">₹100</span> Securely</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- VIEW 3: Netbanking Payment -->
+          <div id="view-netbanking" class="theme-block p-6 rounded-3xl space-y-6 hidden">
+            <h2 class="text-lg font-extrabold flex items-center gap-2 border-b pb-4" style="border-color: var(--card-border); color: var(--text-heading);">
+              <span class="material-symbols-outlined text-purple-500">account_balance</span>
+              <span>Netbanking</span>
+            </h2>
+
+            <div class="space-y-4">
+              <p class="text-xs font-medium" style="color: var(--text-sub);">Select your preferred bank to proceed to secure Netbanking portal.</p>
+              
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="selectBank('HDFC Bank')" class="p-3 border rounded-2xl text-xs font-bold text-center hover:border-orange-500 transition-all flex flex-col items-center gap-1.5" style="border-color: var(--card-border); color: var(--text-heading);">
+                  <span class="material-symbols-outlined text-blue-600 text-lg">account_balance</span>
+                  <span>HDFC Bank</span>
+                </button>
+                <button type="button" onclick="selectBank('ICICI Bank')" class="p-3 border rounded-2xl text-xs font-bold text-center hover:border-orange-500 transition-all flex flex-col items-center gap-1.5" style="border-color: var(--card-border); color: var(--text-heading);">
+                  <span class="material-symbols-outlined text-orange-600 text-lg">account_balance</span>
+                  <span>ICICI Bank</span>
+                </button>
+                <button type="button" onclick="selectBank('State Bank of India')" class="p-3 border rounded-2xl text-xs font-bold text-center hover:border-orange-500 transition-all flex flex-col items-center gap-1.5" style="border-color: var(--card-border); color: var(--text-heading);">
+                  <span class="material-symbols-outlined text-blue-500 text-lg">account_balance</span>
+                  <span>State Bank of India</span>
+                </button>
+                <button type="button" onclick="selectBank('Axis Bank')" class="p-3 border rounded-2xl text-xs font-bold text-center hover:border-orange-500 transition-all flex flex-col items-center gap-1.5" style="border-color: var(--card-border); color: var(--text-heading);">
+                  <span class="material-symbols-outlined text-red-600 text-lg">account_balance</span>
+                  <span>Axis Bank</span>
+                </button>
+              </div>
+
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider mb-2" style="color: var(--label-text);">Or Choose Other Bank</label>
+                <select id="bank-select" class="theme-input w-full px-4 py-3 rounded-2xl font-bold focus:outline-none transition-all">
+                  <option value="">Select Other Bank...</option>
+                  <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                  <option value="Punjab National Bank">Punjab National Bank</option>
+                  <option value="Bank of Baroda">Bank of Baroda</option>
+                  <option value="IDFC FIRST Bank">IDFC FIRST Bank</option>
+                </select>
+              </div>
+
+              <button type="button" onclick="processPayment('Netbanking')" class="w-full text-white py-4 rounded-2xl font-extrabold text-base shadow-xl flex items-center justify-center gap-2 hover:opacity-95 transition-all mt-4" style="background: linear-gradient(135deg, #ff6b35 0%, #ab3500 100%);">
+                <span>Continue to Netbanking (<span class="sync-payable-amount">₹100</span>)</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Order Summary (3 Cols) -->
+        <aside class="lg:col-span-3">
+          <div class="theme-block p-6 rounded-3xl sticky top-24 space-y-6">
+            <h3 class="text-xl font-extrabold border-b pb-4 flex items-center justify-between" style="border-color: var(--card-border); color: var(--text-heading);">
+              <span>Order Summary</span>
+              <span class="material-symbols-outlined text-orange-500">receipt</span>
+            </h3>
+
+            <div class="space-y-3.5 text-sm font-medium">
+              <div class="flex justify-between items-center">
+                <span style="color: var(--text-sub);">Package / Item:</span>
+                <span id="summary-pack-name" class="font-extrabold" style="color: var(--text-heading);">Starter Pack</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span style="color: var(--text-sub);">Base Price:</span>
+                <span id="summary-base-price" class="font-bold" style="color: var(--text-heading);">₹100</span>
+              </div>
+              <div id="summary-discount-row" class="flex justify-between items-center text-green-500 hidden font-bold">
+                <span>10% Discount:</span>
+                <span id="summary-discount">-₹0</span>
+              </div>
+              <div class="flex justify-between items-center border-t pt-3" style="border-color: var(--card-border);">
+                <span style="color: var(--text-sub);">Credits Added:</span>
+                <span id="summary-credits" class="font-black text-orange-500">100 C</span>
+              </div>
+              <div class="flex justify-between items-center border-t pt-3 text-base font-black" style="border-color: var(--card-border); color: var(--text-heading);">
+                <span>Final Payable:</span>
+                <span id="summary-total-payable" class="text-xl font-black text-orange-500">₹100</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-xs font-semibold text-orange-500 flex items-start gap-2">
+              <span class="material-symbols-outlined text-base flex-shrink-0">info</span>
+              <span>Credits are credited instantly to your wallet upon successful transaction.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="border-t py-8 px-6 text-center text-sm font-medium mt-12" style="background-color: var(--card-bg); border-color: var(--card-border); color: var(--text-sub);">
+      <p>&copy; 2026 CouponEx. India's P2P Digital Coupon Exchange. All rights reserved.</p>
+    </footer>
+
+    <script>
+      let currentSelection = null;
+      let activeMethod = 'upi';
+      let activeUpiSubTab = 'phonepe';
+
+      function loadAndSynchronizeOrderSummary() {
+        currentSelection = loadPurchaseSelection();
+        if (!currentSelection || !currentSelection.total) {
+          currentSelection = {
+            name: "Starter Pack",
+            amount: 100,
+            discount: 0,
+            credits: 100,
+            total: 100
+          };
+        }
+
+        const packNameEl = document.getElementById("summary-pack-name");
+        const basePriceEl = document.getElementById("summary-base-price");
+        const discountRow = document.getElementById("summary-discount-row");
+        const discountEl = document.getElementById("summary-discount");
+        const creditsEl = document.getElementById("summary-credits");
+        const totalPayableEl = document.getElementById("summary-total-payable");
+
+        if (packNameEl) packNameEl.textContent = currentSelection.name;
+        if (basePriceEl) basePriceEl.textContent = formatCurrency(currentSelection.amount);
+        
+        if (currentSelection.discount > 0) {
+          if (discountEl) discountEl.textContent = `-` + formatCurrency(currentSelection.discount);
+          if (discountRow) discountRow.classList.remove("hidden");
+        } else {
+          if (discountRow) discountRow.classList.add("hidden");
+        }
+
+        if (creditsEl) creditsEl.textContent = formatCredits(currentSelection.credits);
+        if (totalPayableEl) totalPayableEl.textContent = formatCurrency(currentSelection.total);
+
+        // Update all elements carrying class sync-payable-amount
+        document.querySelectorAll(".sync-payable-amount").forEach(el => {
+          el.textContent = formatCurrency(currentSelection.total);
+        });
+      }
+
+      function switchPaymentMethod(method) {
+        activeMethod = method;
+        const btnUpi = document.getElementById("method-btn-upi");
+        const btnCards = document.getElementById("method-btn-cards");
+        const btnNetbanking = document.getElementById("method-btn-netbanking");
+
+        const viewUpi = document.getElementById("view-upi");
+        const viewCards = document.getElementById("view-cards");
+        const viewNetbanking = document.getElementById("view-netbanking");
+
+        [btnUpi, btnCards, btnNetbanking].forEach(btn => btn?.classList.remove("active-method"));
+        [viewUpi, viewCards, viewNetbanking].forEach(view => view?.classList.add("hidden"));
+
+        if (method === 'upi') {
+          btnUpi?.classList.add("active-method");
+          viewUpi?.classList.remove("hidden");
+        } else if (method === 'cards') {
+          btnCards?.classList.add("active-method");
+          viewCards?.classList.remove("hidden");
+        } else if (method === 'netbanking') {
+          btnNetbanking?.classList.add("active-method");
+          viewNetbanking?.classList.remove("hidden");
+        }
+      }
+
+      function switchUpiSubTab(subTab) {
+        activeUpiSubTab = subTab;
+        const tabPhonepe = document.getElementById("upi-tab-phonepe");
+        const tabQr = document.getElementById("upi-tab-qr");
+        const subviewPhonepe = document.getElementById("upi-subview-phonepe");
+        const subviewQr = document.getElementById("upi-subview-qr");
+
+        if (subTab === 'phonepe') {
+          tabPhonepe?.classList.add("bg-orange-500", "text-white");
+          tabPhonepe?.classList.remove("border");
+          tabQr?.classList.remove("bg-orange-500", "text-white");
+          tabQr?.classList.add("border");
+
+          subviewPhonepe?.classList.remove("hidden");
+          subviewQr?.classList.add("hidden");
+        } else {
+          tabQr?.classList.add("bg-orange-500", "text-white");
+          tabQr?.classList.remove("border");
+          tabPhonepe?.classList.remove("bg-orange-500", "text-white");
+          tabPhonepe?.classList.add("border");
+
+          subviewQr?.classList.remove("hidden");
+          subviewPhonepe?.classList.add("hidden");
+        }
+      }
+
+      function selectBank(bankName) {
+        const select = document.getElementById("bank-select");
+        if (select) select.value = bankName;
+      }
+
+      async function processPayment(methodName) {
+        if (!currentSelection || !currentSelection.total) return;
+
+        const usrStr = localStorage.getItem("couponex_user");
+        const usr = usrStr ? JSON.parse(usrStr) : { id: 1, fullName: "Demo User", username: "demo", email: "demo@couponex.com" };
+
+        let paymentMethodUpper = "UPI";
+        if (activeMethod === "cards" || activeMethod === "card") {
+          paymentMethodUpper = "CARD";
+        } else if (activeMethod === "netbanking") {
+          paymentMethodUpper = "NETBANKING";
+        } else {
+          paymentMethodUpper = "UPI";
+        }
+
+        const reqId = `CPX-PAY-${Date.now()}`;
+        let paymentRef = `${paymentMethodUpper}-REF-${Math.floor(100000 + Math.random() * 900000)}`;
+
+        if (paymentMethodUpper === "UPI") {
+          const upiInput = document.getElementById("upi-id-input");
+          if (upiInput && upiInput.value.trim()) paymentRef = upiInput.value.trim();
+        } else if (paymentMethodUpper === "CARD") {
+          const cardInput = document.getElementById("card-number");
+          if (cardInput && cardInput.value.trim()) {
+            const cleanNum = cardInput.value.replace(/\s+/g, '');
+            paymentRef = `CARD-••••${cleanNum.slice(-4)}`;
+          }
+        } else if (paymentMethodUpper === "NETBANKING") {
+          const bankSelect = document.getElementById("bank-select");
+          if (bankSelect && bankSelect.value) paymentRef = bankSelect.value;
+        }
+
+        const payload = {
+          requestId: reqId,
+          userId: usr.id || 1,
+          userName: usr.fullName || usr.username || "User",
+          username: usr.username || "user",
+          email: usr.email || "user@couponex.com",
+          packageName: currentSelection.name || "Custom Amount",
+          requestedCredits: currentSelection.credits,
+          purchaseAmount: currentSelection.amount,
+          discount: currentSelection.discount || 0,
+          totalAmount: currentSelection.total,
+          paymentMethod: paymentMethodUpper,
+          paymentReference: paymentRef,
+          paymentStatus: "Pending",
+          requestStatus: "Pending",
+          createdAt: new Date().toISOString()
+        };
+
+        // 1. Save locally to couponex_topups array for instant sync
+        let localTopups = JSON.parse(localStorage.getItem("couponex_topups") || "[]");
+        localTopups.unshift({ ...payload, id: Date.now() });
+        localStorage.setItem("couponex_topups", JSON.stringify(localTopups));
+
+        // 2. Fast background post to backend API without blocking navigation
+        const apiEndpoint = (window.location.protocol === "file:" ? "http://localhost:8000" : "") + "/api/profile/topup";
+        fetch(apiEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }).catch(err => console.warn("Backend API sync:", err));
+
+        alert(`Payment request of ${formatCurrency(currentSelection.total)} submitted successfully!\n\nYour request ID: ${reqId}\n\nYour credits (${formatCredits(currentSelection.credits)}) will be added to your wallet after admin verification.`);
+        location.href = "wallet.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadAndSynchronizeOrderSummary();
+        switchPaymentMethod('upi');
+      });
+    </script>
+  </body>
+</html>

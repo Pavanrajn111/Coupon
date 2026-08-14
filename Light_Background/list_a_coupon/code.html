@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sell Coupon - CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#832600",
+                      "surface-variant": "#e5e2db",
+                      "secondary-fixed": "#d8e2ff",
+                      "surface-dim": "#dcdad3",
+                      "secondary-container": "#c8d7fe",
+                      "on-error": "#ffffff",
+                      "surface-container": "#f0eee7",
+                      "on-secondary-container": "#4e5d7f",
+                      "on-secondary-fixed": "#0a1b39",
+                      "on-background": "#1c1c18",
+                      "on-primary-container": "#5f1900",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#31312c",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "primary-container": "#ff6b35",
+                      "tertiary": "#755b00",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#584400",
+                      "tertiary-container": "#cea62b",
+                      "background": "#fcf9f2",
+                      "on-tertiary-fixed": "#241a00",
+                      "secondary": "#4f5e80",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#ab3500",
+                      "surface-container-low": "#f6f3ec",
+                      "primary": "#ab3500",
+                      "tertiary-fixed": "#ffe08e",
+                      "on-surface": "#1c1c18",
+                      "surface-container-highest": "#e5e2db",
+                      "on-secondary-fixed-variant": "#374667",
+                      "inverse-primary": "#ffb59d",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#fcf9f2",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "surface-container-high": "#ebe8e1",
+                      "on-error-container": "#93000a",
+                      "outline": "#8d7168",
+                      "on-primary-fixed": "#390c00",
+                      "outline-variant": "#e1bfb5",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#4f3d00",
+                      "on-surface-variant": "#594139",
+                      "inverse-on-surface": "#f3f0ea",
+                      "primary-fixed-dim": "#ffb59d",
+                      "primary-fixed": "#ffdbd0",
+                      "surface-bright": "#fcf9f2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "stack-md": "16px",
+                      "stack-sm": "8px",
+                      "container-max": "1200px",
+                      "gutter": "16px",
+                      "stack-lg": "32px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "price-display": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        body {
+            background-color: #FAF7F0; /* Level 0 */
+            color: #1c1c18;
+        }
+        .coupon-mask {
+            mask-image: radial-gradient(circle at 0% 50%, transparent 8px, black 8.5px), radial-gradient(circle at 100% 50%, transparent 8px, black 8.5px);
+            mask-size: 51% 100%, 51% 100%;
+            mask-position: left, right;
+            mask-repeat: no-repeat;
+            -webkit-mask-image: radial-gradient(circle at 0% 50%, transparent 8px, black 8.5px), radial-gradient(circle at 100% 50%, transparent 8px, black 8.5px);
+            -webkit-mask-size: 51% 100%, 51% 100%;
+            -webkit-mask-position: left, right;
+            -webkit-mask-repeat: no-repeat;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-24 md:pb-0 font-body-lg text-body-lg">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background border-b border-outline-variant flex justify-between items-center px-gutter py-stack-sm w-full docked full-width top-0 z-40 relative md:fixed">
+<button class="p-2 text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg font-bold text-on-secondary-fixed tracking-tight">CouponEx</h1>
+<button class="p-2 text-secondary dark:text-secondary-fixed hover:bg-surface-container-high transition-colors active:scale-95 duration-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="md:pt-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-4 md:grid-cols-12 gap-gutter py-stack-lg">
+<!-- Camera Capture Area (Spans 4 cols on mobile, 7 on desktop) -->
+<section class="col-span-4 md:col-span-7 flex flex-col gap-stack-md">
+<div class="w-full aspect-[4/3] bg-surface-container-high border border-outline-variant rounded-lg relative overflow-hidden flex flex-col items-center justify-center group cursor-pointer">
+<div class="absolute inset-0 border-2 border-dashed border-outline/50 m-4 rounded z-10 pointer-events-none group-hover:border-primary-container transition-colors"></div>
+<span class="material-symbols-outlined text-4xl text-on-secondary-container mb-2" data-icon="photo_camera">photo_camera</span>
+<p class="font-headline-md text-headline-md text-on-secondary-fixed text-center">Scan your coupon</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center mt-1">Position code within frame</p>
+<div class="absolute bottom-4 left-0 w-full flex justify-center">
+<button class="bg-white/80 backdrop-blur-sm border border-outline-variant px-4 py-2 rounded-full font-label-caps text-label-caps uppercase text-on-secondary-fixed flex items-center gap-2 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-lg">image</span> Upload from gallery
+                     </button>
+</div>
+</div>
+<!-- Auto-filled Details Form -->
+<div class="bg-[#FFFFFF] border border-[#E7E2D8] rounded-lg p-6 mt-4">
+<h2 class="font-headline-md text-headline-md text-on-secondary-fixed mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="bolt">bolt</span>
+                    Auto-Extracted Details
+                </h2>
+<form class="flex flex-col gap-stack-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps uppercase text-on-surface-variant">Brand</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<span class="material-symbols-outlined text-sm" data-icon="storefront">storefront</span>
+</div>
+</div>
+<input class="w-full pl-11 pr-4 py-3 bg-[#FFFFFF] border border-[#E7E2D8] rounded-lg font-body-sm text-body-sm text-on-secondary-fixed focus:border-on-secondary-fixed focus:ring-0 transition-colors" readonly="" type="text" value="Swiggy Instamart"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps uppercase text-on-surface-variant">Discount Value</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="font-price-display text-price-display text-on-secondary-fixed">₹</span>
+</div>
+<input class="w-full pl-8 pr-4 py-3 bg-[#FFFFFF] border border-[#E7E2D8] rounded-lg font-price-display text-price-display text-on-secondary-fixed focus:border-on-secondary-fixed focus:ring-0 transition-colors" type="text" value="250"/>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps uppercase text-on-surface-variant">Expiry Date</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="calendar_today">calendar_today</span>
+</div>
+<input class="w-full pl-10 pr-4 py-3 bg-[#FFFFFF] border border-[#E7E2D8] rounded-lg font-body-sm text-body-sm text-on-secondary-fixed focus:border-on-secondary-fixed focus:ring-0 transition-colors" type="text" value="31 Oct 2024"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps uppercase text-on-surface-variant">Coupon Code</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="key">key</span>
+</div>
+<input class="w-full pl-10 pr-10 py-3 bg-surface-container border border-[#E7E2D8] rounded-lg font-price-display text-price-display text-on-secondary-fixed focus:border-on-secondary-fixed focus:ring-0 transition-colors blur-sm group-hover:blur-none select-none pointer-events-none" type="text" value="SWIGGY250XYZ"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-10 group-hover:hidden">
+<span class="material-symbols-outlined text-on-surface-variant text-lg" data-icon="visibility_off">visibility_off</span>
+</div>
+</div>
+<span class="text-[10px] text-on-surface-variant mt-1 leading-tight">Code is masked for security until purchased.</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4 pt-4 border-t border-outline-variant border-dashed">
+<label class="font-label-caps text-label-caps uppercase text-on-surface-variant">Your Selling Price</label>
+<div class="flex items-center gap-4">
+<div class="relative w-1/2">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="font-price-display text-price-display text-on-secondary-fixed font-bold">₹</span>
+</div>
+<input class="w-full pl-8 pr-4 py-4 bg-[#FFFFFF] border-2 border-primary-container rounded-lg font-price-display text-[24px] font-bold text-on-secondary-fixed focus:border-on-secondary-fixed focus:ring-0 transition-colors" type="number" value="200"/>
+</div>
+<div class="text-sm text-on-surface-variant flex flex-col">
+<span>Platform Fee (5%): <span class="font-price-display">₹10</span></span>
+<span class="text-on-secondary-fixed font-bold">You receive: <span class="font-price-display text-primary-container">₹190</span></span>
+</div>
+</div>
+</div>
+</form>
+</div>
+</section>
+<!-- Right Column / Intentional asymmetry gap (Spans 4 cols on mobile, 4 on desktop, leaving 1 col gap) -->
+<div class="col-span-4 md:col-span-1 hidden md:block"></div>
+<section class="col-span-4 md:col-span-4 flex flex-col gap-stack-md">
+<!-- Price Suggestion Card -->
+<div class="bg-surface-container-low border border-tertiary-container/30 rounded-lg p-5 flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 text-tertiary-container/10 pointer-events-none">
+<span class="material-symbols-outlined text-6xl" data-icon="trending_up">trending_up</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container/20 flex items-center justify-center border border-tertiary-container/50">
+<span class="material-symbols-outlined text-sm text-tertiary-container font-bold" data-icon="insights">insights</span>
+</div>
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Market Insights</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-secondary-fixed leading-tight">Similar coupons sell for <span class="font-price-display text-primary-container">₹180 - ₹220</span></h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pricing near ₹200 usually results in a sale within 2 hours based on recent marketplace activity.</p>
+</div>
+<!-- Live Preview -->
+<div class="mt-6">
+<h3 class="font-label-caps text-label-caps uppercase text-on-surface-variant mb-4">Live Listing Preview</h3>
+<!-- The Coupon Card Metaphor -->
+<div class="bg-[#FFFFFF] border border-[#E7E2D8] rounded-xl p-5 coupon-mask shadow-sm flex flex-col relative transition-transform hover:-translate-y-1 duration-300">
+<div class="absolute top-4 right-4 flex items-center gap-1 bg-surface-container-low border border-outline-variant px-2 py-1 rounded text-xs font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified_user">verified_user</span> Verified
+                    </div>
+<div class="flex items-start gap-4 mb-4">
+<div class="w-12 h-12 rounded bg-surface-container border border-outline-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl text-on-secondary-fixed" data-icon="storefront">storefront</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Swiggy Instamart</span>
+<span class="font-headline-md text-headline-md text-on-secondary-fixed leading-none mt-1">₹250 Off</span>
+</div>
+</div>
+<div class="border-t border-dashed border-outline-variant my-2"></div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant">Selling For</span>
+<span class="font-price-display text-[22px] font-bold text-primary-container leading-none mt-1">₹200</span>
+</div>
+<div class="text-right flex flex-col items-end">
+<span class="text-[10px] text-on-surface-variant">Valid till</span>
+<span class="font-body-sm text-body-sm text-on-secondary-fixed font-medium">31 Oct '24</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex flex-col gap-3">
+<button class="w-full bg-primary-container text-white font-headline-md text-headline-md py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-[#d65a2d] transition-colors shadow-sm active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="publish">publish</span>
+                     Publish Listing
+                 </button>
+<p class="text-center text-[12px] text-on-surface-variant">By publishing, you agree to our <a class="underline" href="#">Seller Terms</a>.</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-on-secondary-fixed z-50 md:hidden border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

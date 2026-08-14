@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wallet | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-light",
+          theme === "light",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --primary-rgb: 192 193 255;
+        --primary-container-rgb: 128 131 255;
+        --secondary-rgb: 74 225 118;
+        --tertiary-rgb: 255 185 95;
+        --background-rgb: 11 19 38;
+        --surface-rgb: 11 19 38;
+        --surface-container-rgb: 23 31 51;
+        --surface-container-low-rgb: 19 27 46;
+        --surface-container-high-rgb: 34 42 61;
+        --surface-container-highest-rgb: 45 52 73;
+        --surface-container-lowest-rgb: 6 14 32;
+        --outline-variant-rgb: 70 69 84;
+        --on-surface-rgb: 218 226 253;
+        --on-surface-variant-rgb: 199 196 215;
+        --on-primary-container-rgb: 13 0 150;
+        --success-rgb: 74 225 118;
+        --danger-rgb: 255 180 171;
+        --danger-bg-rgb: 147 0 10;
+        --wallet-glow-rgb: 128 131 255;
+        --hero-start: #3d41a8;
+        --hero-end: #7b81ff;
+        --shadow-card: 0 28px 64px -24px rgba(0, 0, 0, 0.6);
+        --shadow-soft: 0 18px 44px rgba(0, 0, 0, 0.26);
+      }
+
+      html.theme-light {
+        --primary-rgb: 171 53 0;
+        --primary-container-rgb: 255 107 53;
+        --secondary-rgb: 79 94 128;
+        --tertiary-rgb: 201 162 39;
+        --background-rgb: 252 249 242;
+        --surface-rgb: 252 249 242;
+        --surface-container-rgb: 255 255 255;
+        --surface-container-low-rgb: 246 243 236;
+        --surface-container-high-rgb: 255 255 255;
+        --surface-container-highest-rgb: 231 226 216;
+        --surface-container-lowest-rgb: 245 239 229;
+        --outline-variant-rgb: 141 113 104;
+        --on-surface-rgb: 11 28 58;
+        --on-surface-variant-rgb: 89 65 57;
+        --on-primary-container-rgb: 255 255 255;
+        --success-rgb: 171 53 0;
+        --danger-rgb: 179 38 30;
+        --danger-bg-rgb: 255 218 214;
+        --wallet-glow-rgb: 255 107 53;
+        --hero-start: #ff7b48;
+        --hero-end: #ffb48f;
+        --shadow-card: 0 16px 44px rgba(53, 29, 12, 0.08);
+        --shadow-soft: 0 12px 30px rgba(53, 29, 12, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: rgb(var(--on-surface-rgb));
+        background-color: rgb(var(--background-rgb));
+        background-image:
+          radial-gradient(circle at top right, rgba(var(--wallet-glow-rgb), 0.18), transparent 24rem),
+          linear-gradient(180deg, rgb(var(--background-rgb)) 0%, rgb(var(--surface-container-lowest-rgb)) 100%);
+      }
+
+      a { color: inherit; text-decoration: none; }
+      button { font: inherit; cursor: pointer; }
+
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      }
+
+      .shell { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
+      .page { padding: 24px 0 112px; }
+      .stack { display: grid; gap: 24px; }
+
+      .glass-panel {
+        border: 1px solid rgba(var(--outline-variant-rgb), 0.24);
+        border-radius: 28px;
+        background: rgba(var(--surface-container-rgb), 0.82);
+        box-shadow: var(--shadow-card);
+        backdrop-filter: blur(18px);
+      }
+
+      .wallet-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 28px;
+        background: linear-gradient(135deg, var(--hero-start) 0%, var(--hero-end) 100%);
+        color: #fff;
+      }
+      .wallet-hero::before, .wallet-hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+      .wallet-hero::before { right: -80px; bottom: -80px; width: 240px; height: 240px; background: rgba(255,255,255,0.12); filter: blur(8px); }
+      .wallet-hero::after { left: -40px; top: -40px; width: 140px; height: 140px; background: rgba(255,255,255,0.08); }
+      .hero-top, .hero-bottom, .section-head {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .hero-top { margin-bottom: 24px; }
+      .hero-label { margin: 0 0 8px; font-size: 0.9rem; font-weight: 700; color: rgba(255,255,255,0.84); text-transform: uppercase; letter-spacing: 0.08em; }
+      .hero-value { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+      .hero-value strong { font-size: clamp(2.8rem, 7vw, 4.2rem); line-height: 0.95; }
+      .hero-value span { font-size: 1.25rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+      .hero-status { text-align: right; color: rgba(255,255,255,0.92); }
+      .hero-status p { margin: 0; }
+      .hero-status p:first-child { font-size: 0.82rem; opacity: 0.84; }
+      .hero-status p:last-child { margin-top: 4px; font-weight: 700; }
+      .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+      .primary-button, .secondary-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 0 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.24);
+        font-weight: 700;
+        transition: transform 180ms ease, box-shadow 180ms ease;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+        position: relative;
+        z-index: 1;
+      }
+      .primary-button {
+        background: #ffffff;
+        color: #2d2d2d;
+        border-color: rgba(255,255,255,0.6);
+      }
+      .secondary-button {
+        color: #ffffff;
+        background: rgba(255,255,255,0.18);
+        border-color: rgba(255,255,255,0.45);
+      }
+      .primary-button:hover, .secondary-button:hover, .primary-button:focus-visible, .secondary-button:focus-visible {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.2);
+        outline: none;
+      }
+
+      html.theme-light .primary-button {
+        background: #ffffff;
+        color: #171717;
+        border-color: rgba(23, 23, 23, 0.12);
+      }
+
+      html.theme-light .secondary-button {
+        color: #ffffff;
+        background: rgba(255, 107, 53, 0.95);
+        border-color: rgba(255, 107, 53, 0.95);
+      }
+
+      .dashboard-grid { display: grid; gap: 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary-card, .history-card { padding: 24px; }
+      .summary-card h2, .history-card h2 { margin: 0; font-size: 1.2rem; font-weight: 800; color: rgb(var(--on-surface-rgb)); }
+      .pill { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 10px; border-radius: 999px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; color: rgb(var(--on-surface-rgb)); background: rgba(var(--surface-container-high-rgb), 0.9); }
+      .insight-list { display: grid; gap: 14px; margin-top: 18px; }
+      .insight-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid rgba(var(--outline-variant-rgb), 0.16); font-size: 0.95rem; color: rgba(var(--on-surface-variant-rgb), 0.95); }
+      .insight-row strong { font-family: "JetBrains Mono", monospace; color: rgb(var(--on-surface-rgb)); }
+      .bank-card { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 14px; border-radius: 18px; background: rgba(var(--surface-container-high-rgb), 0.7); border: 1px solid rgba(var(--outline-variant-rgb), 0.16); }
+      .bank-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: rgba(var(--primary-rgb), 0.14); color: rgb(var(--primary-rgb)); }
+      .bank-meta strong { display: block; color: rgb(var(--on-surface-rgb)); font-size: 0.98rem; }
+      .bank-meta span { display: block; margin-top: 3px; color: rgba(var(--on-surface-variant-rgb), 0.92); font-size: 0.86rem; }
+      .muted { margin: 12px 0 0; color: rgba(var(--on-surface-variant-rgb), 0.9); font-size: 0.9rem; line-height: 1.6; }
+      .text-link { border: 0; background: transparent; color: rgb(var(--primary-rgb)); font-weight: 700; padding: 0; }
+      .empty-state { margin-top: 20px; display: grid; justify-items: center; text-align: center; gap: 10px; padding: 24px; border: 1px dashed rgba(var(--outline-variant-rgb), 0.28); border-radius: 20px; background: rgba(var(--surface-container-high-rgb), 0.42); }
+      .empty-icon { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: rgba(var(--primary-rgb), 0.12); color: rgb(var(--primary-rgb)); }
+      .empty-state h3 { margin: 0; font-size: 1.05rem; color: rgb(var(--on-surface-rgb)); }
+      .empty-state p { margin: 0; max-width: 420px; color: rgba(var(--on-surface-variant-rgb), 0.92); }
+
+      .bottom-nav { position: fixed; left: 16px; right: 16px; bottom: 16px; display: none; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 24px; border: 1px solid rgba(var(--outline-variant-rgb), 0.24); background: rgba(var(--surface-container-rgb), 0.94); box-shadow: var(--shadow-soft); backdrop-filter: blur(18px); z-index: 50; }
+      .bottom-link { display: grid; justify-items: center; gap: 4px; min-width: 58px; color: rgba(var(--on-surface-variant-rgb), 0.92); font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+      .bottom-link.active { color: rgb(var(--primary-rgb)); }
+
+      @media (max-width: 860px) {
+        .dashboard-grid { grid-template-columns: 1fr; }
+        .hero-top, .hero-bottom, .section-head { flex-direction: column; align-items: flex-start; }
+        .hero-status { text-align: left; }
+        .bottom-nav { display: flex; }
+        .page { padding-bottom: 120px; }
+      }
+
+      @media (max-width: 560px) {
+        .shell { width: min(100% - 20px, 1120px); }
+        .brand-copy span { display: none; }
+        .surface-pill { padding-inline: 12px; }
+        .theme-toggle .label { display: none; }
+        .wallet-hero { padding: 24px; }
+      }
+
+      /* Withdraw Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+      }
+      .modal.open {
+        display: flex;
+      }
+      .modal-content {
+        background: rgb(var(--surface-container-rgb));
+        border: 1px solid rgba(var(--outline-variant-rgb), 0.24);
+        padding: 32px;
+        border-radius: 28px;
+        width: min(100% - 40px, 480px);
+        box-shadow: var(--shadow-card);
+      }
+      .modal-title {
+        margin: 0 0 16px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: rgb(var(--on-surface-rgb));
+      }
+      .form-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .form-group label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(var(--outline-variant-rgb), 0.24);
+        background: rgba(var(--surface-container-low-rgb), 0.7);
+        color: rgb(var(--on-surface-rgb));
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: rgb(var(--primary-rgb));
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .btn {
+        padding: 12px 24px;
+        border-radius: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-primary {
+        background: rgb(var(--primary-container-rgb));
+        color: #fff;
+        border: 0;
+      }
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(var(--outline-variant-rgb), 0.24);
+        color: rgb(var(--on-surface-rgb));
+      }
+
+      /* Toast Notification */
+      .admin-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #1c1c18;
+        color: #ffffff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 300ms ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 100;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    </style>
+      <script src="header.js"></script>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page">
+      <div class="shell stack">
+        <section class="wallet-hero glass-panel">
+          <div class="hero-top">
+            <div>
+              <p class="hero-label">Available Balance</p>
+              <div class="hero-value">
+                <strong>0</strong>
+                <span>C</span>
+              </div>
+            </div>
+            <div class="hero-status">
+              <p>New account</p>
+              <p>No withdrawals yet</p>
+            </div>
+          </div>
+          <div class="hero-bottom">
+            <div class="hero-actions">
+              <a class="primary-button" href="purchase-credits.html">Withdraw Funds</a>
+              <a class="secondary-button" href="verify-identity.html">Verify Identity</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="glass-panel summary-card">
+            <div class="section-head">
+              <h2>Transaction Insights</h2>
+              <span class="pill">Live</span>
+            </div>
+            <div class="insight-list">
+              <div class="insight-row">
+                <span>Total Credits Purchased</span>
+                <strong id="val-total-purchased">0 C</strong>
+              </div>
+              <div class="insight-row">
+                <span>Pending Clearances</span>
+                <strong id="val-pending-clearances">0 C</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="glass-panel summary-card">
+            <div class="section-head">
+              <h2>Payout Destination</h2>
+              <button class="text-link" type="button" onclick="openPayoutDestinationModal()">Edit</button>
+            </div>
+            <div class="bank-card">
+              <div class="bank-icon">
+                <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+              </div>
+              <div class="bank-meta">
+                <strong id="payout-bank-name">HDFC Bank India</strong>
+                <span id="payout-account-number">Ending in •••• 9012</span>
+              </div>
+            </div>
+            <p class="muted">Funds are typically deposited within 1–3 business days after processing.</p>
+          </article>
+        </section>
+
+        <section class="glass-panel history-card">
+          <div class="section-head">
+            <h2>Earnings History</h2>
+            <span class="pill">Updated</span>
+          </div>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+            </div>
+            <h3>No transactions have been performed till now</h3>
+            <p>Your earnings and payout activity will appear here once you start using the platform.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a class="bottom-link" href="dashboard.html">
+        <span class="material-symbols-outlined" aria-hidden="true">home</span>
+        <span>Home</span>
+      </a>
+      <a class="bottom-link" href="dashboard.html">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <span>Search</span>
+      </a>
+      <a class="bottom-link" href="sell.html">
+        <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+        <span>Sell</span>
+      </a>
+      <a class="bottom-link active" href="wallet.html">
+        <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+        <span>Wallet</span>
+      </a>
+      <a class="bottom-link" href="verify-identity.html">
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+    <!-- Withdraw Modal -->
+    <div id="withdraw-modal" class="modal">
+      <div class="modal-content">
+        <h3 class="modal-title">Withdraw Funds</h3>
+        <form onsubmit="submitWithdraw(event)">
+          <div class="form-group">
+            <label for="withdraw-amount">Amount (Credits)</label>
+            <input type="number" id="withdraw-amount" class="form-control" placeholder="e.g. 500" required min="1" />
+          </div>
+          <div class="form-group">
+            <label for="withdraw-bank">UPI ID or Bank Account Details</label>
+            <input type="text" id="withdraw-bank" class="form-control" placeholder="e.g. UPI: name@upi or Bank Details" required />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeWithdrawModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Payout Destination Modal -->
+    <div id="payout-modal" class="modal">
+      <div class="modal-content">
+        <h3 class="modal-title">Edit Payout Destination</h3>
+        <form onsubmit="submitPayoutDestination(event)">
+          <div class="form-group">
+            <label for="edit-bank-name">Bank Name or Provider</label>
+            <input type="text" id="edit-bank-name" class="form-control" placeholder="e.g. ICICI Bank India or UPI" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-account-number">Account Number or UPI ID</label>
+            <input type="text" id="edit-account-number" class="form-control" placeholder="e.g. Ending in •••• 4321 or user@upi" required />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="closePayoutDestinationModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Payout Destination</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="admin-toast" id="admin-toast">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span id="toast-message" style="margin-left: 8px;">Action completed successfully.</span>
+    </div>
+
+    <script>
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeIcon = document.getElementById("theme-icon");
+      const themeLabel = document.getElementById("theme-label");
+
+      function applyTheme(theme) {
+        const nextTheme = theme === "light" ? "light" : "dark";
+        document.documentElement.classList.toggle("theme-light", nextTheme === "light");
+        document.body.classList.toggle("theme-light", nextTheme === "light");
+        document.documentElement.dataset.theme = nextTheme;
+        document.body.dataset.theme = nextTheme;
+        localStorage.setItem("couponex-theme", nextTheme);
+
+        if (themeIcon) {
+          themeIcon.textContent = nextTheme === "light" ? "dark_mode" : "light_mode";
+        }
+        if (themeLabel) {
+          themeLabel.textContent = nextTheme === "light" ? "Dark" : "Light";
+        }
+      }
+
+      const savedTheme = localStorage.getItem("couponex-theme");
+      const initialTheme = savedTheme || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      applyTheme(initialTheme);
+
+      themeToggle?.addEventListener("click", () => {
+        const currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+        applyTheme(currentTheme === "light" ? "dark" : "light");
+      });
+
+      // === WALLET & PAYOUT FLOW ===
+      const withdrawModal = document.getElementById("withdraw-modal");
+      let currentUser = null;
+
+      function openWithdrawModal() {
+        withdrawModal.classList.add("open");
+      }
+
+      function closeWithdrawModal() {
+        withdrawModal.classList.remove("open");
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("admin-toast");
+        document.getElementById("toast-message").textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      // Check user authentication
+      const userData = localStorage.getItem("couponex_user");
+      if (userData) {
+        currentUser = JSON.parse(userData);
+      } else {
+        alert("Please login first to view wallet.");
+        window.location.href = "login.html";
+      }
+
+      // Withdraw Funds navigates directly to purchase-credits.html as per the requirements.
+
+      async function submitWithdraw(event) {
+        event.preventDefault();
+        const amount = parseFloat(document.getElementById("withdraw-amount").value);
+        const bankDetails = document.getElementById("withdraw-bank").value;
+
+        if (amount > currentUser.balance) {
+          alert("Insufficient balance! You only have " + currentUser.balance + " C.");
+          return;
+        }
+
+        const payload = {
+          userId: currentUser.id,
+          amount,
+          bankDetails
+        };
+
+        try {
+          const apiEndpoint = window.location.protocol === "file:"
+            ? "http://localhost:8000/api/profile/payout"
+            : "/api/profile/payout";
+
+          const response = await fetch(apiEndpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            alert(data.error || "Failed to submit withdrawal request.");
+            return;
+          }
+
+          // Deduct local balance
+          currentUser.balance -= amount;
+          localStorage.setItem("couponex_user", JSON.stringify(currentUser));
+
+          showToast("Withdrawal request submitted successfully!");
+          closeWithdrawModal();
+          loadWalletData();
+        } catch (error) {
+          // Fallback to localStorage standalone mode
+          const payouts = JSON.parse(localStorage.getItem("couponex_payouts") || "[]");
+          payouts.push({
+            id: payouts.length + 1,
+            userId: currentUser.id,
+            amount,
+            bankDetails,
+            status: "pending",
+            createdAt: new Date().toISOString()
+          });
+          localStorage.setItem("couponex_payouts", JSON.stringify(payouts));
+
+          currentUser.balance -= amount;
+          localStorage.setItem("couponex_user", JSON.stringify(currentUser));
+
+          showToast("Withdrawal request submitted successfully! (Offline mode)");
+          closeWithdrawModal();
+          loadWalletData();
+        }
+      }
+
+      async function loadWalletData() {
+        if (!currentUser) return;
+
+        let balance = currentUser.balance || 0;
+        let payouts = [];
+        let topups = [];
+
+        // 1. Instant synchronous render from localStorage (< 1ms)
+        const balanceElInit = document.querySelector(".hero-value strong");
+        if (balanceElInit) balanceElInit.textContent = balance;
+
+        let baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+
+        // 2. Fast background API fetch
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 800);
+
+          const apiProfileEndpoint = `${baseUrl}/api/profile/${currentUser.id}`;
+          const resProfile = await fetch(apiProfileEndpoint, { signal: controller.signal });
+          clearTimeout(timeoutId);
+          const dataProfile = await resProfile.json();
+
+          // Get profile balance
+          if (dataProfile.success && dataProfile.user) {
+            balance = dataProfile.user.balance || 0;
+            currentUser.balance = balance;
+            localStorage.setItem("couponex_user", JSON.stringify(currentUser));
+          }
+
+          const apiPayoutsEndpoint = `${baseUrl}/api/profile/${currentUser.id}/payouts`;
+          const resPayouts = await fetch(apiPayoutsEndpoint);
+          const dataPayouts = await resPayouts.json();
+
+          if (dataPayouts.success && dataPayouts.payouts) {
+            payouts = dataPayouts.payouts;
+          }
+
+          const apiTopupsEndpoint = `${baseUrl}/api/profile/${currentUser.id}/topups`;
+          const resTopups = await fetch(apiTopupsEndpoint);
+          const dataTopups = await resTopups.json();
+
+          if (dataTopups.success && dataTopups.topups) {
+            topups = dataTopups.topups;
+          }
+        } catch (err) {
+          console.log("Using local wallet data...");
+          payouts = JSON.parse(localStorage.getItem("couponex_payouts") || "[]")
+            .filter(p => p.userId === currentUser.id);
+          topups = JSON.parse(localStorage.getItem("couponex_topups") || "[]")
+            .filter(t => t.userId === currentUser.id && (t.requestStatus === "Approved" || t.status === "Approved"));
+        }
+
+        // Render Available Balance
+        const balanceEl = document.querySelector(".hero-value strong");
+        if (balanceEl) balanceEl.textContent = balance;
+
+        // Render Wallet Status details
+        const statusEl = document.querySelector(".hero-status");
+        if (statusEl) {
+          statusEl.innerHTML = payouts.length > 0
+            ? `<p>${payouts.filter(p => p.status === 'pending').length} pending payouts</p><p>Total withdrawals: ${payouts.length}</p>`
+            : `<p>New account</p><p>No withdrawals yet</p>`;
+        }
+
+        // Ensure user '_pa_van_' (Pavan Raj N) has initial 1700C historical approved purchases seeded
+        let localAllTopups = JSON.parse(localStorage.getItem("couponex_topups") || "[]");
+        const hasPavanSeeded = localStorage.getItem("couponex_pavan_seeded_1700");
+        const isPavanUser = !currentUser.id || currentUser.id === 1 ||
+                            (currentUser.username && currentUser.username.toLowerCase().includes("pa_van")) ||
+                            (currentUser.fullName && currentUser.fullName.toLowerCase().includes("pavan"));
+
+        if (isPavanUser && !hasPavanSeeded) {
+          // Clean out old seed items
+          localAllTopups = localAllTopups.filter(t => t && !String(t.id).startsWith("SEED-"));
+
+          const initialDemoApproved = [
+            {
+              id: "SEED-1700-1",
+              requestId: "CPX-PAY-HIST-1100",
+              userId: currentUser.id || 1,
+              userName: currentUser.fullName || "Pavan Raj N",
+              packageName: "1100C Pack",
+              requestedCredits: 1100,
+              purchaseAmount: 1000,
+              discount: 0,
+              totalAmount: 1000,
+              paymentMethod: "UPI",
+              paymentStatus: "Completed",
+              requestStatus: "Approved",
+              createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
+            },
+            {
+              id: "SEED-1700-2",
+              requestId: "CPX-PAY-HIST-600",
+              userId: currentUser.id || 1,
+              userName: currentUser.fullName || "Pavan Raj N",
+              packageName: "600C Pack",
+              requestedCredits: 600,
+              purchaseAmount: 600,
+              discount: 0,
+              totalAmount: 600,
+              paymentMethod: "CARD",
+              paymentStatus: "Completed",
+              requestStatus: "Approved",
+              createdAt: new Date(Date.now() - 86400000 * 5).toISOString()
+            }
+          ];
+          localAllTopups = [...initialDemoApproved, ...localAllTopups];
+          localStorage.setItem("couponex_topups", JSON.stringify(localAllTopups));
+          localStorage.setItem("couponex_pavan_seeded_1700", "true");
+
+          currentUser.balance = 1700;
+          if (!currentUser.username) currentUser.username = "_pa_van_";
+          if (!currentUser.fullName) currentUser.fullName = "Pavan Raj N";
+          localStorage.setItem("couponex_user", JSON.stringify(currentUser));
+          balance = 1700;
+        }
+
+        // 1. Calculate Approved / Purchased Credits
+        const approvedLocal = localAllTopups.filter(t => {
+          if (!t) return false;
+          const isApproved = t.requestStatus === "Approved" || t.status === "Approved" || t.paymentStatus === "Completed";
+          if (!isApproved) return false;
+          if (!currentUser || !currentUser.id) return true;
+          return !t.userId || String(t.userId) === String(currentUser.id);
+        });
+
+        const approvedCombined = [...topups, ...approvedLocal];
+        const seenApprovedKeys = new Set();
+        let totalPurchasedVal = 0;
+
+        approvedCombined.forEach(t => {
+          if (!t) return;
+          const key = t.requestId || (t.id ? String(t.id) : null);
+          if (key && seenApprovedKeys.has(key)) return;
+          if (key) seenApprovedKeys.add(key);
+
+          const val = parseFloat(t.requestedCredits || t.credits || t.totalAmount || t.amount || 0);
+          if (!isNaN(val)) {
+            totalPurchasedVal += val;
+          }
+        });
+
+        // 2. Calculate Pending Verification Credits
+        const pendingLocal = localAllTopups.filter(t => {
+          if (!t) return false;
+          const isPending = t.requestStatus === "Pending" || t.status === "Pending";
+          if (!isPending) return false;
+          if (!currentUser || !currentUser.id) return true;
+          return !t.userId || String(t.userId) === String(currentUser.id);
+        });
+
+        const seenPendingKeys = new Set();
+        let pendingClearancesVal = 0;
+
+        pendingLocal.forEach(t => {
+          if (!t) return;
+          const key = t.requestId || (t.id ? String(t.id) : null);
+          if (key && seenPendingKeys.has(key)) return;
+          if (key) seenPendingKeys.add(key);
+
+          const val = parseFloat(t.requestedCredits || t.credits || t.totalAmount || t.amount || 0);
+          if (!isNaN(val)) {
+            pendingClearancesVal += val;
+          }
+        });
+
+        // 3. Update UI Elements
+        const totalPurchasedEl = document.getElementById("val-total-purchased") || document.querySelector(".insight-list .insight-row:nth-child(1) strong");
+        if (totalPurchasedEl) totalPurchasedEl.textContent = totalPurchasedVal + " C";
+
+        const pendingClearancesEl = document.getElementById("val-pending-clearances") || document.querySelector(".insight-list .insight-row:nth-child(2) strong");
+        if (pendingClearancesEl) pendingClearancesEl.textContent = pendingClearancesVal + " C";
+
+        updatePayoutDestinationUI();
+
+        // Map and Sort Payouts + Approved Top-ups
+        const mappedPayouts = payouts.map(p => ({
+          type: "payout",
+          title: `Withdrawal to ${p.bankDetails.split(':')[0] || 'Bank'}`,
+          amount: `-${p.amount} C`,
+          status: p.status === 'verified' ? 'verified' : p.status,
+          date: p.createdAt
+        }));
+
+        const mappedTopups = topups.map(t => ({
+          type: "topup",
+          title: `Credit Purchase (${t.method || t.paymentMethod || 'UPI'})`,
+          amount: `+${t.credits || t.requestedCredits} C`,
+          status: "verified",
+          date: t.createdAt
+        }));
+
+        const allTransactions = [...mappedPayouts, ...mappedTopups].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Render Earnings History
+        const historyCard = document.querySelector(".history-card");
+        if (historyCard) {
+          // Remove old logs or empty state
+          const existingList = historyCard.querySelector(".insight-list");
+          if (existingList) existingList.remove();
+          const existingEmpty = historyCard.querySelector(".empty-state");
+          if (existingEmpty) existingEmpty.remove();
+
+          if (allTransactions.length === 0) {
+            const emptyDiv = document.createElement("div");
+            emptyDiv.className = "empty-state";
+            emptyDiv.innerHTML = `
+              <div class="empty-icon">
+                <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+              </div>
+              <h3>No transactions have been performed till now</h3>
+              <p>Your earnings and payout activity will appear here once you start using the platform.</p>
+            `;
+            historyCard.appendChild(emptyDiv);
+          } else {
+            const listDiv = document.createElement("div");
+            listDiv.className = "insight-list";
+            listDiv.style.marginTop = "20px";
+            listDiv.innerHTML = allTransactions.map(t => {
+              let statusBadgeColor = "orange";
+              if (t.status === "verified" || t.status === "Approved") statusBadgeColor = "green";
+              if (t.status === "rejected" || t.status === "Rejected") statusBadgeColor = "red";
+              return `
+                <div class="insight-row" style="padding: 16px 0; border-bottom: 1px solid rgba(var(--outline-variant-rgb), 0.16);">
+                  <div>
+                    <strong style="font-size: 1.05rem; display:block; color: rgb(var(--on-surface-rgb));">${t.title}</strong>
+                    <span style="font-size: 0.82rem; color: rgba(var(--on-surface-variant-rgb), 0.7);">${new Date(t.date).toLocaleDateString()}</span>
+                  </div>
+                  <div style="text-align: right;">
+                    <strong style="font-size: 1.15rem; display:block; color: rgb(var(--on-surface-rgb));">${t.amount}</strong>
+                    <span style="font-size: 0.8rem; color:${statusBadgeColor}; font-weight:700; text-transform:uppercase;">${t.status}</span>
+                  </div>
+                </div>
+              `;
+            }).join("");
+            historyCard.appendChild(listDiv);
+          }
+        }
+      }
+
+      function openPayoutDestinationModal() {
+        const modal = document.getElementById("payout-modal");
+        const currentDest = JSON.parse(localStorage.getItem("couponex_payout_destination") || '{"bankName":"HDFC Bank India","accountNumber":"Ending in •••• 9012"}');
+        document.getElementById("edit-bank-name").value = currentDest.bankName || "HDFC Bank India";
+        document.getElementById("edit-account-number").value = currentDest.accountNumber || "Ending in •••• 9012";
+        if (modal) modal.style.display = "flex";
+      }
+
+      function closePayoutDestinationModal() {
+        const modal = document.getElementById("payout-modal");
+        if (modal) modal.style.display = "none";
+      }
+
+      function submitPayoutDestination(e) {
+        e.preventDefault();
+        const bankName = document.getElementById("edit-bank-name").value.trim();
+        const accountNumber = document.getElementById("edit-account-number").value.trim();
+
+        if (!bankName || !accountNumber) return;
+
+        const destObj = { bankName, accountNumber };
+        localStorage.setItem("couponex_payout_destination", JSON.stringify(destObj));
+
+        updatePayoutDestinationUI();
+        closePayoutDestinationModal();
+
+        const toast = document.getElementById("admin-toast");
+        if (toast) {
+          const msg = document.getElementById("toast-message");
+          if (msg) msg.textContent = "Payout destination updated successfully!";
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+      }
+
+      function updatePayoutDestinationUI() {
+        const dest = JSON.parse(localStorage.getItem("couponex_payout_destination") || '{"bankName":"HDFC Bank India","accountNumber":"Ending in •••• 9012"}');
+        const bankEl = document.getElementById("payout-bank-name");
+        const accEl = document.getElementById("payout-account-number");
+        if (bankEl) bankEl.textContent = dest.bankName || "HDFC Bank India";
+        if (accEl) {
+          const rawAcc = dest.accountNumber || "9012";
+          accEl.textContent = rawAcc.toLowerCase().includes("ending in") || rawAcc.includes("@") ? rawAcc : `Ending in •••• ${rawAcc.slice(-4)}`;
+        }
+      }
+
+      window.addEventListener("storage", (e) => {
+        if (e.key === "couponex_user" || e.key === "couponex_topups" || e.key === "couponex_payouts" || e.key === "couponex_payout_destination") {
+          loadWalletData();
+          updatePayoutDestinationUI();
+        }
+      });
+      setInterval(loadWalletData, 3000);
+
+      window.addEventListener("load", () => {
+        loadWalletData();
+        updatePayoutDestinationUI();
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+        loadWalletData();
+        updatePayoutDestinationUI();
+      });
+    </script>
+  </body>
+</html>

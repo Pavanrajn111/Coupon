@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Purchases | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          document.body.className = theme === "light" ? "theme-light" : "";
+        });
+      })();
+    </script>
+    <style>
+      .purchases-tabs {
+        display: flex;
+        gap: 24px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 24px;
+        padding-bottom: 8px;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        color: var(--text-soft);
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding-bottom: 12px;
+        position: relative;
+      }
+      .tab-btn.active {
+        color: var(--primary);
+      }
+      .tab-btn.active::after {
+        content: "";
+        position: absolute;
+        bottom: -9px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--primary);
+      }
+      .purchases-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      @media (min-width: 992px) {
+        .purchases-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .purchases-card-large {
+          grid-column: span 2;
+        }
+      }
+      .purchase-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 220px;
+        transition: border-color 0.2s;
+      }
+      .purchase-card:hover {
+        border-color: var(--primary);
+      }
+      .purchase-card-large {
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+      }
+      .purchase-logo {
+        width: 64px;
+        height: 64px;
+        background: var(--surface-soft);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+      }
+      .purchase-logo span {
+        font-size: 32px;
+        color: var(--primary);
+      }
+      .purchase-details {
+        flex: 1;
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(74, 225, 118, 0.1);
+        border: 1px solid var(--secondary);
+        color: var(--secondary);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        width: fit-content;
+      }
+      .purchase-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        margin: 0 0 4px 0;
+      }
+      .purchase-merchant {
+        font-size: 0.875rem;
+        color: var(--text-soft);
+        margin-bottom: 12px;
+      }
+      .purchase-meta {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .action-area {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-end;
+      }
+      @media (max-width: 768px) {
+        .purchase-card-large {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .action-area {
+          align-items: stretch;
+          width: 100%;
+          border-top: 1px dashed var(--border);
+          padding-top: 16px;
+        }
+      }
+      .view-code-btn {
+        background: var(--primary);
+        color: var(--button-primary-text);
+        padding: 10px 20px;
+        border: 0;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: filter 0.2s;
+      }
+      .view-code-btn:hover {
+        filter: brightness(1.1);
+      }
+      .secondary-btn {
+        background: none;
+        border: 1px solid var(--border);
+        color: var(--text-soft);
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        width: 100%;
+      }
+      .secondary-btn:hover {
+        background: var(--surface-soft);
+      }
+    </style>
+      <script src="header.js"></script>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page">
+      <div class="shell stack">
+        <h1 class="section-title-new" style="font-size: 2.25rem; font-weight: 800; margin-top: 12px; margin-bottom: 4px;">My Purchases</h1>
+        <p style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 24px;">Manage and access your purchased digital coupons.</p>
+
+        <div class="purchases-tabs">
+          <button class="tab-btn active">All Purchases</button>
+          <button class="tab-btn">Ready to Use (2)</button>
+          <button class="tab-btn">Already Used</button>
+        </div>
+
+        <div class="purchases-grid">
+          <!-- Large Purchase card -->
+          <div class="purchase-card purchase-card-large purchases-card-large">
+            <div class="purchase-logo">
+              <span class="material-symbols-outlined">devices</span>
+            </div>
+            <div class="purchase-details">
+              <div class="status-badge">
+                <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">check_circle</span> Ready to Use
+              </div>
+              <h3 class="purchase-title">20% Off All Tech Hardware</h3>
+              <div class="purchase-merchant">TechHaven Electronics</div>
+              <div class="purchase-meta">Purchased: Oct 12, 2026 • Order #ORD-88392</div>
+            </div>
+            <div class="action-area">
+              <button class="view-code-btn" type="button" onclick="alert('Coupon Code: TECH20OFF')">View Code</button>
+            </div>
+          </div>
+
+          <!-- Small Purchase card -->
+          <div class="purchase-card">
+            <div>
+              <div class="status-badge">
+                <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">check_circle</span> Ready to Use
+              </div>
+              <h3 class="purchase-title">Buy 1 Get 1 Coffee</h3>
+              <div class="purchase-merchant">Bean & Brew Roasters</div>
+            </div>
+            <button class="secondary-btn" type="button" onclick="alert('Coupon Code: COFFEEBOGO')">View Code</button>
+          </div>
+
+          <!-- Already used item -->
+          <div class="purchase-card" style="opacity: 0.6;">
+            <div>
+              <div class="status-badge" style="background: rgba(255,255,255,0.1); border-color: var(--border); color: var(--text-muted)">
+                Already Used
+              </div>
+              <h3 class="purchase-title" style="text-decoration: line-through;">$15 Off Any Fiction Book</h3>
+              <div class="purchase-merchant">Chapter One Books</div>
+            </div>
+            <button class="secondary-btn" type="button" style="cursor: not-allowed;" disabled>Code Redeemed</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+        }
+
+        
+          document.addEventListener("click", () => {
+            profileDropdown.classList.remove("show");
+          });
+          profileDropdown.addEventListener("click", (e) => {
+            e.stopPropagation();
+          });
+        }
+      });
+
+      function logoutUser() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

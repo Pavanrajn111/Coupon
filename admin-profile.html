@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Profile | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f6f3ec;
+        --surface-muted: #f0eee7;
+        --surface-border: #e5e2db;
+        --surface-container: #f0eee7;
+        --surface-container-low: #f6f3ec;
+        --surface-container-high: #ebe8e1;
+        --surface-container-highest: #e5e2db;
+        --surface-container-lowest: #ffffff;
+        --surface-variant: #e5e2db;
+        --outline: #8d7168;
+        --outline-variant: #e1bfb5;
+        --text: #1c1c18;
+        --text-soft: #4f5e80;
+        --text-muted: #7b675a;
+        --text-variant: #594139;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --primary-container: #ff6b35;
+        --primary-fixed-dim: #ffb59d;
+        --primary-fixed: #ffdbd0;
+        --navy: #0a1b39;
+        --navy-soft: #374667;
+        --error: #ba1a1a;
+        --error-container: #ffdad6;
+        --on-error-container: #93000a;
+        --success: #4ade80;
+        --shadow-soft: 0 10px 24px rgba(28, 28, 24, 0.06);
+        --shadow-hover: 0 18px 40px rgba(28, 28, 24, 0.1);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #4f5e80;
+        --secondary-container: #c8d7fe;
+        --on-secondary-container: #4e5d7f;
+        --tertiary: #755b00;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #ffffff;
+        --on-tertiary-container: #4f3d00;
+        --on-secondary-fixed: #0a1b39;
+        --on-secondary-fixed-variant: #374667;
+        --on-background: #1c1c18;
+        --on-surface-variant: #594139;
+        --card-bg: #ffffff;
+        --card-border: #e5e2db;
+        --badge-bg: rgba(255, 255, 255, 0.8);
+        --secondary-fixed-dim: #b7c6ed;
+        --hairline: #e7e2d8;
+      }
+
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: rgba(23, 31, 51, 0.78);
+        --surface-soft: rgba(13, 24, 45, 0.7);
+        --surface-muted: rgba(34, 42, 61, 0.88);
+        --surface-border: rgba(192, 193, 255, 0.18);
+        --surface-container: rgba(23, 31, 51, 0.78);
+        --surface-container-low: rgba(19, 27, 46, 0.7);
+        --surface-container-high: rgba(34, 42, 61, 0.88);
+        --surface-container-highest: rgba(45, 52, 73, 0.9);
+        --surface-container-lowest: rgba(6, 14, 32, 0.9);
+        --surface-variant: rgba(70, 69, 84, 0.8);
+        --outline: #8d7168;
+        --outline-variant: rgba(70, 69, 84, 0.8);
+        --text: #dae2fd;
+        --text-soft: #c7c4d7;
+        --text-muted: #98a2bd;
+        --text-variant: #c7c4d7;
+        --primary: #c0c1ff;
+        --primary-dark: #8083ff;
+        --primary-container: #8083ff;
+        --primary-fixed-dim: #8083ff;
+        --primary-fixed: rgba(192, 193, 255, 0.2);
+        --navy: #c0c1ff;
+        --navy-soft: #8083ff;
+        --error: #ffb4ab;
+        --error-container: rgba(255, 180, 171, 0.2);
+        --on-error-container: #ffb4ab;
+        --success: #4ade80;
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.38);
+        --shadow-hover: 0 32px 100px rgba(0, 0, 0, 0.5);
+        --on-primary: #0d0096;
+        --on-secondary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.15);
+        --on-secondary-container: #4ae176;
+        --tertiary: #ffb95f;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #4f3d00;
+        --on-tertiary-container: #ffb95f;
+        --on-secondary-fixed: #dae2fd;
+        --on-secondary-fixed-variant: #c7c4d7;
+        --on-background: #dae2fd;
+        --on-surface-variant: #c7c4d7;
+        --card-bg: rgba(23, 31, 51, 0.78);
+        --card-border: rgba(192, 193, 255, 0.18);
+        --badge-bg: rgba(11, 19, 38, 0.8);
+        --secondary-fixed-dim: rgba(74, 225, 118, 0.3);
+        --hairline: rgba(192, 193, 255, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      *::selection {
+        background: rgba(171, 53, 0, 0.16);
+        color: var(--navy);
+      }
+      html.theme-dark *::selection {
+        background: rgba(128, 131, 255, 0.25);
+        color: var(--text);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--on-background);
+        font-family:
+          Geist,
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a,
+      button {
+        color: inherit;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      /* === TOP NAV BAR (Shared with Admin Dashboard) === */
+      .admin-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 1px solid var(--surface-border);
+        backdrop-filter: blur(12px);
+      }
+      .admin-header .shell {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 72px;
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+      .admin-header-left {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .admin-brand {
+        font-family: Inter, sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--primary);
+      }
+      .admin-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-nav-link {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-variant);
+        transition: all 180ms ease;
+        cursor: pointer;
+      }
+      .admin-nav-link:hover {
+        background: var(--surface-container-low);
+        color: var(--text);
+      }
+      .admin-nav-link.active {
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+        border-radius: 0;
+        padding-bottom: 6px;
+      }
+      .admin-header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .admin-icon-btn {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        color: var(--text-variant);
+        transition: background 180ms ease;
+      }
+      .admin-icon-btn:hover {
+        background: var(--surface-container-low);
+      }
+      .admin-user-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px 4px 4px;
+        border: 1px solid var(--surface-border);
+        border-radius: 999px;
+        color: var(--text);
+        transition: background 180ms ease;
+        cursor: pointer;
+      }
+      .admin-user-btn:hover {
+        background: var(--surface-container-low);
+      }
+      .admin-user-btn .material-symbols-outlined {
+        color: var(--primary);
+        font-variation-settings: "FILL" 1;
+      }
+      .admin-user-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .admin-settings-wrap {
+        position: relative;
+      }
+      .admin-settings-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-top: 8px;
+        width: 160px;
+        background: var(--surface-container);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--surface-border);
+        padding: 8px;
+        z-index: 60;
+      }
+      .admin-settings-menu.is-open {
+        display: block;
+      }
+      .admin-settings-opt {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+      .admin-settings-opt:hover {
+        background: var(--surface-container-high);
+      }
+
+      /* === PAGE HEADER === */
+      .admin-main {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+        padding: 32px 0 60px;
+      }
+      .admin-dash-header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      @media (min-width: 768px) {
+        .admin-dash-header {
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: space-between;
+        }
+      }
+      .admin-dash-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--tertiary);
+      }
+      .admin-dash-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 4px 0 0;
+      }
+      .admin-dash-desc {
+        font-size: 0.95rem;
+        color: var(--text-variant);
+        margin: 8px 0 0;
+        max-width: 520px;
+      }
+      .admin-dash-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .admin-btn {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 180ms ease;
+        cursor: pointer;
+      }
+      .admin-btn:active {
+        transform: scale(0.95);
+      }
+      .admin-btn-secondary {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--hairline);
+        color: var(--on-secondary-fixed);
+      }
+      .admin-btn-secondary:hover {
+        background: var(--surface-container-high);
+      }
+      .admin-btn-primary {
+        background: var(--primary-container);
+        color: var(--on-primary);
+      }
+      .admin-btn-primary:hover {
+        opacity: 0.9;
+      }
+
+      /* === STATUS BADGE === */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--tertiary-container);
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--tertiary);
+        white-space: nowrap;
+      }
+      .status-badge .material-symbols-outlined {
+        font-size: 16px;
+        font-variation-settings: "FILL" 1;
+      }
+
+      /* === PROFILE CONTENT GRID === */
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      @media (min-width: 1024px) {
+        .profile-grid {
+          grid-template-columns: 8fr 4fr;
+        }
+      }
+
+      /* === PROFILE CARD === */
+      .profile-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .profile-head {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 24px;
+      }
+      @media (min-width: 640px) {
+        .profile-head {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+      .avatar-wrap {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        border-radius: 999px;
+        background: var(--surface-variant);
+        border: 1px solid var(--surface-border);
+        overflow: hidden;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .avatar-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .avatar-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(28, 28, 24, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        transition: all 180ms ease;
+      }
+      .avatar-wrap:hover .avatar-overlay {
+        display: flex;
+      }
+      .avatar-overlay .material-symbols-outlined {
+        font-size: 24px;
+      }
+      .profile-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+      }
+      .profile-role {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-variant);
+        margin: 2px 0 0;
+      }
+      .profile-id {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 4px 12px;
+        background: var(--surface-container-high);
+        border: 1px solid var(--surface-border);
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--text-variant);
+      }
+      .profile-divider {
+        border: 0;
+        border-top: 1px solid var(--surface-border);
+        margin: 0 0 24px;
+      }
+
+      /* === FORM === */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      @media (min-width: 640px) {
+        .form-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .form-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+      }
+      .form-input {
+        width: 100%;
+        padding: 10px 16px;
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--surface-border);
+        border-radius: 8px;
+        font-size: 1rem;
+        color: var(--text);
+        transition: border-color 180ms ease;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .form-input:disabled {
+        background: var(--surface-container-low);
+        color: var(--text-variant);
+        cursor: not-allowed;
+      }
+      .form-input-wrap {
+        position: relative;
+      }
+      .form-input-wrap .material-symbols-outlined {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: var(--text-variant);
+      }
+      .form-input-wrap .form-input {
+        padding-left: 40px;
+      }
+
+      /* === PRIVILEGES CARD === */
+      .privileges-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .privileges-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .privileges-head .material-symbols-outlined {
+        color: var(--text);
+        font-size: 20px;
+      }
+      .privileges-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+      }
+      .privilege-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 0;
+      }
+      .privilege-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .privilege-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .privilege-desc {
+        font-size: 0.8rem;
+        color: var(--text-variant);
+      }
+      .privilege-divider {
+        border: 0;
+        border-top: 1px solid var(--surface-border);
+        margin: 0;
+      }
+
+      /* === TOGGLE SWITCH === */
+      .toggle {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background: var(--surface-variant);
+        border-radius: 999px;
+        transition: background 200ms ease;
+      }
+      .toggle-slider::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        left: 2px;
+        top: 2px;
+        background: #ffffff;
+        border-radius: 999px;
+        transition: transform 200ms ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .toggle input:checked + .toggle-slider {
+        background: var(--primary-container);
+      }
+      .toggle input:checked + .toggle-slider::before {
+        transform: translateX(20px);
+      }
+
+      /* === ACTION BUTTONS === */
+      .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .save-btn {
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--primary-container);
+        color: var(--on-primary);
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 180ms ease;
+      }
+      .save-btn:hover {
+        opacity: 0.9;
+      }
+      .save-btn:active {
+        transform: scale(0.98);
+      }
+      .save-btn .material-symbols-outlined {
+        font-size: 16px;
+      }
+      .discard-btn {
+        width: 100%;
+        padding: 12px 16px;
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--hairline);
+        color: var(--on-secondary-fixed);
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 180ms ease;
+      }
+      .discard-btn:hover {
+        background: var(--surface-container-high);
+      }
+      .discard-btn:active {
+        transform: scale(0.98);
+      }
+
+      /* === FOOTER (Shared with Admin Dashboard) === */
+      .admin-footer {
+        background: var(--surface-container-low);
+        border-top: 1px solid var(--surface-border);
+        padding: 32px 0;
+      }
+      .admin-footer .shell {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+      @media (min-width: 768px) {
+        .admin-footer .shell {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+      .admin-footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-footer-brand span {
+        font-family: Inter, sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .admin-footer-version {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .admin-footer-links {
+        display: flex;
+        gap: 24px;
+      }
+      .admin-footer-links a {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+        transition: color 180ms ease;
+      }
+      .admin-footer-links a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+      .admin-footer-copy {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+
+      /* === TOAST === */
+      .admin-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--on-background);
+        color: var(--on-surface-variant);
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 300ms ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 100;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .admin-toast .material-symbols-outlined {
+        color: var(--success);
+      }
+      .admin-toast span {
+        color: #ffffff;
+        font-size: 0.875rem;
+      }
+
+      /* === MOBILE RESPONSIVE === */
+      @media (max-width: 768px) {
+        .admin-nav {
+          display: none;
+        }
+        .admin-main {
+          width: min(100% - 20px, 1200px);
+        }
+        .admin-dash-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+        .admin-btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav Bar (Shared with Admin Dashboard) -->
+    <header class="admin-header">
+      <div class="shell">
+        <div class="admin-header-left">
+          <span class="admin-brand">CouponEx</span>
+          <nav class="admin-nav" aria-label="Admin navigation">
+            <a class="admin-nav-link" href="admin-dashboard.html">Dashboard</a>
+            <a class="admin-nav-link" href="admin-identity.html">Identity</a>
+            <a class="admin-nav-link" href="admin-verifications.html">Verifications</a>
+            <a class="admin-nav-link" href="admin-payments.html">Payments</a>
+          </nav>
+        </div>
+        <div class="admin-header-right">
+          <div class="admin-settings-wrap">
+            <button
+              id="settings-toggle"
+              class="admin-icon-btn"
+              type="button"
+              aria-label="Settings"
+            >
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div id="settings-menu" class="admin-settings-menu" role="menu">
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="setTheme('dark')"
+              >
+                Dark mode
+              </button>
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="setTheme('light')"
+              >
+                Light mode
+              </button>
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="logout()"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+          <button class="admin-user-btn" type="button" onclick="window.location.href='admin-profile.html'">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="admin-user-label">Admin</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Page Header -->
+      <div class="admin-dash-header">
+        <div>
+          <span class="admin-dash-label">Administrative Suite</span>
+          <h1 class="admin-dash-title">Admin Profile</h1>
+          <p class="admin-dash-desc">
+            Manage your personal information and administrative privileges.
+          </p>
+        </div>
+        <div class="admin-dash-actions">
+          <div class="status-badge">
+            <span class="material-symbols-outlined">verified</span>
+            ACTIVE / VERIFIED
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Content Grid -->
+      <div class="profile-grid">
+        <!-- Left Column: Personal Info (8 cols) -->
+        <div class="profile-card">
+          <!-- Profile Head -->
+          <div class="profile-head">
+            <div class="avatar-wrap">
+              <img
+                alt="Admin profile photo"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRwMrNUMJ6Z--23t719gtjvDtmhk6PHsyxumn1zG9xlILEGV4SRvcRfuOcIZ7KwBf7E7TMKVYhRYHwTNyHtc4-manmrwlQvtFgIn3Ko4lzuLuc-h8gjZIMtIt9d965XTJEettzFne34PDpXGZNRh0larpgcbtnXDwBr0HUawCInP5IMU-NrnndsqYyESN_9TD5CsG7mez6-B2eiF-slbuHOgyMrC92qMTKfaqIjHFLX3mje3JhOwnO"
+              />
+              <div class="avatar-overlay">
+                <span class="material-symbols-outlined">edit</span>
+              </div>
+            </div>
+            <div>
+              <h2 class="profile-name">Aditya Kumar</h2>
+              <p class="profile-role">Senior Operations Lead</p>
+              <span class="profile-id">ADM-9928-XP</span>
+            </div>
+          </div>
+
+          <hr class="profile-divider" />
+
+          <!-- Edit Form -->
+          <form id="profile-form" class="form-grid">
+            <div class="form-field">
+              <label class="form-label" for="full-name">FULL NAME</label>
+              <input class="form-input" id="full-name" type="text" value="Aditya Kumar" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="role">ROLE / DESIGNATION</label>
+              <input class="form-input" id="role" type="text" value="Senior Operations Lead" disabled />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="email">EMAIL ADDRESS</label>
+              <div class="form-input-wrap">
+                <span class="material-symbols-outlined">mail</span>
+                <input class="form-input" id="email" type="email" value="aditya.k@couponex.in" />
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="phone">PHONE NUMBER</label>
+              <div class="form-input-wrap">
+                <span class="material-symbols-outlined">phone</span>
+                <input class="form-input" id="phone" type="tel" value="+91 98765 43210" />
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Column: Privileges & Actions (4 cols) -->
+        <div>
+          <!-- Administrative Privileges Card -->
+          <div class="privileges-card">
+            <div class="privileges-head">
+              <span class="material-symbols-outlined">admin_panel_settings</span>
+              <h3 class="privileges-title">Administrative Privileges</h3>
+            </div>
+
+            <div class="privilege-row">
+              <div class="privilege-info">
+                <span class="privilege-name">Verify Coupons</span>
+                <span class="privilege-desc">Approve new listings</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <hr class="privilege-divider" />
+
+            <div class="privilege-row">
+              <div class="privilege-info">
+                <span class="privilege-name">Release Payments</span>
+                <span class="privilege-desc">Authorize final payouts</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <hr class="privilege-divider" />
+
+            <div class="privilege-row">
+              <div class="privilege-info">
+                <span class="privilege-name">Manage Disputes</span>
+                <span class="privilege-desc">Resolve buyer/seller flags</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <hr class="privilege-divider" />
+
+            <div class="privilege-row">
+              <div class="privilege-info">
+                <span class="privilege-name">Access System Logs</span>
+                <span class="privilege-desc">View raw activity data</span>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-stack">
+            <button class="save-btn" type="button" onclick="saveProfile()">
+              <span class="material-symbols-outlined">save</span>
+              Save Changes
+            </button>
+            <button class="discard-btn" type="button" onclick="discardChanges()">
+              Discard Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer (Shared with Admin Dashboard) -->
+    <footer class="admin-footer">
+      <div class="shell">
+        <div class="admin-footer-brand">
+          <span>CouponEx</span>
+          <span class="admin-footer-version">Admin Profile v2.4.0</span>
+        </div>
+        <div class="admin-footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="admin-dashboard.html">Back to Dashboard</a>
+        </div>
+        <div class="admin-footer-copy">
+          &copy; 2026 CouponEx India. Secure 256-bit SSL Encrypted.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="admin-toast" id="admin-toast">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>Action completed successfully.</span>
+    </div>
+
+    <script>
+      /* ----- PROFILE ACTIONS ----- */
+      function saveProfile() {
+        const name = document.getElementById("full-name").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        showToast("Profile saved — " + name + " (" + email + ")");
+      }
+
+      function discardChanges() {
+        document.getElementById("full-name").value = "Aditya Kumar";
+        document.getElementById("email").value = "aditya.k@couponex.in";
+        document.getElementById("phone").value = "+91 98765 43210";
+        showToast("Changes discarded. Reverted to saved values.");
+      }
+
+      /* ----- SHARED ADMIN UTILITIES ----- */
+      const settingsToggle = document.getElementById("settings-toggle");
+      const settingsMenu = document.getElementById("settings-menu");
+
+      settingsToggle.addEventListener("click", () => {
+        settingsMenu.classList.toggle("is-open");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (
+          !settingsToggle.contains(e.target) &&
+          !settingsMenu.contains(e.target)
+        ) {
+          settingsMenu.classList.remove("is-open");
+        }
+      });
+
+      function setTheme(theme) {
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem("couponex-theme", theme);
+        settingsMenu.classList.remove("is-open");
+      }
+
+      function logout() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+
+      let toastTimer = null;
+      function showToast(message) {
+        const toast = document.getElementById("admin-toast");
+        toast.querySelector("span:last-child").textContent =
+          message || "Action completed successfully.";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      // Admin-only guard
+      const userData = localStorage.getItem("couponex_user");
+      if (userData) {
+        const user = JSON.parse(userData);
+        if (user.role !== "admin") {
+          window.location.href = "dashboard.html";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

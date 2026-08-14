@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coupon Detail - Zomato</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#ffdbd0",
+                      "primary-container": "#ff6b35",
+                      "surface-container-high": "#ebe8e1",
+                      "surface-container-highest": "#e5e2db",
+                      "outline": "#8d7168",
+                      "surface-variant": "#e5e2db",
+                      "on-secondary-fixed-variant": "#374667",
+                      "on-tertiary-fixed": "#241a00",
+                      "background": "#fcf9f2",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "on-primary-fixed": "#390c00",
+                      "error": "#ba1a1a",
+                      "on-primary-container": "#5f1900",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "secondary": "#4f5e80",
+                      "on-surface-variant": "#594139",
+                      "on-background": "#1c1c18",
+                      "on-surface": "#1c1c18",
+                      "surface": "#fcf9f2",
+                      "primary": "#ab3500",
+                      "error-container": "#ffdad6",
+                      "surface-tint": "#ab3500",
+                      "inverse-on-surface": "#f3f0ea",
+                      "tertiary-container": "#cea62b",
+                      "surface-container": "#f0eee7",
+                      "secondary-container": "#c8d7fe",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-primary": "#ffb59d",
+                      "outline-variant": "#e1bfb5",
+                      "on-secondary-container": "#4e5d7f",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-container": "#4f3d00",
+                      "surface-bright": "#fcf9f2",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#832600",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ffe08e",
+                      "surface-container-low": "#f6f3ec",
+                      "primary-fixed-dim": "#ffb59d",
+                      "inverse-surface": "#31312c",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#755b00",
+                      "on-secondary-fixed": "#0a1b39",
+                      "surface-dim": "#dcdad3",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-tertiary-fixed-variant": "#584400"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "stack-lg": "32px",
+                      "gutter": "16px",
+                      "margin-desktop": "40px",
+                      "stack-md": "16px",
+                      "container-max": "1200px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Geist"],
+                      "price-display": ["JetBrains Mono"],
+                      "headline-md": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "body-sm": ["Geist"],
+                      "label-caps": ["Geist"],
+                      "display-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .coupon-notch {
+            mask-image: radial-gradient(circle at 0 50%, transparent 12px, black 13px), radial-gradient(circle at 100% 50%, transparent 12px, black 13px);
+            mask-size: 51% 100%, 51% 100%;
+            mask-position: 0 0, 100% 0;
+            mask-repeat: no-repeat;
+            -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 12px, black 13px), radial-gradient(circle at 100% 50%, transparent 12px, black 13px);
+            -webkit-mask-size: 51% 100%, 51% 100%;
+            -webkit-mask-position: 0 0, 100% 0;
+            -webkit-mask-repeat: no-repeat;
+        }
+        body {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-40 bg-background/90 backdrop-blur-sm border-b border-surface-variant flex justify-between items-center px-6 py-stack-sm w-full h-16">
+<div class="flex items-center gap-4">
+<button aria-label="Go back" class="p-2 -ml-2 text-on-secondary-fixed-variant hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="font-headline-md text-headline-md text-on-secondary-fixed-variant">Coupon Details</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Share" class="p-2 text-on-secondary-fixed-variant hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</header>
+<!-- Full Width Layout Container -->
+<main class="w-full px-6 lg:px-12 py-stack-lg grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1600px] mx-auto">
+<!-- Left Column: Coupon Focus (65%) -->
+<section class="lg:col-span-8 flex flex-col gap-10">
+<!-- Brand Hero Section -->
+<div class="flex items-center gap-6">
+<img alt="Zomato Logo" class="w-20 h-20 rounded-2xl border border-surface-variant object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXokrbb0sFYAO86X3hxWlSIsJE6gy_nYzXZsX1ghD92jXQ4-d_oLhUYzb1r4Lj-qWHy4sz_tKeuRXvDGnHP0K4e6AeW3HZZ7o1SSONKZQP7WSNqyIA1HSbEWIQ3pnwccLZ8lwThSM0YECvA1z7xGnKDCShKloG_ceiAO6n1U_JMUfjD2aP2SOkYZszQNUCZiBnlZJVEGdsVDm1wyFnCY73JbxyctqUgPFSflQ0O0u8aLrqLp6NG8P-_FLefXKCQc2yFdR5ql1Jofg"/>
+<div class="flex flex-col">
+<h1 class="font-display-lg text-display-lg text-on-background">Zomato</h1>
+<p class="text-on-surface-variant font-body-lg">Food Delivery &amp; Dining</p>
+</div>
+</div>
+<!-- Impact Banner -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-2xl p-10 coupon-notch relative overflow-hidden flex flex-col items-center justify-center min-h-[240px] shadow-sm">
+<div class="absolute left-0 top-0 bottom-0 w-1 border-r border-dashed border-surface-variant/50"></div>
+<div class="absolute right-0 top-0 bottom-0 w-1 border-l border-dashed border-surface-variant/50"></div>
+<div class="font-price-display text-[72px] leading-tight font-bold text-primary-container tracking-tighter">
+                    ₹250 OFF
+                </div>
+<div class="flex items-center gap-3 text-on-surface-variant mt-2">
+<span class="font-body-lg">Original Value:</span>
+<span class="font-price-display text-2xl line-through decoration-error/70 decoration-2">₹500</span>
+</div>
+<div class="mt-6 font-body-lg text-on-surface-variant max-w-xl text-center leading-relaxed">
+                    Valid on orders above ₹799. Applicable for new and returning users on all restaurant orders.
+                </div>
+<div class="mt-4 px-4 py-1 bg-primary-container/10 text-primary-container rounded-full text-label-caps uppercase font-bold tracking-widest">
+                    Limited Time Offer: Expires in 48 hours
+                </div>
+</div>
+<!-- How to Redeem Section -->
+<div class="flex flex-col gap-6">
+<h2 class="font-headline-md text-display-lg-mobile text-on-background">How to Redeem</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl border border-surface-variant/30 flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold">1</div>
+<h3 class="font-headline-md text-[18px]">Copy Code</h3>
+<p class="text-body-sm text-on-surface-variant">Secure the unique alphanumeric code after successful payment.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-surface-variant/30 flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold">2</div>
+<h3 class="font-headline-md text-[18px]">Open Zomato</h3>
+<p class="text-body-sm text-on-surface-variant">Launch the Zomato app or website and select your favorite meal.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-surface-variant/30 flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold">3</div>
+<h3 class="font-headline-md text-[18px]">Apply at Checkout</h3>
+<p class="text-body-sm text-on-surface-variant">Paste the code in the 'Offers' section before finalizing payment.</p>
+</div>
+</div>
+</div>
+<!-- Terms & Conditions Section -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-8 flex flex-col gap-4">
+<h2 class="font-headline-md text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">info</span>
+                    Terms &amp; Conditions
+                </h2>
+<ul class="space-y-3 text-on-surface-variant font-body-lg list-disc pl-5 marker:text-primary">
+<li>Coupon is valid for a single transaction only.</li>
+<li>Minimum order value of ₹799 (after other discounts) is required to apply the code.</li>
+<li>Applicable on both the Zomato mobile app and website platforms.</li>
+<li>Cannot be combined with other promotional codes or Zomato Gold benefits.</li>
+<li>The coupon is non-refundable once the code has been revealed or used.</li>
+<li>In case of order cancellation by the restaurant, the coupon value will not be reinstated.</li>
+</ul>
+</div>
+</section>
+<!-- Right Column: Checkout Sidebar (35%) -->
+<aside class="lg:col-span-4 flex flex-col gap-8">
+<!-- Persistent Seller Information -->
+<div class="sticky top-24 flex flex-col gap-8">
+<div class="bg-surface-container-lowest border border-surface-variant rounded-2xl p-6 shadow-md flex flex-col gap-6">
+<h3 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Verified Seller</h3>
+<div class="flex items-center gap-4">
+<img class="w-16 h-16 rounded-full border-2 border-primary-fixed-dim object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqf0j5VVDsJgV_afAJor46hJ30nmhY4cl83Isjxn00kYRUJRBevV8eKMhko2g_2Ap-8c5Kl4dF8GwzbljIKPd7UxMuRIYH5RhXhQo5PJyw1pqgwQnoghdsEpYxXUDdUVh2XffKIpAXiue5jTrJtIvUZWuMQh0TL6OTbZ2MPszDN_4Nntqlsi6GQ6FZoUeDSQ19_0O5Quw2MU9135zK91bqCJEdAgL3J9Awq9Ie5h-gYhBbR8oai7RpokPPuh2l26w9JaZHyZ6hDVU"/>
+<div class="flex flex-col">
+<span class="font-headline-md text-xl text-on-background">Rahul S.</span>
+<div class="flex items-center gap-1 text-tertiary-container font-price-display">
+<span>4.9</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-on-surface-variant text-sm font-body-sm ml-1">(128 reviews)</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 py-4 border-y border-surface-variant border-dashed">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Successful Trades</span>
+<span class="font-price-display text-lg font-medium text-on-background">450+</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Avg. Response</span>
+<span class="font-price-display text-lg font-medium text-on-background">&lt; 5 mins</span>
+</div>
+</div>
+<!-- Recent Feedback Snippet -->
+<div class="bg-surface-container p-4 rounded-xl italic text-body-sm text-on-surface-variant relative">
+<span class="material-symbols-outlined absolute -top-2 -left-1 text-surface-variant text-[32px]">format_quote</span>
+                        "Code worked instantly! Highly recommend Rahul for Zomato coupons."
+                        <div class="mt-2 text-[12px] font-bold not-italic">— Amit K., 1h ago</div>
+</div>
+<div class="flex items-center gap-3 bg-tertiary-fixed/20 text-on-tertiary-container p-3 rounded-xl border border-tertiary-container/20">
+<span class="material-symbols-outlined text-tertiary-container">verified_user</span>
+<span class="font-body-sm font-medium">Identity &amp; OCR Verified</span>
+</div>
+<!-- Payment Summary & Call to Action -->
+<div class="pt-4 flex flex-col gap-4">
+<div class="flex justify-between items-center px-1">
+<span class="font-body-lg text-on-surface-variant">Total Payable</span>
+<span class="font-price-display text-3xl font-bold text-on-background">₹225</span>
+</div>
+<button class="bg-primary-container text-on-primary w-full py-5 rounded-xl font-headline-md text-xl font-bold hover:bg-primary transition-all flex items-center justify-center gap-3 shadow-[0_8px_24px_rgba(255,107,53,0.3)] hover:shadow-[0_12px_32px_rgba(255,107,53,0.4)] active:scale-[0.98]">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">security</span>
+                            Buy Securely
+                        </button>
+<p class="text-center text-label-caps text-secondary font-semibold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            Sold 5 coupons in the last hour
+                        </p>
+</div>
+</div>
+<!-- Guaranteed Trust & Refund Section -->
+<div class="bg-secondary-container/10 border border-secondary-container/30 rounded-2xl overflow-hidden shadow-sm">
+<div class="p-5 border-b border-secondary-container/20 bg-secondary-container/20">
+<h4 class="font-headline-md text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined">lock</span>
+                            Guaranteed Trust
+                        </h4>
+</div>
+<div class="p-5 flex flex-col gap-5">
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 font-bold">1</div>
+<div class="flex flex-col">
+<span class="font-body-lg font-bold text-on-background">Secure Escrow</span>
+<span class="font-body-sm text-on-surface-variant leading-relaxed">Funds are held by Razorpay until you confirm code validity.</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 font-bold">2</div>
+<div class="flex flex-col">
+<span class="font-body-lg font-bold text-on-background">No-Risk Refund</span>
+<span class="font-body-sm text-on-surface-variant leading-relaxed">100% money-back guarantee if the code is invalid or already used.</span>
+</div>
+</div>
+<div class="pt-2 border-t border-surface-variant/30">
+<span class="font-label-caps text-label-caps text-on-surface-variant block mb-1">Refund Policy</span>
+<p class="text-[12px] text-on-surface-variant/80">Claims must be filed within 2 hours of purchase with screen-recording proof.</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Mobile Bottom Bar (Mobile Only) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-surface-variant p-4 z-50 pb-safe lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+<div class="max-w-[1200px] mx-auto flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Total</span>
+<span class="font-price-display text-2xl font-bold text-on-background">₹225</span>
+</div>
+<button class="bg-primary-container text-on-primary w-full max-w-[200px] py-4 rounded-xl font-headline-md text-base font-bold active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-lg">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">security</span>
+                Buy Now
+            </button>
+</div>
+</div>
+<script>
+        // Smooth scroll for anchors or future navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body></html>

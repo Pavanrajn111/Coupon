@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          document.body.className = theme === "light" ? "theme-light" : "";
+        });
+      })();
+    </script>
+    <style>
+      .orders-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top: 24px;
+      }
+      @media (min-width: 768px) {
+        .orders-container {
+          grid-template-columns: 1fr 2fr;
+        }
+      }
+      .stats-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        height: fit-content;
+      }
+      .stats-title {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .stats-val {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary);
+        font-family: 'JetBrains Mono', monospace;
+        margin-bottom: 16px;
+      }
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+        color: var(--text-soft);
+      }
+      .stat-row:last-child {
+        border-bottom: 0;
+      }
+      .order-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: 16px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        transition: border-color 0.2s;
+      }
+      .order-card:hover {
+        border-color: var(--primary);
+      }
+      .order-indicator {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+      }
+      .order-indicator.active {
+        background: var(--tertiary);
+      }
+      .order-indicator.completed {
+        background: var(--secondary);
+      }
+      .order-indicator.disputed {
+        background: #ba1a1a;
+      }
+      .order-body {
+        padding: 24px;
+        flex: 1;
+      }
+      .order-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+      .order-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+      .order-badge.active {
+        background: rgba(206, 166, 43, 0.1);
+        border: 1px solid var(--tertiary);
+        color: var(--tertiary);
+      }
+      .order-badge.completed {
+        background: rgba(74, 225, 118, 0.1);
+        border: 1px solid var(--secondary);
+        color: var(--secondary);
+      }
+      .order-badge.disputed {
+        background: rgba(255, 218, 214, 0.2);
+        border: 1px solid #ba1a1a;
+        color: #ffb4ab;
+      }
+      .order-date-id {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-left: 8px;
+      }
+      .order-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        margin: 0;
+      }
+      .order-merchant {
+        font-size: 0.875rem;
+        color: var(--text-soft);
+        margin-top: 4px;
+        margin-bottom: 16px;
+      }
+      .order-price-column {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .order-actions {
+        display: flex;
+        gap: 16px;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+      }
+      .order-action-link {
+        color: var(--primary);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .order-action-link:hover {
+        text-decoration: underline;
+      }
+      .coupon-notch-card {
+        background: var(--surface-soft);
+        border-left: 1px dashed var(--border);
+        width: 140px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      @media (max-width: 576px) {
+        .order-card {
+          flex-direction: column;
+        }
+        .coupon-notch-card {
+          width: 100%;
+          border-left: 0;
+          border-top: 1px dashed var(--border);
+          padding: 20px;
+        }
+      }
+    </style>
+      <script src="header.js"></script>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page">
+      <div class="shell stack">
+        <h1 class="section-title-new" style="font-size: 2.25rem; font-weight: 800; margin-top: 12px; margin-bottom: 4px;">My Orders</h1>
+        <p style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 24px;">Track and review transactions you have initiated on CouponEx.</p>
+
+        <div class="orders-container">
+          <!-- Left side stats -->
+          <div class="stats-card">
+            <h2 class="stats-title">Voucher Balance</h2>
+            <div class="stats-val">4,250 C</div>
+            <div class="stat-row">
+              <span>Active Orders</span>
+              <strong>3</strong>
+            </div>
+            <div class="stat-row">
+              <span>Completed</span>
+              <strong>12</strong>
+            </div>
+            <div class="stat-row" style="border-bottom: 0;">
+              <span>Disputed</span>
+              <strong style="color: #ba1a1a;">1</strong>
+            </div>
+          </div>
+
+          <!-- Right side list -->
+          <div>
+            <!-- Item 1: Active -->
+            <div class="order-card">
+              <div class="order-indicator active"></div>
+              <div class="order-body">
+                <div class="order-header-row">
+                  <div>
+                    <span class="order-badge active">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">pending_actions</span> ACTIVE
+                    </span>
+                    <span class="order-date-id">Oct 24, 2026 • ID: ORD-8921</span>
+                  </div>
+                  <div class="order-price-column">150 C</div>
+                </div>
+                <h3 class="order-title">50% off Swiggy Instamart</h3>
+                <div class="order-merchant">Merchant: Ramesh Foods • Valid till Oct 31</div>
+                <div class="order-actions">
+                  <a class="order-action-link">View Details</a>
+                  <a class="order-action-link" onclick="navigator.clipboard.writeText('SWIG50'); alert('Code Copied!')">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">content_copy</span> Copy Code
+                  </a>
+                </div>
+              </div>
+              <div class="coupon-notch-card">
+                <span class="material-symbols-outlined" style="font-size: 32px; color: var(--primary);">qr_code_2</span>
+                <strong style="font-size: 0.75rem; margin-top: 4px; color: var(--text-soft)">SWIG50</strong>
+              </div>
+            </div>
+
+            <!-- Item 2: Completed -->
+            <div class="order-card" style="opacity: 0.85;">
+              <div class="order-indicator completed"></div>
+              <div class="order-body">
+                <div class="order-header-row">
+                  <div>
+                    <span class="order-badge completed">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> COMPLETED
+                    </span>
+                    <span class="order-date-id">Oct 20, 2026 • ID: ORD-8845</span>
+                  </div>
+                  <div class="order-price-column">480 C</div>
+                </div>
+                <h3 class="order-title">Amazon Pay Rs. 500 Gift Card</h3>
+                <div class="order-merchant">Merchant: Digital Deals IN • Redeemed on Oct 21</div>
+                <div class="order-actions">
+                  <a class="order-action-link" style="color: var(--text-soft)">View Details</a>
+                  <a class="order-action-link" style="color: var(--text-soft)">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">rate_review</span> Leave Review
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 3: Disputed -->
+            <div class="order-card" style="border-color: rgba(220, 38, 38, 0.4);">
+              <div class="order-indicator disputed"></div>
+              <div class="order-body">
+                <div class="order-header-row">
+                  <div>
+                    <span class="order-badge disputed">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">report_problem</span> DISPUTED
+                    </span>
+                    <span class="order-date-id">Oct 15, 2026 • ID: ORD-8712</span>
+                  </div>
+                  <div class="order-price-column">200 C</div>
+                </div>
+                <h3 class="order-title">Uber 20% Off 3 Rides</h3>
+                <div class="order-merchant">Merchant: QuickCabs • Issue: Code Invalid</div>
+                <div class="order-actions">
+                  <a class="order-action-link" style="color: #ba1a1a">View Details</a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+        }
+
+        
+          document.addEventListener("click", () => {
+            profileDropdown.classList.remove("show");
+          });
+          profileDropdown.addEventListener("click", (e) => {
+            e.stopPropagation();
+          });
+        }
+      });
+
+      function logoutUser() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

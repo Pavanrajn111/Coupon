@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Purchases - CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#241a00",
+                      "on-tertiary-fixed-variant": "#584400",
+                      "surface-variant": "#e5e2db",
+                      "surface": "#fcf9f2",
+                      "outline": "#8d7168",
+                      "surface-container-highest": "#e5e2db",
+                      "surface-tint": "#ab3500",
+                      "on-error-container": "#93000a",
+                      "surface-container-low": "#f6f3ec",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1c1c18",
+                      "surface-bright": "#fcf9f2",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ffe08e",
+                      "on-secondary-container": "#4e5d7f",
+                      "primary-fixed-dim": "#ffb59d",
+                      "primary-container": "#ff6b35",
+                      "tertiary-container": "#cea62b",
+                      "on-primary-container": "#5f1900",
+                      "surface-container": "#f0eee7",
+                      "primary-fixed": "#ffdbd0",
+                      "secondary": "#4f5e80",
+                      "background": "#fcf9f2",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#0a1b39",
+                      "inverse-primary": "#ffb59d",
+                      "on-tertiary-container": "#4f3d00",
+                      "secondary-fixed": "#d8e2ff",
+                      "secondary-container": "#c8d7fe",
+                      "surface-container-high": "#ebe8e1",
+                      "inverse-surface": "#31312c",
+                      "on-secondary-fixed-variant": "#374667",
+                      "on-primary-fixed": "#390c00",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "error-container": "#ffdad6",
+                      "tertiary": "#755b00",
+                      "on-background": "#1c1c18",
+                      "primary": "#ab3500",
+                      "inverse-on-surface": "#f3f0ea",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#594139",
+                      "outline-variant": "#e1bfb5",
+                      "on-primary-fixed-variant": "#832600",
+                      "surface-dim": "#dcdad3"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-max": "1200px",
+                      "margin-desktop": "40px",
+                      "margin-mobile": "20px",
+                      "stack-lg": "32px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "price-display": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .coupon-notch {
+            mask-image: radial-gradient(circle at 0 50%, transparent 8px, black 9px), radial-gradient(circle at 100% 50%, transparent 8px, black 9px);
+            mask-composite: intersect;
+            -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 8px, black 9px), radial-gradient(circle at 100% 50%, transparent 8px, black 9px);
+            -webkit-mask-composite: destination-in;
+        }
+      </style>
+</head>
+<body class="bg-surface text-on-surface font-body-lg min-h-screen flex flex-col">
+<!-- TopNavBar (Hidden on md for SideNav) -->
+<nav class="bg-surface w-full h-16 border-b border-outline-variant flex justify-between items-center px-margin-mobile md:hidden">
+<div class="font-display-lg-mobile text-display-lg-mobile text-primary">CouponEx</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-on-surface cursor-pointer">shopping_bag</span>
+<img alt="User Account Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a user against a bright, ivory-toned background. The lighting is soft and even, highlighting their face clearly. The image has a clean, premium feel consistent with a high-end fintech marketplace. The overall color palette is warm, relying on pure white and ivory tones to convey trust and approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI1yzqcGy_N2sd8fGbD4qapUcle4VrrHj7ppLfv7Ji6LrBAi6074Oy-3TFox40WPnKasQ_l31v1sxgLLhdL6VHo_LoSggltyYQIqTc-SBuC0U3X2cldOPP6o-nc-zVan-JsqtCxrxv-VYDEli42u_EY7DzxS_jLwDO6wH0jzjy0C9f-XxTuYDfzMFfSN2BzVQTpTqyRCeR5IrNqHTqBxAfWPn_bVkTFPBF1lL0XXzLZ8ubvgjFDne_"/>
+</div>
+</nav>
+<div class="flex flex-1">
+<!-- SideNavBar (Hidden on mobile) -->
+<aside class="bg-surface-container-low h-screen w-64 fixed left-0 top-0 border-r border-outline-variant flex flex-col py-stack-lg hidden md:flex z-10">
+<div class="px-6 mb-8">
+<div class="font-headline-md text-headline-md text-primary mb-4">CouponEx</div>
+<div class="flex items-center gap-3">
+<img alt="User profile picture" class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A small, circular avatar of a user. The user is smiling subtly in a well-lit studio environment. The background is a stark, clean white, emphasizing clarity. The lighting is bright and soft, ensuring high visibility and conveying a sense of reliability suited for a digital marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2OvTRuG5OdZ0Rqoj3LaXO-PZj0lEMHVVYyey9WMb2NYM8L98xqmOONj5hxTQl6C9w_SmnyMvLPoTVo1l1yq1rWr7hG-pIZmn_4AvjudVoJxtxHS50nf9CzNPPYq9jDEMS2oZe6TK2hegQCzuXGv4nf_-hQhPRlB0Qcvj8blmagxGwP7as7CsmEl-DMk1_NP-Jiut0ACefHCd8aR8Fblp4_8wX3FeFhXfqfxFpmgK3oaG30D2Czb1A"/>
+<div>
+<div class="font-body-sm text-body-sm text-on-surface font-medium">Welcome back</div>
+<div class="font-label-caps text-label-caps text-secondary-fixed">Verified Merchant</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm text-body-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-primary-container font-bold border-l-4 border-primary bg-surface-container-high cursor-pointer" href="#">
+<span class="material-symbols-outlined icon-fill text-primary">confirmation_number</span>
+<span class="font-body-sm text-body-sm">My Coupons</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-sm text-body-sm">Transaction History</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-body-sm text-body-sm">Security</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-sm text-body-sm">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-surface text-on-secondary-fixed border border-on-secondary-fixed font-body-sm text-body-sm py-2 rounded-lg mb-4 hover:bg-surface-container-highest transition-colors cursor-pointer">Upgrade to Pro</button>
+<div class="flex flex-col gap-2 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-sm text-body-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-sm text-body-sm">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 bg-surface pt-8 pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<header class="mb-stack-lg flex justify-between items-end">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">My Purchases</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Manage and access your purchased digital coupons.</p>
+</div>
+<div class="hidden sm:flex gap-4">
+<div class="relative">
+<input class="pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-sm font-body-sm focus:border-on-secondary-fixed focus:ring-0 outline-none w-64" placeholder="Search purchases..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-sm">search</span>
+</div>
+</div>
+</header>
+<!-- Status Tabs -->
+<div class="flex gap-6 mb-stack-md border-b border-outline-variant w-full overflow-x-auto">
+<button class="font-body-sm text-body-sm pb-3 text-primary border-b-2 border-primary font-medium whitespace-nowrap">All Purchases</button>
+<button class="font-body-sm text-body-sm pb-3 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Ready to Use (3)</button>
+<button class="font-body-sm text-body-sm pb-3 text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">Already Used</button>
+</div>
+<!-- Bento Grid / Cards Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Ready to Use Coupon 1 (Spans 8 cols on desktop) -->
+<div class="col-span-1 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col sm:flex-row gap-6 items-center coupon-notch relative group transition-all hover:border-on-secondary-fixed">
+<div class="w-24 h-24 flex-shrink-0 bg-surface-container-low rounded-lg border border-outline-variant flex items-center justify-center p-2">
+<img alt="TechHaven Logo" class="w-full h-full object-contain" data-alt="A stylized logo for a fictional tech hardware store named 'TechHaven'. The logo features a geometric rendering of a microchip intersected by a house silhouette, rendered in crisp navy blue (#0B1C3A) on a pure white background. The aesthetic is clean, minimalist, and conveys technological trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8DKCAzQDc0iVRC6itND4v6H1qpJwu7djecpuFmmwXV7bz9sCcYR_LwxfW9yifNcOWOk2NA1px7pJoexrD0NijcAOv5TLMKia5p5RN58T5rrLE0QX06hgzpxyPc7Hx05bwBDZlVQDWb9WCPvFw2jEZ1OrrSzbMlGeghPi8sm0y8wSukV8LGIe4wAb_Lj6evXb8l16AkT6bvWJO_3RSYF7c7vnkH9h8oIPEku6JfHSrzCHugFG0YlOw"/>
+</div>
+<div class="flex-1 flex flex-col justify-center text-center sm:text-left">
+<div class="flex items-center gap-2 mb-1 justify-center sm:justify-start">
+<span class="bg-tertiary-fixed text-on-tertiary-container font-label-caps text-label-caps px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> Ready to Use</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">20% Off All Tech Hardware</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">TechHaven Electronics</p>
+<div class="font-price-display text-price-display text-primary-container font-medium mb-4">Valid till Oct 31, 2024</div>
+<div class="text-xs text-outline font-body-sm">Purchased: Oct 12, 2024 • Order #ORD-88392</div>
+</div>
+<div class="w-full sm:w-auto flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-outline-variant pt-4 sm:pt-0 sm:pl-6 border-dashed">
+<button class="w-full bg-primary-container text-on-primary font-body-sm text-body-sm px-6 py-3 rounded-lg hover:bg-surface-tint transition-colors cursor-pointer">View Code</button>
+</div>
+</div>
+<!-- Ready to Use Coupon 2 (Spans 4 cols on desktop) -->
+<div class="col-span-1 lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 flex flex-col justify-between items-center text-center coupon-notch relative hover:border-on-secondary-fixed transition-colors">
+<div class="w-full flex justify-between items-start mb-4">
+<span class="bg-tertiary-fixed text-on-tertiary-container font-label-caps text-label-caps px-2 py-0.5 rounded-full">Ready to Use</span>
+<span class="material-symbols-outlined text-outline">more_horiz</span>
+</div>
+<div class="w-16 h-16 bg-surface-container-low rounded-lg border border-outline-variant mb-4 flex items-center justify-center p-2">
+<img alt="Coffee Shop Logo" class="w-full h-full object-contain" data-alt="A minimalist logo for a high-end coffee roastery called 'Bean &amp; Brew'. It depicts a simple, single line-art coffee bean intertwined with steam, colored in a deep, sophisticated brown against a pure white background. The design is modern, clean, and evokes a sense of artisanal quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_2_sZxHE7YgJ383kE2pz6dhr-Y57Fh_6ApMJcGUMdb_XsXuq_1cN__ej_vyQUDvtj56VG1vnJTKMnZkpIyxmjGXBXs60-39qmSNbTnizNQRIbezjc0Jmfqo8d-Ux9lY21YoIk3B315EFVCGXN08uhe2CDvV2UYaQYnHO2qrNzzFA_OK8lXbw7HE7rcYZGkzGTP9DE-0AzHHQLB4ps3I0rX3cS8gHteYoNfzeAGKRQy0EF_jBSu9ef"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface text-lg mb-1">Buy 1 Get 1 Free Coffee</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Bean &amp; Brew Roasters</p>
+<button class="w-full bg-surface-container-lowest text-on-secondary-fixed border border-on-secondary-fixed font-body-sm text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer mt-auto">View Code</button>
+</div>
+<!-- Already Used Coupon (Spans 6 cols on desktop) -->
+<div class="col-span-1 lg:col-span-6 bg-surface border border-outline-variant rounded-xl p-6 flex flex-col sm:flex-row gap-6 items-center coupon-notch opacity-75">
+<div class="w-20 h-20 flex-shrink-0 bg-surface-container-low rounded-lg border border-outline-variant flex items-center justify-center p-2 grayscale">
+<img alt="Bookstore Logo" class="w-full h-full object-contain" data-alt="A simple, elegant logo for a bookstore named 'Chapter One'. The icon is an open book constructed from thin, sharp geometric lines in navy blue on a white square. The visual style is highly structured, minimalist, and communicates intellectual rigor and organization." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJPZbWTDokYe1sSY6Kh_xaV2aSaPKOBOjisD7LH1HiUYw3oootmlYTo7mLwfGLlRRJxH-5p_6Tyjxu4gMia7CBlIeJw_MJ4sDExBtkEj79phnxbwev06S9UqMlA5dUObPMGkvEJjXS2sNU_D5JM6aOKS82lvx_a_siz4UDSJdH4-6nojkBv09VLIVEIgaNTQnm-KLMzFYT2Skec38_v6VbqIwt9qYynqxHbCorGx_SB9nbKNysSXjm"/>
+</div>
+<div class="flex-1 flex flex-col justify-center text-center sm:text-left">
+<div class="flex items-center gap-2 mb-1 justify-center sm:justify-start">
+<span class="bg-surface-container-highest text-on-surface-variant font-label-caps text-label-caps px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">history</span> Already Used</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 line-through decoration-outline-variant">$15 Off Any Fiction Book</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Chapter One Books</p>
+<div class="text-xs text-outline font-body-sm">Used on: Oct 10, 2024</div>
+</div>
+<div class="w-full sm:w-auto flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-outline-variant pt-4 sm:pt-0 sm:pl-6 border-dashed">
+<button class="w-full bg-surface-container-high text-on-surface-variant font-body-sm text-body-sm px-4 py-2 rounded-lg cursor-not-allowed" disabled="">Code Redeemed</button>
+</div>
+</div>
+<!-- Already Used Coupon (Spans 6 cols on desktop) -->
+<div class="col-span-1 lg:col-span-6 bg-surface border border-outline-variant rounded-xl p-6 flex flex-col sm:flex-row gap-6 items-center coupon-notch opacity-75">
+<div class="w-20 h-20 flex-shrink-0 bg-surface-container-low rounded-lg border border-outline-variant flex items-center justify-center p-2 grayscale">
+<img alt="Fitness App Logo" class="w-full h-full object-contain" data-alt="A logo for a fitness app called 'FitCore'. The design features a stylized, abstract dumbbell integrated into a continuous, flowing line that forms a hexagon. Rendered in dark navy (#0B1C3A) on a pure white background, it embodies structural minimalism and physical clarity without using gradients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkwQPuiF8Yx2VcfzU4A30LytlI-z3ccMdBdv7QcPnC5tDjrux-bPuVCClM5nLYwhofOvrpIA624sSfbcuYOkJ7fwppwzanThyNMq9jYgR5-t67gOBKEromszqp0Z4jImfAqxEV48aIv0UKq9HM0VaNsMY4HshbGnQaoqx1T2qwjZNN9JEUdYvur59VgqdmTiTmrXbzVnrlL0RPUAV7Vyf0YbsWH1ybYYHn4lleZEZOmcSuUCxa2ubL"/>
+</div>
+<div class="flex-1 flex flex-col justify-center text-center sm:text-left">
+<div class="flex items-center gap-2 mb-1 justify-center sm:justify-start">
+<span class="bg-surface-container-highest text-on-surface-variant font-label-caps text-label-caps px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">history</span> Already Used</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 line-through decoration-outline-variant">1 Month Premium Access</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">FitCore Digital</p>
+<div class="text-xs text-outline font-body-sm">Used on: Sep 28, 2024</div>
+</div>
+<div class="w-full sm:w-auto flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-outline-variant pt-4 sm:pt-0 sm:pl-6 border-dashed">
+<button class="w-full bg-surface-container-high text-on-surface-variant font-body-sm text-body-sm px-4 py-2 rounded-lg cursor-not-allowed" disabled="">Code Redeemed</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-on-secondary-fixed w-full py-12 border-t border-outline-variant flex flex-col items-center justify-center space-y-4 px-margin-desktop md:ml-64 mt-auto">
+<div class="font-headline-md text-headline-md text-surface mb-2">CouponEx</div>
+<div class="flex flex-wrap justify-center gap-6 mb-4">
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">FAQ</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Support</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Careers</a>
+</div>
+<p class="font-label-caps text-label-caps text-secondary-fixed-dim text-center">© 2024 CouponEx. Peer-to-Peer Digital Marketplace.</p>
+</footer>
+</body></html>

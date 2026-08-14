@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | CouponEx</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-light",
+          theme === "light",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "rgb(var(--primary-rgb) / <alpha-value>)",
+              "primary-container":
+                "rgb(var(--primary-container-rgb) / <alpha-value>)",
+              secondary: "rgb(var(--secondary-rgb) / <alpha-value>)",
+              background: "rgb(var(--background-rgb) / <alpha-value>)",
+              surface: "rgb(var(--surface-rgb) / <alpha-value>)",
+              "surface-container":
+                "rgb(var(--surface-container-rgb) / <alpha-value>)",
+              "surface-container-low":
+                "rgb(var(--surface-container-low-rgb) / <alpha-value>)",
+              "surface-container-high":
+                "rgb(var(--surface-container-high-rgb) / <alpha-value>)",
+              "surface-container-highest":
+                "rgb(var(--surface-container-highest-rgb) / <alpha-value>)",
+              "surface-container-lowest":
+                "rgb(var(--surface-container-lowest-rgb) / <alpha-value>)",
+              "outline-variant":
+                "rgb(var(--outline-variant-rgb) / <alpha-value>)",
+              "on-surface": "rgb(var(--on-surface-rgb) / <alpha-value>)",
+              "on-surface-variant":
+                "rgb(var(--on-surface-variant-rgb) / <alpha-value>)",
+              "on-primary": "rgb(var(--on-primary-rgb) / <alpha-value>)",
+              "on-primary-container":
+                "rgb(var(--on-primary-container-rgb) / <alpha-value>)",
+              "on-secondary": "rgb(var(--on-secondary-rgb) / <alpha-value>)",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --primary-rgb: 192 193 255;
+        --primary-container-rgb: 128 131 255;
+        --secondary-rgb: 74 225 118;
+        --background-rgb: 11 19 38;
+        --surface-rgb: 11 19 38;
+        --surface-container-rgb: 23 31 51;
+        --surface-container-low-rgb: 19 27 46;
+        --surface-container-high-rgb: 34 42 61;
+        --surface-container-highest-rgb: 45 52 73;
+        --surface-container-lowest-rgb: 6 14 32;
+        --outline-variant-rgb: 70 69 84;
+        --on-surface-rgb: 218 226 253;
+        --on-surface-variant-rgb: 199 196 215;
+        --on-primary-rgb: 16 0 169;
+        --on-primary-container-rgb: 13 0 150;
+        --on-secondary-rgb: 0 57 21;
+        --border-rgb: 192 193 255;
+        --border-strong-rgb: 192 193 255;
+        --error-rgb: 255 180 171;
+        --error-border-rgb: 255 180 171;
+        --error-bg-rgb: 147 0 10;
+        --success-border-rgb: 192 193 255;
+        --success-bg-rgb: 192 193 255;
+        --card-shadow: 0 25px 60px -18px rgba(0, 0, 0, 0.65);
+        --glow-rgb: 128 131 255;
+      }
+
+      html.theme-light {
+        --primary-rgb: 171 53 0;
+        --primary-container-rgb: 255 107 53;
+        --secondary-rgb: 79 94 128;
+        --background-rgb: 252 249 242;
+        --surface-rgb: 252 249 242;
+        --surface-container-rgb: 255 255 255;
+        --surface-container-low-rgb: 246 243 236;
+        --surface-container-high-rgb: 255 255 255;
+        --surface-container-highest-rgb: 231 226 216;
+        --surface-container-lowest-rgb: 245 239 229;
+        --outline-variant-rgb: 141 113 104;
+        --on-surface-rgb: 11 28 58;
+        --on-surface-variant-rgb: 89 65 57;
+        --on-primary-rgb: 255 255 255;
+        --on-primary-container-rgb: 255 255 255;
+        --on-secondary-rgb: 255 255 255;
+        --border-rgb: 141 113 104;
+        --border-strong-rgb: 231 226 216;
+        --error-rgb: 179 38 30;
+        --error-border-rgb: 179 38 30;
+        --error-bg-rgb: 179 38 30;
+        --success-border-rgb: 171 53 0;
+        --success-bg-rgb: 255 107 53;
+        --card-shadow: 0 16px 44px rgba(53, 29, 12, 0.08);
+        --glow-rgb: 255 107 53;
+      }
+
+      body {
+        background-color: rgb(var(--background-rgb));
+        color: rgb(var(--on-surface-rgb));
+        background-image: linear-gradient(
+          180deg,
+          rgb(var(--background-rgb)) 0%,
+          rgb(var(--surface-container-lowest-rgb)) 100%
+        );
+        overflow-x: hidden;
+      }
+      .glass-card {
+        background: rgba(var(--surface-container-rgb), 0.82);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(var(--border-strong-rgb), 0.7);
+        box-shadow: var(--card-shadow);
+      }
+      .glow-effect {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(var(--glow-rgb), 0.2) 0%,
+          rgba(var(--background-rgb), 0) 70%
+        );
+        z-index: 0;
+        filter: blur(50px);
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .rule-valid {
+        color: rgb(var(--secondary-rgb));
+      }
+      .rule-invalid {
+        color: rgb(var(--error-rgb));
+      }
+      .auth-header {
+        border-color: rgba(var(--border-rgb), 0.16) !important;
+        background: rgba(var(--surface-container-rgb), 0.88) !important;
+      }
+      .field-error {
+        color: rgb(var(--error-rgb));
+      }
+      .status-message.is-error {
+        border-color: rgba(var(--error-border-rgb), 0.24);
+        background: rgba(var(--error-bg-rgb), 0.1);
+        color: rgb(var(--error-rgb));
+      }
+      .status-message.is-success {
+        border-color: rgba(var(--success-border-rgb), 0.2);
+        background: rgba(var(--success-bg-rgb), 0.1);
+        color: rgb(var(--primary-rgb));
+      }
+      input::placeholder {
+        color: rgba(var(--on-surface-variant-rgb), 0.8);
+      }
+      .popup-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+      }
+      .popup-overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+      .popup-card {
+        background: rgb(var(--surface-container-rgb));
+        border: 1px solid rgba(var(--error-border-rgb), 0.4);
+        border-radius: 1.5rem;
+        box-shadow: var(--card-shadow);
+        max-width: 24rem;
+        width: calc(100% - 2rem);
+        padding: 2rem;
+        text-align: center;
+        transform: scale(0.9);
+        transition: transform 0.25s ease;
+      }
+      .popup-overlay.is-visible .popup-card {
+        transform: scale(1);
+      }
+      .popup-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background: rgba(var(--error-bg-rgb), 0.15);
+        color: rgb(var(--error-rgb));
+      }
+      .popup-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: rgb(var(--on-surface-rgb));
+        margin-bottom: 0.5rem;
+      }
+      .popup-message {
+        font-size: 0.9rem;
+        color: rgb(var(--on-surface-variant-rgb));
+        margin-bottom: 1.5rem;
+      }
+      .popup-close-btn {
+        width: 100%;
+        border-radius: 9999px;
+        background: rgb(var(--error-bg-rgb));
+        color: rgb(var(--error-rgb));
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        transition: opacity 0.2s ease;
+      }
+      .popup-close-btn:hover {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen font-sans">
+
+
+    <main
+      class="relative flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-14 sm:px-6 lg:px-8"
+    >
+      <div class="glow-effect left-[-5rem] top-16"></div>
+      <div class="glow-effect bottom-[-2rem] right-[-2rem]"></div>
+
+      <div class="relative z-10 w-full max-w-2xl">
+        <div class="glass-card rounded-3xl p-6 sm:p-8">
+          <div class="mb-7 text-center">
+            <div
+              class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/15 text-primary"
+            >
+              <span class="material-symbols-outlined text-3xl">person_add</span>
+            </div>
+            <h1 class="text-3xl font-bold text-on-surface">
+              Create your account
+            </h1>
+            <p class="mt-2 text-sm text-on-surface-variant">
+              Join CouponEx and start trading verified coupons with confidence
+            </p>
+          </div>
+
+          <div
+            id="formMessage"
+            class="status-message mb-4 hidden rounded-2xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm text-primary"
+          ></div>
+
+          <form id="register-form" class="space-y-4">
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <label
+                  for="fullName"
+                  class="mb-2 block text-sm font-medium text-on-surface-variant"
+                  >Full Name</label
+                >
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  placeholder="Enter your full name"
+                  class="w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 px-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                />
+                <p id="fullNameError" class="field-error mt-2 text-sm"></p>
+              </div>
+              <div>
+                <label
+                  for="username"
+                  class="mb-2 block text-sm font-medium text-on-surface-variant"
+                  >Username</label
+                >
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="Choose a username"
+                  class="w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 px-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                />
+                <p id="usernameError" class="field-error mt-2 text-sm"></p>
+              </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <label
+                  for="email"
+                  class="mb-2 block text-sm font-medium text-on-surface-variant"
+                  >Email Address</label
+                >
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  class="w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 px-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                />
+                <p id="emailError" class="field-error mt-2 text-sm"></p>
+              </div>
+              <div>
+                <label
+                  for="phoneNumber"
+                  class="mb-2 block text-sm font-medium text-on-surface-variant"
+                  >Phone Number</label
+                >
+                <input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  maxlength="10"
+                  placeholder="10-digit number"
+                  class="w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 px-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                />
+                <p id="phoneError" class="field-error mt-2 text-sm"></p>
+              </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div>
+                <label
+                  for="password"
+                  class="mb-2 block text-sm font-medium text-on-surface-variant"
+                  >Password</label
+                >
+                <div class="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Create a strong password"
+                    class="w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 pr-12 pl-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant transition hover:text-on-surface"
+                    data-target="password"
+                    aria-label="Toggle password visibility"
+                  >
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </div>
+                <div id="passwordChecklist" class="mt-3 space-y-2 text-sm">
+                  <p id="rule-length" class="rule-invalid">
+                    Minimum 8 characters
+                  </p>
+                  <p id="rule-uppercase" class="rule-invalid">
+                    One uppercase letter
+                  </p>
+                  <p id="rule-lowercase" class="rule-invalid">
+                    One lowercase letter
+                  </p>
+                  <p id="rule-number" class="rule-invalid">One number</p>
+                  <p id="rule-special" class="rule-invalid">
+                    One special character
+                  </p>
+                </div>
+                <p id="passwordError" class="field-error mt-2 text-sm"></p>
+              </div>
+              <div>
+                <label
+                  for="confirmPassword"
+                  class="mb-2 block text-sm font-medium text-on-surface-variant"
+                  >Confirm Password</label
+                >
+                <div class="relative">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    placeholder="Re-enter password"
+                    class="w-full rounded-2xl border border-outline-variant bg-surface-container-low py-3 pr-12 pl-4 text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant transition hover:text-on-surface"
+                    data-target="confirmPassword"
+                    aria-label="Toggle password visibility"
+                  >
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </div>
+                <p
+                  id="confirmPasswordError"
+                  class="field-error mt-2 text-sm"
+                ></p>
+              </div>
+            </div>
+
+            <button
+              id="submitBtn"
+              type="submit"
+              class="w-full rounded-2xl bg-primary-container px-4 py-3 font-semibold text-on-primary-container transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-60"
+              disabled
+            >
+              Create Account
+            </button>
+          </form>
+
+          <p class="mt-6 text-center text-sm text-on-surface-variant">
+            Already have an account?
+            <a
+              href="login.html"
+              class="ml-1 font-semibold text-primary hover:underline"
+              >Login</a
+            >
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <div id="usernamePopup" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <div class="popup-card">
+        <div class="popup-icon">
+          <span class="material-symbols-outlined text-3xl">error</span>
+        </div>
+        <h2 id="popupTitle" class="popup-title">Username already exists</h2>
+        <p class="popup-message">Please try with other names.</p>
+        <button id="popupCloseBtn" type="button" class="popup-close-btn">OK</button>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("register-form");
+      const submitBtn = document.getElementById("submitBtn");
+      const formMessage = document.getElementById("formMessage");
+      const fields = {
+        fullName: document.getElementById("fullName"),
+        username: document.getElementById("username"),
+        email: document.getElementById("email"),
+        phoneNumber: document.getElementById("phoneNumber"),
+        password: document.getElementById("password"),
+        confirmPassword: document.getElementById("confirmPassword"),
+      };
+
+      const errors = {
+        fullName: document.getElementById("fullNameError"),
+        username: document.getElementById("usernameError"),
+        email: document.getElementById("emailError"),
+        phone: document.getElementById("phoneError"),
+        password: document.getElementById("passwordError"),
+        confirmPassword: document.getElementById("confirmPasswordError"),
+      };
+
+      const passwordRules = {
+        length: document.getElementById("rule-length"),
+        uppercase: document.getElementById("rule-uppercase"),
+        lowercase: document.getElementById("rule-lowercase"),
+        number: document.getElementById("rule-number"),
+        special: document.getElementById("rule-special"),
+      };
+
+      const validateField = () => {
+        const fullName = fields.fullName.value.trim();
+        const username = fields.username.value.trim();
+        const email = fields.email.value.trim();
+        const phoneNumber = fields.phoneNumber.value.trim();
+        const password = fields.password.value;
+        const confirmPassword = fields.confirmPassword.value;
+
+        let isValid = true;
+
+        if (
+          fullName.length < 3 ||
+          fullName.length > 50 ||
+          !/^[A-Za-z ]+$/.test(fullName)
+        ) {
+          errors.fullName.textContent = "Full name must be 3-50 letters/spaces";
+          isValid = false;
+        } else {
+          errors.fullName.textContent = "";
+        }
+
+        if (
+          username.length < 4 ||
+          username.length > 20 ||
+          !/^[a-z0-9_]+$/.test(username)
+        ) {
+          errors.username.textContent =
+            "Username must be 4-20 chars, letters/numbers/_ only";
+          isValid = false;
+        } else {
+          errors.username.textContent = "";
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          errors.email.textContent = "Please enter a valid email";
+          isValid = false;
+        } else {
+          errors.email.textContent = "";
+        }
+
+        if (!/^\d{10}$/.test(phoneNumber)) {
+          errors.phone.textContent = "Phone number must be exactly 10 digits";
+          isValid = false;
+        } else {
+          errors.phone.textContent = "";
+        }
+
+        const checks = {
+          length: password.length >= 8,
+          uppercase: /[A-Z]/.test(password),
+          lowercase: /[a-z]/.test(password),
+          number: /\d/.test(password),
+          special: /[!@#$%^&*()_+=-]/.test(password),
+        };
+
+        Object.entries(checks).forEach(([key, passed]) => {
+          const rule = passwordRules[key];
+          rule.className = passed ? "rule-valid" : "rule-invalid";
+        });
+
+        if (
+          !checks.length ||
+          !checks.uppercase ||
+          !checks.lowercase ||
+          !checks.number ||
+          !checks.special
+        ) {
+          errors.password.textContent =
+            "Password does not meet complexity requirements";
+          isValid = false;
+        } else {
+          errors.password.textContent = "";
+        }
+
+        if (confirmPassword && password !== confirmPassword) {
+          errors.confirmPassword.textContent = "Passwords do not match";
+          isValid = false;
+        } else {
+          errors.confirmPassword.textContent = "";
+        }
+
+        submitBtn.disabled =
+          !isValid ||
+          !fullName ||
+          !username ||
+          !email ||
+          !phoneNumber ||
+          !password ||
+          !confirmPassword ||
+          password !== confirmPassword;
+      };
+
+      const showMessage = (message, isError = false) => {
+        formMessage.textContent = message;
+        formMessage.className = `status-message mb-4 rounded-2xl border px-4 py-3 text-sm ${isError ? "is-error" : "is-success"}`;
+        formMessage.classList.remove("hidden");
+      };
+
+      const usernamePopup = document.getElementById("usernamePopup");
+      const popupCloseBtn = document.getElementById("popupCloseBtn");
+
+      const showUsernamePopup = () => {
+        usernamePopup.classList.add("is-visible");
+        popupCloseBtn.focus();
+      };
+
+      const hideUsernamePopup = () => {
+        usernamePopup.classList.remove("is-visible");
+      };
+
+      popupCloseBtn.addEventListener("click", hideUsernamePopup);
+
+      usernamePopup.addEventListener("click", (event) => {
+        if (event.target === usernamePopup) {
+          hideUsernamePopup();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && usernamePopup.classList.contains("is-visible")) {
+          hideUsernamePopup();
+        }
+      });
+
+      document.querySelectorAll(".toggle-password").forEach((button) => {
+        button.addEventListener("click", () => {
+          const targetId = button.getAttribute("data-target");
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          const isHidden = input.type === "password";
+          input.type = isHidden ? "text" : "password";
+          const icon = button.querySelector(".material-symbols-outlined");
+          if (icon) {
+            icon.textContent = isHidden ? "visibility_off" : "visibility";
+          }
+        });
+      });
+
+      Object.values(fields).forEach((field) => {
+        field.addEventListener("input", validateField);
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        validateField();
+        if (submitBtn.disabled) return;
+
+        const payload = {
+          fullName: fields.fullName.value.trim(),
+          username: fields.username.value.trim(),
+          email: fields.email.value.trim(),
+          phoneNumber: fields.phoneNumber.value.trim(),
+          password: fields.password.value,
+          confirmPassword: fields.confirmPassword.value,
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Creating account...";
+
+        try {
+          const apiEndpoint =
+            window.location.protocol === "file:"
+              ? "http://localhost:8000/api/auth/register"
+              : "/api/auth/register";
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+          const response = await fetch(apiEndpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            const firstError =
+              Object.values(data.errors || {})[0] ||
+              data.error ||
+              "Registration failed";
+
+            if (
+              data.errors &&
+              data.errors.username &&
+              data.errors.username.toLowerCase().includes("already")
+            ) {
+              showUsernamePopup();
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Create Account";
+              return;
+            }
+
+            showMessage(firstError, true);
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Create Account";
+            return;
+          }
+
+          showMessage(data.message || "Account created successfully.");
+          setTimeout(() => {
+            window.location.href = `login.html?username=${encodeURIComponent(payload.username)}`;
+          }, 900);
+          return;
+        } catch (error) {
+          showMessage(
+            "Unable to reach the authentication server. Please start the backend and try again.",
+            true,
+          );
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Create Account";
+        }
+      });
+    </script>
+  </body>
+</html>

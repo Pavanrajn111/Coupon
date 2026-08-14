@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Checkout | CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&amp;family=JetBrains+Mono:wght@500&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f6f3ec",
+                    "surface-container-high": "#ebe8e1",
+                    "primary": "#ab3500",
+                    "outline": "#8d7168",
+                    "secondary-fixed-dim": "#b7c6ed",
+                    "primary-fixed-dim": "#ffb59d",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#d8e2ff",
+                    "tertiary-fixed": "#ffe08e",
+                    "inverse-surface": "#31312c",
+                    "inverse-primary": "#ffb59d",
+                    "on-secondary-container": "#4e5d7f",
+                    "on-primary-fixed-variant": "#832600",
+                    "on-primary-fixed": "#390c00",
+                    "on-background": "#1c1c18",
+                    "inverse-on-surface": "#f3f0ea",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#e1bfb5",
+                    "tertiary-fixed-dim": "#ecc246",
+                    "on-secondary-fixed": "#0a1b39",
+                    "on-tertiary-container": "#4f3d00",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f0eee7",
+                    "surface": "#fcf9f2",
+                    "tertiary": "#755b00",
+                    "on-surface-variant": "#594139",
+                    "surface-variant": "#e5e2db",
+                    "error-container": "#ffdad6",
+                    "secondary": "#4f5e80",
+                    "on-primary-container": "#5f1900",
+                    "on-secondary-fixed-variant": "#374667",
+                    "surface-bright": "#fcf9f2",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1c1c18",
+                    "surface-dim": "#dcdad3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "background": "#fcf9f2",
+                    "primary-fixed": "#ffdbd0",
+                    "secondary-container": "#c8d7fe",
+                    "tertiary-container": "#cea62b",
+                    "surface-tint": "#ab3500",
+                    "surface-container-highest": "#e5e2db",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "primary-container": "#ff6b35"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "margin-desktop": "40px",
+                    "stack-lg": "32px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "headline-md": ["Inter"],
+                    "label-caps": ["Geist"],
+                    "price-display": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FAF7F0;
+            color: #1c1c18;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .hairline-card {
+            background: #FFFFFF;
+            border: 1px solid #E7E2D8;
+        }
+
+        .input-focus:focus {
+            outline: none;
+            border-color: #0B1C3A;
+            box-shadow: none;
+        }
+
+        .coupon-notch {
+            position: relative;
+        }
+        .coupon-notch::before, .coupon-notch::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            width: 16px;
+            height: 16px;
+            background-color: #FAF7F0;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .coupon-notch::before { top: 25%; }
+        .coupon-notch::after { bottom: 25%; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-lg text-body-lg">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full bg-surface z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-display-lg text-display-lg text-primary font-extrabold tracking-tighter">
+                CouponEx
+            </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95 font-body-lg text-body-lg" href="#">Marketplace</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95 font-body-lg text-body-lg" href="#">My Coupons</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95 font-body-lg text-body-lg" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 rounded-full">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 rounded-full">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-stack-lg px-margin-desktop max-w-container-max mx-auto min-h-screen">
+<!-- Breadcrumb / Task Focus -->
+<div class="mb-stack-md flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps">
+<a class="hover:text-primary transition-colors" href="#">CART</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-bold">PAYMENT</span>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Side Navigation Shell -->
+<aside class="col-span-12 md:col-span-3">
+<div class="flex flex-col gap-stack-md h-fit sticky top-24">
+<div class="mb-4">
+<h2 class="font-display-lg text-headline-md text-primary">Payment Methods</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Secure Checkout</p>
+</div>
+<nav class="flex flex-col border-r border-outline-variant py-stack-lg gap-1">
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200 font-label-caps text-label-caps">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+                            UPI &amp; Wallets
+                        </button>
+<button class="flex items-center gap-3 px-4 py-3 text-primary border-r-4 border-primary bg-surface-container-high font-bold transition-all duration-200 font-label-caps text-label-caps">
+<span class="material-symbols-outlined">credit_card</span>
+                            Cards
+                        </button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200 font-label-caps text-label-caps">
+<span class="material-symbols-outlined">account_balance</span>
+                            Net Banking
+                        </button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200 font-label-caps text-label-caps">
+<span class="material-symbols-outlined">payments</span>
+                            EMI Options
+                        </button>
+</nav>
+<!-- Trust Indicators -->
+<div class="mt-8 space-y-4">
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-lg">
+<span class="material-symbols-outlined text-[#C9A227]">shield</span>
+<span class="text-body-sm font-body-sm">256-bit SSL Encrypted</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-surface-container-lowest border border-outline-variant rounded-lg">
+<span class="material-symbols-outlined text-[#C9A227]">verified_user</span>
+<span class="text-body-sm font-body-sm">PCI DSS Compliant</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area: Card Form -->
+<section class="col-span-12 md:col-span-6">
+<div class="hairline-card p-stack-lg rounded-xl">
+<div class="flex justify-between items-center mb-stack-lg">
+<h3 class="font-headline-md text-headline-md">Credit &amp; Debit Cards</h3>
+<div class="flex gap-2">
+<img alt="Visa" class="h-6 opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3K3S1wgdapsJLw70oGaodQWc0I967XlshDYsFingaAHQ3ufMoL85ZYl3tlVvWv14cImnsONCsoMEmC3fmIT49HhODuU96fvyq3rZN9WUln0NaTt6Rs6Vm1MOM3mvUBUUX7FHPMRv7b821lUT_oRB9jwvtzxAZXRaMNzjFs4Q841JOMlK6LLpH63qAdTlOxTSbQNQnrhI7Ki1gGFsv5BBEqS3wwPUBfjWWWwTkE7UATU-o13XJ2YDx"/>
+<img alt="Mastercard" class="h-6 opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqvSkPVnFZX72WC6f_wlcGaZBaCr3vSb7YbphmAiDdZ5PUQIZbjXBPE2Ks4G4QvPdTwiD_3lDsb8VuBsu0PxwrFXrzlXnf15hrfCPi5rDtX_q7iXzSgV0HFTZ9kTpPfIxt2ckIPPjg4jKgxIr7sm-nGUJ9iv53a30ElFVS9wsGs8pdg1bB4BG6-9lWJd1uURAnuwLiGluLBIUK5-cLFFyd8sJRumRUrhjnitKzBLDLturwUhdf6bnh"/>
+<img alt="Rupay" class="h-6 opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLponIkZ18t6VnIP8JB9w_fcpIkmbpapIV-6aE9_8mnOXZUcEegs-UN6GQdA7WHCqrK8F9AyKiyClr6CMe7vBzLVHO2LbUHWCPtmAOxCrsMv9wIA9OSN9bBfXqSSLsFoEmTktx5Vg3GYtD4PpTGq7Vl-0A9MHNAaOlKjNjFylOcrR4Mnkwkdn9ZWr8momCq78NJdkN4t5YTwo-WfBT5pAwA-Wm_z9cZmlcLvmGtIzG2xXHAwEQzSIp"/>
+</div>
+</div>
+<form class="space-y-6">
+<!-- Card Number -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">CARD NUMBER</label>
+<div class="relative">
+<input class="w-full h-12 px-4 hairline-card rounded-lg input-focus font-price-display text-price-display" placeholder="0000 0000 0000 0000" type="text"/>
+<span class="absolute right-4 top-3 material-symbols-outlined text-outline">credit_card</span>
+</div>
+</div>
+<!-- Expiry and CVV -->
+<div class="grid grid-cols-2 gap-gutter">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">EXPIRY DATE</label>
+<input class="w-full h-12 px-4 hairline-card rounded-lg input-focus font-price-display text-price-display" placeholder="MM/YY" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-1">
+                                    CVV
+                                    <span class="material-symbols-outlined text-[16px] cursor-help">info</span>
+</label>
+<input class="w-full h-12 px-4 hairline-card rounded-lg input-focus font-price-display text-price-display" placeholder="***" type="password"/>
+</div>
+</div>
+<!-- Name on Card -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">NAME ON CARD</label>
+<input class="w-full h-12 px-4 hairline-card rounded-lg input-focus font-body-lg text-body-lg" placeholder="AS APPEARS ON CARD" type="text"/>
+</div>
+<!-- Save Card Checkbox -->
+<div class="flex items-start gap-3 py-2">
+<div class="pt-0.5">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" id="save-card" type="checkbox"/>
+</div>
+<label class="text-body-sm font-body-sm text-on-surface-variant leading-tight" for="save-card">
+<span class="text-on-surface font-semibold">Securely save card</span> for future payments. We follow PCI DSS standards to keep your data safe.
+                            </label>
+</div>
+</form>
+</div>
+<!-- Secondary Trust Badge -->
+<div class="mt-stack-lg p-6 flex items-center gap-6 hairline-card rounded-xl border-dashed border-2">
+<div class="flex-shrink-0 w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">verified</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg font-bold">100% Refund Guarantee</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant">If the coupon code doesn't work, we offer a full refund within 24 hours. No questions asked.</p>
+</div>
+</div>
+</section>
+<!-- Order Summary Section -->
+<aside class="col-span-12 md:col-span-3">
+<div class="hairline-card rounded-xl overflow-hidden">
+<div class="bg-surface-container-low p-4 border-b border-outline-variant">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Order Summary</h3>
+</div>
+<div class="p-4 space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-body-sm font-body-sm text-on-surface-variant">1x Premium Subscription</span>
+<span class="font-price-display text-body-lg">₹499</span>
+</div>
+<div class="flex justify-between items-center text-primary">
+<span class="text-body-sm font-body-sm">Coupon Discount</span>
+<span class="font-price-display text-body-lg">-₹299</span>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-end">
+<div>
+<span class="text-label-caps font-label-caps block">TOTAL AMOUNT</span>
+<span class="text-display-lg font-price-display text-primary">₹200</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Payment Action -->
+<div class="mt-stack-md">
+<button class="w-full bg-primary-container text-on-primary-container h-14 rounded-lg font-headline-md flex items-center justify-center gap-2 hover:brightness-95 active:scale-[0.98] transition-all cursor-pointer shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+                        Pay ₹200
+                    </button>
+<p class="text-center text-body-sm font-body-sm text-on-surface-variant mt-4">
+                        By paying, you agree to our <a class="underline" href="#">Terms of Service</a>.
+                    </p>
+</div>
+<!-- Atmospheric Ad/Visual -->
+<div class="mt-8 relative hairline-card rounded-xl overflow-hidden aspect-[4/5]">
+<div class="absolute inset-0 z-0" data-alt="A premium close-up of a metallic credit card surface with soft lighting reflections on a dark navy and orange background. High-trust fintech aesthetic with subtle bokeh effects." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAVJnjCL6_gQtackqkKAe-pcMryrYMEe_ScHSqyIQ-SRujJHT_8pH2bdZijOw0w9L8r6UsXIh9n0OXSA_qajY-G25Z87lX6AOvgi2qQEHTepjG9HPXp_b0xumrVIICoadlpPYxhryn0e8ozfj2RDyvrM2V_ScDGWHQy8qg5HJpW7_WFcu7LICXlkqR5m2m07NdvudKfZxUP3557WAe_stnpuFqa9fWKjrOWgShJeItl1zaw75ddgJXv')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent z-10"></div>
+<div class="absolute bottom-0 p-6 z-20 text-white">
+<p class="font-label-caps text-label-caps opacity-80">PRO MEMBER PERK</p>
+<h4 class="font-headline-md text-headline-md leading-tight">Unlock 20% more savings.</h4>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 border-t border-outline-variant bg-surface-container-low">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-container-max mx-auto gap-stack-md">
+<div class="font-display-lg text-display-lg text-primary opacity-50 font-bold">
+                CouponEx
+            </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                © 2024 CouponEx India. Secure 256-bit SSL Encrypted.
+            </div>
+<div class="flex gap-6">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Refund Policy</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for form fields
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.closest('.space-y-2')?.querySelector('label')?.classList.add('text-primary');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.closest('.space-y-2')?.querySelector('label')?.classList.remove('text-primary');
+            });
+        });
+
+        // Simple Card Number Formatting
+        const cardNumberInput = document.querySelector('input[placeholder="0000 0000 0000 0000"]');
+        if(cardNumberInput) {
+            cardNumberInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                let formattedValue = '';
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formattedValue += ' ';
+                    }
+                    formattedValue += value[i];
+                }
+                e.target.value = formattedValue.substring(0, 19);
+            });
+        }
+    </script>
+</body></html>

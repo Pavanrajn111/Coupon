@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Sales | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme = savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.classList.toggle("theme-dark", theme === "dark");
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --surface-border: #cbd5e1;
+        --text: #0f172a;
+        --text-soft: #475569;
+        --primary: #ff6b35;
+        --shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      }
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: #161f35;
+        --surface-soft: #1e2742;
+        --surface-border: rgba(192, 193, 255, 0.2);
+        --text: #f2f5ff;
+        --text-soft: #c0c7dc;
+        --primary: #ff6b35;
+        --shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+      }
+      body { margin: 0; font-family: Geist, Inter, sans-serif; background: var(--bg); color: var(--text); }
+      .container { max-width: 1180px; margin: 32px auto 80px; padding: 0 16px; }
+      
+      .table-card {
+        background: var(--surface); border: 1px solid var(--surface-border); border-radius: 20px; padding: 28px; box-shadow: var(--shadow);
+      }
+      .table-wrap { overflow-x: auto; margin-top: 20px; }
+      table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+      th { padding: 12px 16px; border-bottom: 2px solid var(--surface-border); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-soft); }
+      td { padding: 16px; border-bottom: 1px solid var(--surface-border); }
+      
+      .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+      .badge-success { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <div class="container">
+      <div class="table-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div>
+            <h1 style="margin:0 0 4px; font-size:1.6rem; font-weight:800;">My Sales</h1>
+            <p style="margin:0; color:var(--text-soft); font-size:0.9rem;">Track all your completed coupon sales, platform fees, and net earnings.</p>
+          </div>
+          <button class="admin-btn admin-btn-primary" onclick="location.href='sell.html'" style="padding:10px 20px;">+ Sell New Coupon</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Order Number</th>
+                <th>Coupon Code</th>
+                <th>Buyer</th>
+                <th>Sale Price</th>
+                <th>Platform Fee</th>
+                <th>Your Net Earning</th>
+                <th>Order Status</th>
+                <th>Payout Status</th>
+              </tr>
+            </thead>
+            <tbody id="sales-tbody">
+              <tr><td colspan="8" style="text-align:center; color:var(--text-soft);">Loading sales data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const storedUser = JSON.parse(localStorage.getItem("couponex_user") || "null") || { id: 1 };
+
+      async function loadSales() {
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/sales/${storedUser.id}`);
+          const data = await res.json();
+          const tbody = document.getElementById("sales-tbody");
+
+          if (data.success && Array.isArray(data.sales) && data.sales.length > 0) {
+            tbody.innerHTML = data.sales.map(s => `
+              <tr>
+                <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${s.orderNumber || s.orderId}</td>
+                <td><strong>${s.brand}</strong> <div style="font-size:0.75rem; color:var(--text-soft);">${s.code}</div></td>
+                <td>@${s.buyerUsername || 'buyer'}</td>
+                <td>₹${s.grossAmount}</td>
+                <td style="color:var(--text-soft);">₹${s.platformFee}</td>
+                <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--success);">₹${s.sellerNetAmount}</td>
+                <td><span class="badge badge-success">${s.orderStatus || 'COMPLETED'}</span></td>
+                <td><span class="badge badge-success">${s.payoutStatus || 'AVAILABLE'}</span></td>
+              </tr>
+            `).join("");
+          } else {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-soft);">No sales completed yet. List your coupons on the marketplace!</td></tr>`;
+          }
+        } catch (err) {
+          console.log("Error loading sales:", err);
+        }
+      }
+
+      loadSales();
+    </script>
+  </body>
+</html>

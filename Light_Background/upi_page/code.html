@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f6f3ec",
+                    "surface-container-high": "#ebe8e1",
+                    "primary": "#ab3500",
+                    "outline": "#8d7168",
+                    "secondary-fixed-dim": "#b7c6ed",
+                    "primary-fixed-dim": "#ffb59d",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#d8e2ff",
+                    "tertiary-fixed": "#ffe08e",
+                    "inverse-surface": "#31312c",
+                    "inverse-primary": "#ffb59d",
+                    "on-secondary-container": "#4e5d7f",
+                    "on-primary-fixed-variant": "#832600",
+                    "on-primary-fixed": "#390c00",
+                    "on-background": "#1c1c18",
+                    "inverse-on-surface": "#f3f0ea",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#e1bfb5",
+                    "tertiary-fixed-dim": "#ecc246",
+                    "on-secondary-fixed": "#0a1b39",
+                    "on-tertiary-container": "#4f3d00",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f0eee7",
+                    "surface": "#fcf9f2",
+                    "tertiary": "#755b00",
+                    "on-surface-variant": "#594139",
+                    "surface-variant": "#e5e2db",
+                    "error-container": "#ffdad6",
+                    "secondary": "#4f5e80",
+                    "on-primary-container": "#5f1900",
+                    "on-secondary-fixed-variant": "#374667",
+                    "surface-bright": "#fcf9f2",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1c1c18",
+                    "surface-dim": "#dcdad3",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "background": "#fcf9f2",
+                    "primary-fixed": "#ffdbd0",
+                    "secondary-container": "#c8d7fe",
+                    "tertiary-container": "#cea62b",
+                    "surface-tint": "#ab3500",
+                    "surface-container-highest": "#e5e2db",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "primary-container": "#ff6b35"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "margin-desktop": "40px",
+                    "stack-lg": "32px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "display-lg-mobile": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-caps": ["Geist"],
+                    "price-display": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { @apply bg-background text-on-background font-body-lg antialiased; }
+        .coupon-notch {
+            position: relative;
+            background: white;
+            border: 1px solid #E7E2D8;
+        }
+        .coupon-notch::before, .coupon-notch::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: #FAF7F0; /* background level 0 */
+            border-radius: 50%;
+            border: 1px solid #E7E2D8;
+            transform: translateY(-50%);
+        }
+        .coupon-notch::before { left: -11px; }
+        .coupon-notch::after { right: -11px; }
+        
+        .bank-grid-item { @apply transition-all duration-200 border border-outline-variant bg-surface-container-lowest p-4 flex flex-col items-center justify-center gap-2 cursor-pointer; }
+        .bank-grid-item:hover { @apply border-primary bg-surface-container-low; }
+        
+        .upi-pill { @apply flex items-center gap-3 border border-outline-variant bg-surface-container-lowest px-4 py-3 cursor-pointer transition-all active:scale-95; }
+        .upi-pill.active { @apply border-primary ring-1 ring-primary; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full bg-surface border-b border-outline-variant z-50">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-display-lg text-display-lg text-primary">CouponEx</div>
+<nav class="hidden md:flex gap-8">
+<span class="font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95">Marketplace</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95">My Coupons</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95">Support</span>
+</nav>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95">notifications</span>
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95">account_circle</span>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-stack-lg max-w-container-max mx-auto w-full px-margin-desktop grid grid-cols-12 gap-gutter">
+<!-- Left: SideNavBar (Payment Methods) -->
+<aside class="col-span-3 sticky top-24 h-[calc(100vh-120px)] flex flex-col gap-stack-md py-stack-lg border-r border-outline-variant pr-gutter">
+<div class="mb-4">
+<h2 class="font-display-lg text-headline-md text-primary">Payment Methods</h2>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Secure Checkout</p>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Active Tab: UPI & Wallets (Mapped from Shared Component "UPI & Wallets") -->
+<button class="flex items-center gap-3 px-4 py-3 text-primary border-r-4 border-primary bg-surface-container-high font-bold transition-all duration-200">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps">UPI &amp; Wallets</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-label-caps text-label-caps">Cards</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-caps text-label-caps">Net Banking</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-caps text-label-caps">EMI Options</span>
+</button>
+</div>
+</aside>
+<!-- Center: Payment Details Area -->
+<section class="col-span-6 space-y-stack-lg">
+<!-- UPI Section -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-lg space-y-stack-md">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Unified Payments Interface (UPI)</h3>
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<div class="upi-pill active">
+<img class="w-6 h-6 object-contain" data-alt="Official Google Pay minimalist vector logo icon with vibrant colors on a clean white background, modern fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApU2JpLru6EN_Cu27AjiYtjaF3o3DaB32Wr_fArs8kdAzshk0mGWLHqe4v93KJUfLjGpUQsGx3KLTXkFonIAqwEhEbEW_bfmkJH4bhORhDpR-vOTTwc38-1pO4HdUuGMXiaOfXjvpsRCBQ9-8gp6cMFyo8D06SrcE0BWZM-yApboTZhpjBv29Q1_0yW3hGWLVgv9BzkFFNgeL8oyOdm8CHT8xU0WvxXPE8hF-1hNxMhEWIKmM6ma9c"/>
+<span class="font-body-sm text-body-sm">GPay</span>
+</div>
+<div class="upi-pill">
+<img class="w-6 h-6 object-contain" data-alt="PhonePe minimalist vector logo icon with purple and white tones, set against a professional white background, high-trust fintech style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTCPgnoedjNaLBhFaR_TjXJKJLljulY6-1b5Gdgih-Vh-TG-Uvgl-Wy9uZPd8sgM4x_rj2W1m6hmgNlCJYWbXPC791GrXmpfjH7phDOQ6fk1msQ3VkmoDBfv7gScCB_HckGwZh_rFuAnF23fl1F3uTk2gUAx0poy-nYbPIFwJoZuuU_rkjs2W8SCMQ-Wu6tw8emy6Fy3qVR229pRHaZlPfZWts9MTdbQFZZcpCZq0fL_Z42Mwqoj6o"/>
+<span class="font-body-sm text-body-sm">PhonePe</span>
+</div>
+<div class="upi-pill">
+<img class="w-6 h-6 object-contain" data-alt="Paytm minimalist vector logo icon with blue gradients, professional fintech branding for digital payments." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLk8WU6Glwt6ZE7JNC3-Anz85LRBZNP2Fj22uPQPTe9-u-ABmjahc6W3mTQz58gFJjaIyw5SNzF_qCN0zOK6F6gnenEBzQeKYM282nFVtxTqAc4h8FbxvaZoZ8pS-AJya9Rf9rlfSNtsBgCDLJSovqq7R37NA4-h9TZzCF6RGF1yydLrr7WTF6Tkyfo1rjePUsv9CBp49vtYC2R5UJogy9zlkF_PinmEfB9MzmBGGwCUtrUMZBm7Pg"/>
+<span class="font-body-sm text-body-sm">Paytm</span>
+</div>
+</div>
+<div class="mt-stack-md relative">
+<label class="font-label-caps text-label-caps mb-1 block">Verify UPI ID</label>
+<div class="flex gap-2">
+<input class="flex-grow border border-outline-variant bg-surface-container-lowest px-4 py-3 focus:border-on-background focus:ring-0 outline-none font-body-lg text-body-lg" placeholder="username@upi" type="text"/>
+<button class="bg-primary text-white px-6 py-2 rounded-lg font-label-caps text-label-caps hover:bg-on-primary-container transition-all active:scale-95">VERIFY</button>
+</div>
+</div>
+</div>
+<!-- Netbanking Section -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-lg space-y-stack-md">
+<h3 class="font-headline-md text-headline-md">Netbanking</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Select from popular banks or search below</p>
+<div class="grid grid-cols-4 gap-3">
+<div class="bank-grid-item">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<span class="font-label-caps text-label-caps">HDFC</span>
+</div>
+<div class="bank-grid-item">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<span class="font-label-caps text-label-caps">SBI</span>
+</div>
+<div class="bank-grid-item">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<span class="font-label-caps text-label-caps">ICICI</span>
+</div>
+<div class="bank-grid-item">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<span class="font-label-caps text-label-caps">AXIS</span>
+</div>
+</div>
+<div class="relative mt-4">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-3 border border-outline-variant bg-surface-container-lowest focus:border-on-background focus:ring-0 outline-none font-body-lg text-body-lg" placeholder="Search other banks..." type="text"/>
+</div>
+</div>
+<!-- Unified Pay Button -->
+<button class="w-full bg-primary-container text-on-primary-container py-5 rounded-lg flex justify-center items-center gap-3 font-display-lg text-headline-md hover:brightness-105 transition-all active:scale-[0.98] shadow-sm">
+<span class="material-symbols-outlined">lock</span>
+                Pay <span class="font-price-display text-price-display">₹200</span>
+</button>
+</section>
+<!-- Right: Order Summary -->
+<aside class="col-span-3 space-y-stack-md sticky top-24 h-fit">
+<div class="coupon-notch p-6 rounded-lg shadow-sm border border-outline-variant">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant pb-2 mb-4">Order Summary</h4>
+<div class="space-y-3">
+<div class="flex justify-between font-body-sm text-body-sm">
+<span>Coupon Subtotal</span>
+<span class="font-price-display">₹1,200</span>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm text-primary">
+<span>Platform Discount</span>
+<span class="font-price-display">-₹1,000</span>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm">
+<span>Platform Fee</span>
+<span class="font-price-display">₹0</span>
+</div>
+<div class="pt-3 border-t border-dashed border-outline-variant flex justify-between items-center">
+<span class="font-headline-md text-headline-md">Total</span>
+<span class="font-price-display text-headline-md text-primary">₹200</span>
+</div>
+</div>
+<div class="mt-6 p-3 bg-surface-container-low flex items-start gap-3 rounded">
+<span class="material-symbols-outlined text-tertiary">info</span>
+<p class="text-[11px] leading-tight text-on-surface-variant">Your transaction is secured by CouponEx's 256-bit encryption. Refundable as per policy.</p>
+</div>
+</div>
+<div class="p-4 border border-outline-variant bg-surface-container-lowest rounded-lg flex items-center gap-4">
+<div class="w-12 h-12 bg-tertiary-container/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">verified</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface">Verified Seller</p>
+<p class="font-body-sm text-[12px] text-on-surface-variant">Instant Code Delivery</p>
+</div>
+</div>
+</aside>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-8 max-w-container-max mx-auto gap-stack-md">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                © 2024 CouponEx India. Secure 256-bit SSL Encrypted.
+            </div>
+<div class="flex gap-6 font-body-sm text-body-sm">
+<a class="text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Refund Policy</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for UI
+        document.querySelectorAll('.upi-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.upi-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.bank-grid-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.bank-grid-item').forEach(i => i.classList.remove('border-primary', 'bg-surface-container-low'));
+                item.classList.add('border-primary', 'bg-surface-container-low');
+            });
+        });
+    </script>
+</body></html>

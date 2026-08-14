@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coupon Detail | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f6f3ec;
+        --surface-muted: #f0eee7;
+        --surface-border: #e5e2db;
+        --surface-container: #f0eee7;
+        --surface-container-low: #f6f3ec;
+        --surface-container-high: #ebe8e1;
+        --surface-container-highest: #e5e2db;
+        --surface-container-lowest: #ffffff;
+        --surface-variant: #e5e2db;
+        --outline: #8d7168;
+        --outline-variant: #e1bfb5;
+        --text: #1c1c18;
+        --text-soft: #4f5e80;
+        --text-muted: #7b675a;
+        --text-variant: #594139;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --primary-container: #ff6b35;
+        --primary-fixed-dim: #ffb59d;
+        --primary-fixed: #ffdbd0;
+        --navy: #0a1b39;
+        --navy-soft: #374667;
+        --error-text: #93000a;
+        --shadow-soft: 0 10px 24px rgba(28, 28, 24, 0.06);
+        --shadow-hover: 0 18px 40px rgba(28, 28, 24, 0.1);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #4f5e80;
+        --secondary-container: #c8d7fe;
+        --on-secondary-container: #4e5d7f;
+        --tertiary: #755b00;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #ffffff;
+        --on-tertiary-container: #4f3d00;
+        --tertiary-fixed: #ffe08e;
+        --tertiary-fixed-dim: #ecc246;
+        --on-primary-container: #5f1900;
+        --on-primary-fixed: #390c00;
+        --on-primary-fixed-variant: #832600;
+        --card-bg: #ffffff;
+        --card-border: #e5e2db;
+        --badge-bg: rgba(255, 255, 255, 0.8);
+        --on-secondary-fixed-variant: #374667;
+        --on-background: #1c1c18;
+        --on-surface-variant: #594139;
+        --surface-bright: #fcf9f2;
+        --surface-dim: #dcdad3;
+        --inverse-surface: #31312c;
+        --inverse-on-surface: #f3f0ea;
+        --inverse-primary: #ffb59d;
+        --surface-tint: #ab3500;
+        --error: #ba1a1a;
+        --error-container: #ffdad6;
+        --on-error: #ffffff;
+        --on-error-container: #93000a;
+        --secondary-fixed: #d8e2ff;
+        --secondary-fixed-dim: #b7c6ed;
+        --on-secondary-fixed: #0a1b39;
+        --on-secondary-fixed-variant: #374667;
+        --on-tertiary-fixed: #241a00;
+        --on-tertiary-fixed-variant: #584400;
+      }
+
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: rgba(23, 31, 51, 0.78);
+        --surface-soft: rgba(13, 24, 45, 0.7);
+        --surface-muted: rgba(34, 42, 61, 0.88);
+        --surface-border: rgba(192, 193, 255, 0.18);
+        --surface-container: rgba(23, 31, 51, 0.78);
+        --surface-container-low: rgba(19, 27, 46, 0.7);
+        --surface-container-high: rgba(34, 42, 61, 0.88);
+        --surface-container-highest: rgba(45, 52, 73, 0.9);
+        --surface-container-lowest: rgba(6, 14, 32, 0.9);
+        --surface-variant: rgba(70, 69, 84, 0.8);
+        --outline: #8d7168;
+        --outline-variant: rgba(70, 69, 84, 0.8);
+        --text: #dae2fd;
+        --text-soft: #c7c4d7;
+        --text-muted: #98a2bd;
+        --text-variant: #c7c4d7;
+        --primary: #c0c1ff;
+        --primary-dark: #8083ff;
+        --primary-container: #8083ff;
+        --primary-fixed-dim: #8083ff;
+        --primary-fixed: rgba(192, 193, 255, 0.2);
+        --navy: #c0c1ff;
+        --navy-soft: #8083ff;
+        --error-text: #ffb4ab;
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.38);
+        --shadow-hover: 0 32px 100px rgba(0, 0, 0, 0.5);
+        --on-primary: #0d0096;
+        --on-secondary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.15);
+        --on-secondary-container: #4ae176;
+        --tertiary: #ffb95f;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #4f3d00;
+        --on-tertiary-container: #ffb95f;
+        --tertiary-fixed: rgba(255, 185, 95, 0.2);
+        --tertiary-fixed-dim: rgba(255, 185, 95, 0.3);
+        --on-primary-container: #c0c1ff;
+        --on-primary-fixed: #c0c1ff;
+        --on-primary-fixed-variant: #c0c1ff;
+        --card-bg: rgba(23, 31, 51, 0.78);
+        --card-border: rgba(192, 193, 255, 0.18);
+        --badge-bg: rgba(11, 19, 38, 0.8);
+        --on-secondary-fixed-variant: #c7c4d7;
+        --on-background: #dae2fd;
+        --on-surface-variant: #c7c4d7;
+        --surface-bright: rgba(34, 42, 61, 0.88);
+        --surface-dim: rgba(6, 14, 32, 0.9);
+        --inverse-surface: #fcf9f2;
+        --inverse-on-surface: #1c1c18;
+        --inverse-primary: #ab3500;
+        --surface-tint: #c0c1ff;
+        --error: #ffb4ab;
+        --error-container: rgba(255, 180, 171, 0.2);
+        --on-error: #690005;
+        --on-error-container: #ffb4ab;
+        --secondary-fixed: rgba(74, 225, 118, 0.15);
+        --secondary-fixed-dim: rgba(74, 225, 118, 0.3);
+        --on-secondary-fixed: #4ae176;
+        --on-secondary-fixed-variant: #4ae176;
+        --on-tertiary-fixed: #ffb95f;
+        --on-tertiary-fixed-variant: #ffb95f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      *::selection {
+        background: rgba(171, 53, 0, 0.16);
+        color: var(--navy);
+      }
+      html.theme-dark *::selection {
+        background: rgba(128, 131, 255, 0.25);
+        color: var(--text);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--on-background);
+        font-family:
+          Geist,
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a,
+      button {
+        color: inherit;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      /* === TOP APP BAR (from coupon_detail_updated) === */
+      .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--bg);
+        border-bottom: 1px solid var(--surface-variant);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 24px;
+        width: 100%;
+        height: 64px;
+      }
+      .top-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .top-bar-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--on-secondary-fixed-variant);
+      }
+      .top-bar-btn {
+        padding: 8px;
+        color: var(--on-secondary-fixed-variant);
+        border-radius: 999px;
+        transition:
+          background 180ms ease,
+          transform 100ms ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .top-bar-btn:hover {
+        background: var(--surface-container-high);
+      }
+      .top-bar-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* === MAIN LAYOUT === */
+      .detail-page {
+        width: 100%;
+        padding: 32px 24px 120px;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+      @media (min-width: 1024px) {
+        .detail-page {
+          padding-left: 48px;
+          padding-right: 48px;
+        }
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      @media (min-width: 1024px) {
+        .detail-grid {
+          grid-template-columns: 8fr 4fr;
+        }
+      }
+
+      /* === LEFT COLUMN === */
+      .left-col {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      /* Brand Hero */
+      .brand-hero {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .brand-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 16px;
+        object-fit: cover;
+        border: 1px solid var(--surface-variant);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .brand-name-lg {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      .brand-category {
+        color: var(--on-surface-variant);
+        margin: 4px 0 0;
+      }
+
+      /* Coupon Notch Banner */
+      .coupon-notch {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--surface-variant);
+        border-radius: 16px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 240px;
+        mask-image:
+          radial-gradient(circle at 0 50%, transparent 12px, black 13px),
+          radial-gradient(circle at 100% 50%, transparent 12px, black 13px);
+        mask-size:
+          51% 100%,
+          51% 100%;
+        mask-position:
+          0 0,
+          100% 0;
+        mask-repeat: no-repeat;
+        -webkit-mask-image:
+          radial-gradient(circle at 0 50%, transparent 12px, black 13px),
+          radial-gradient(circle at 100% 50%, transparent 12px, black 13px);
+        -webkit-mask-size:
+          51% 100%,
+          51% 100%;
+        -webkit-mask-position:
+          0 0,
+          100% 0;
+        -webkit-mask-repeat: no-repeat;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      }
+      .coupon-notch::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-right: 1px dashed var(--surface-variant);
+      }
+      .coupon-notch::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border-left: 1px dashed var(--surface-variant);
+      }
+      .coupon-discount-lg {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 4.5rem;
+        font-weight: 700;
+        color: var(--primary-container);
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+      .coupon-original-lg {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--on-surface-variant);
+        margin-top: 8px;
+      }
+      .coupon-original-lg .strike {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.5rem;
+        text-decoration: line-through;
+        text-decoration-color: var(--error-text);
+        text-decoration-thickness: 2px;
+      }
+      .coupon-terms-lg {
+        margin-top: 24px;
+        color: var(--on-surface-variant);
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.6;
+      }
+      .coupon-expiry {
+        margin-top: 16px;
+        padding: 4px 16px;
+        background: rgba(var(--primary-container), 0.1);
+        color: var(--primary-container);
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      /* How to Redeem */
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 24px;
+      }
+      .redeem-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      @media (min-width: 768px) {
+        .redeem-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .redeem-step {
+        background: var(--surface-container-low);
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid var(--surface-variant);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .redeem-num {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary-container);
+        color: var(--on-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+      .redeem-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+      }
+      .redeem-desc {
+        font-size: 0.9rem;
+        color: var(--on-surface-variant);
+        margin: 0;
+      }
+
+      /* Terms & Conditions */
+      .terms-box {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--surface-variant);
+        border-radius: 12px;
+        padding: 32px;
+      }
+      .terms-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+      }
+      .terms-title .material-symbols-outlined {
+        color: var(--secondary);
+      }
+      .terms-list {
+        margin: 16px 0 0;
+        padding-left: 20px;
+        list-style: disc;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        color: var(--on-surface-variant);
+      }
+      .terms-list li::marker {
+        color: var(--primary);
+      }
+
+      /* === RIGHT COLUMN (Sidebar) === */
+      .right-col {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+      .sidebar-sticky {
+        position: sticky;
+        top: 88px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      /* Seller Card */
+      .seller-card-new {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--surface-variant);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      }
+      .seller-card-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--on-surface-variant);
+        margin-bottom: 24px;
+      }
+      .seller-row-lg {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .seller-avatar-lg {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--primary-fixed-dim);
+      }
+      .seller-name-lg {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      .seller-rating-lg {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--tertiary-container);
+        font-family: "JetBrains Mono", monospace;
+      }
+      .seller-rating-lg .material-symbols-outlined {
+        font-size: 18px;
+        font-variation-settings: "FILL" 1;
+      }
+      .review-count {
+        color: var(--on-surface-variant);
+        font-size: 0.9rem;
+        margin-left: 4px;
+        font-family: Geist, sans-serif;
+      }
+
+      .seller-stats-lg {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 16px 0;
+        border-top: 1px dashed var(--surface-variant);
+        border-bottom: 1px dashed var(--surface-variant);
+        margin: 16px 0;
+      }
+      .seller-stat-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--on-surface-variant);
+      }
+      .seller-stat-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .feedback-box {
+        background: var(--surface-container);
+        padding: 16px;
+        border-radius: 12px;
+        font-style: italic;
+        color: var(--on-surface-variant);
+        position: relative;
+        font-size: 0.9rem;
+      }
+      .feedback-box .material-symbols-outlined {
+        position: absolute;
+        top: -8px;
+        left: -4px;
+        color: var(--surface-variant);
+        font-size: 32px;
+      }
+      .feedback-author {
+        margin-top: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-style: normal;
+      }
+
+      .seller-verified-badge {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--tertiary-fixed);
+        color: var(--on-tertiary-container);
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--tertiary-container);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      .seller-verified-badge .material-symbols-outlined {
+        color: var(--tertiary-container);
+        font-variation-settings: "FILL" 1;
+      }
+
+      /* Payment Summary */
+      .payment-summary {
+        padding-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .payment-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4px;
+      }
+      .payment-label {
+        color: var(--on-surface-variant);
+      }
+      .payment-amount {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-container);
+      }
+      .buy-btn-lg {
+        width: 100%;
+        background: var(--primary-container);
+        color: var(--on-primary);
+        padding: 20px;
+        border-radius: 12px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        box-shadow: 0 8px 24px rgba(var(--primary-container), 0.3);
+        transition: all 180ms ease;
+      }
+      .buy-btn-lg:hover {
+        filter: brightness(1.1);
+      }
+      .buy-btn-lg:active {
+        transform: scale(0.98);
+      }
+      .buy-btn-lg .material-symbols-outlined {
+        font-size: 28px;
+        font-variation-settings: "FILL" 1;
+      }
+      .sold-count {
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .sold-count .material-symbols-outlined {
+        font-size: 14px;
+      }
+
+      /* Trust Card */
+      .trust-card {
+        background: var(--secondary-container);
+        border: 1px solid var(--secondary-container);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .trust-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--secondary-container);
+        background: var(--secondary-container);
+      }
+      .trust-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--secondary);
+        margin: 0;
+      }
+      .trust-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .trust-step {
+        display: flex;
+        gap: 16px;
+      }
+      .trust-step-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--secondary-container);
+        color: var(--on-secondary-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .trust-step-title {
+        font-weight: 700;
+      }
+      .trust-step-desc {
+        font-size: 0.9rem;
+        color: var(--on-surface-variant);
+      }
+      .refund-policy {
+        padding-top: 8px;
+        border-top: 1px solid var(--surface-variant);
+      }
+      .refund-policy-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--on-surface-variant);
+        margin-bottom: 4px;
+      }
+      .refund-policy-text {
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+        margin: 0;
+      }
+
+      /* Mobile Bottom Bar */
+      .mobile-buy-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--surface-container-lowest);
+        border-top: 1px solid var(--surface-variant);
+        padding: 16px 20px;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      }
+      @media (min-width: 1024px) {
+        .mobile-buy-bar {
+          display: none;
+        }
+      }
+      .mobile-total-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--on-surface-variant);
+      }
+      .mobile-total-amount {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-container);
+      }
+      .mobile-buy-btn {
+        background: var(--primary-container);
+        color: var(--on-primary);
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(var(--primary-container), 0.3);
+        transition: transform 100ms ease;
+      }
+      .mobile-buy-btn:active {
+        transform: scale(0.95);
+      }
+      .mobile-buy-btn .material-symbols-outlined {
+        font-size: 20px;
+        font-variation-settings: "FILL" 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <!-- Main Content -->
+    <main class="detail-page">
+      <div class="detail-grid">
+        <!-- Left Column (65%) -->
+        <section class="left-col">
+          <!-- Brand Hero -->
+          <div class="brand-hero">
+            <img class="brand-logo" id="coupon-logo" src="" alt="" />
+            <div>
+              <h1 class="brand-name-lg" id="coupon-brand">Zomato</h1>
+              <p class="brand-category" id="coupon-category">
+                Food Delivery & Dining
+              </p>
+            </div>
+          </div>
+
+          <!-- Impact Banner (Coupon Notch) -->
+          <div class="coupon-notch">
+            <div class="coupon-discount-lg" id="coupon-discount">₹250 OFF</div>
+            <div class="coupon-original-lg">
+              <span>Original Value:</span>
+              <span class="strike" id="coupon-original-value">₹500</span>
+            </div>
+            <div class="coupon-terms-lg" id="coupon-terms">
+              Valid on orders above ₹799. Applicable for new and returning users
+              on all orders.
+            </div>
+            <div class="coupon-expiry" id="coupon-expiry">
+              Limited Time Offer: Expires in 48 hours
+            </div>
+          </div>
+
+          <!-- How to Redeem -->
+          <div>
+            <h2 class="section-title">How to Redeem</h2>
+            <div class="redeem-grid">
+              <div class="redeem-step">
+                <div class="redeem-num">1</div>
+                <h3 class="redeem-title">Copy Code</h3>
+                <p class="redeem-desc">
+                  Secure the unique alphanumeric code after successful payment.
+                </p>
+              </div>
+              <div class="redeem-step">
+                <div class="redeem-num">2</div>
+                <h3 class="redeem-title">Open App</h3>
+                <p class="redeem-desc">
+                  Launch the app or website and select your favorite items.
+                </p>
+              </div>
+              <div class="redeem-step">
+                <div class="redeem-num">3</div>
+                <h3 class="redeem-title">Apply at Checkout</h3>
+                <p class="redeem-desc">
+                  Paste the code in the offers section before finalizing
+                  payment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="terms-box">
+            <h2 class="terms-title">
+              <span class="material-symbols-outlined">info</span>
+              Terms & Conditions
+            </h2>
+            <ul class="terms-list">
+              <li>Coupon is valid for a single transaction only.</li>
+              <li>Minimum order value is required to apply the code.</li>
+              <li>Applicable on both mobile app and website platforms.</li>
+              <li>Cannot be combined with other promotional codes.</li>
+              <li>
+                The coupon is non-refundable once the code has been revealed or
+                used.
+              </li>
+              <li>
+                In case of cancellation, the coupon value will not be
+                reinstated.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Right Column (35%) -->
+        <aside class="right-col">
+          <div class="sidebar-sticky">
+            <!-- Seller Information -->
+            <div class="seller-card-new">
+              <div class="seller-card-label">Verified Seller</div>
+              <div class="seller-row-lg">
+                <img
+                  class="seller-avatar-lg"
+                  id="seller-avatar"
+                  src=""
+                  alt=""
+                />
+                <div>
+                  <a
+                    class="seller-name-lg"
+                    id="seller-name-link"
+                    href="#"
+                    style="text-decoration: none; color: inherit"
+                    >@ArjunDeals</a
+                  >
+                  <div class="seller-rating-lg">
+                    <span id="seller-rating">4.9</span>
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="review-count"
+                      >(<span id="seller-reviews">128</span> reviews)</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="seller-stats-lg">
+                <div>
+                  <div class="seller-stat-label">Successful Trades</div>
+                  <div class="seller-stat-value" id="seller-trades">450+</div>
+                </div>
+                <div>
+                  <div class="seller-stat-label">Avg. Response</div>
+                  <div class="seller-stat-value">< 5 mins</div>
+                </div>
+              </div>
+              <div class="feedback-box">
+                <span class="material-symbols-outlined">format_quote</span>
+                "Code worked instantly! Highly recommend for great deals."
+                <div class="feedback-author">— Amit K., 1h ago</div>
+              </div>
+              <div class="seller-verified-badge">
+                <span class="material-symbols-outlined">verified_user</span>
+                <span>Identity & OCR Verified</span>
+              </div>
+
+              <!-- Payment Summary -->
+              <div class="payment-summary">
+                <div class="payment-row">
+                  <span class="payment-label">Total Payable</span>
+                  <span class="payment-amount" id="pay-amount">₹225</span>
+                </div>
+                <button
+                  class="buy-btn-lg"
+                  onclick="location.href = 'escrow.html'"
+                >
+                  <span class="material-symbols-outlined">security</span>
+                  Buy Securely
+                </button>
+                <div class="sold-count">
+                  <span class="material-symbols-outlined">trending_up</span>
+                  Sold <span id="sold-count">5</span> coupons in the last hour
+                </div>
+              </div>
+            </div>
+
+            <!-- Guaranteed Trust -->
+            <div class="trust-card">
+              <div class="trust-header">
+                <h4 class="trust-title">
+                  <span class="material-symbols-outlined">lock</span>
+                  Guaranteed Trust
+                </h4>
+              </div>
+              <div class="trust-body">
+                <div class="trust-step">
+                  <div class="trust-step-num">1</div>
+                  <div>
+                    <div class="trust-step-title">Secure Escrow</div>
+                    <div class="trust-step-desc">
+                      Funds are held by Razorpay until you confirm code
+                      validity.
+                    </div>
+                  </div>
+                </div>
+                <div class="trust-step">
+                  <div class="trust-step-num">2</div>
+                  <div>
+                    <div class="trust-step-title">No-Risk Refund</div>
+                    <div class="trust-step-desc">
+                      100% money-back guarantee if the code is invalid or
+                      already used.
+                    </div>
+                  </div>
+                </div>
+                <div class="refund-policy">
+                  <div class="refund-policy-label">Refund Policy</div>
+                  <p class="refund-policy-text">
+                    Claims must be filed within 2 hours of purchase with
+                    screen-recording proof.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Mobile Bottom Bar -->
+    <div class="mobile-buy-bar">
+      <div>
+        <div class="mobile-total-label">Total</div>
+        <div class="mobile-total-amount" id="pay-mobile">₹225</div>
+      </div>
+      <button class="mobile-buy-btn" onclick="location.href = 'escrow.html'">
+        <span class="material-symbols-outlined">security</span>
+        Buy Now
+      </button>
+    </div>
+
+    <script>
+      // --- Seller database matching each coupon in the dashboard ---
+      const sellers = {
+        arjundeals: {
+          name: "@ArjunDeals",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.9",
+          trades: "450+",
+          reviews: "128",
+          brand: "Swiggy Instamart",
+          category: "Food & Dining",
+          discount: "50% OFF",
+          original: "₹250",
+          price: "₹100",
+          terms: "On orders above ₹500. Limited time offer.",
+          expiry: "Limited Time Offer: Expires in 48 hours",
+          sold: "5",
+        },
+        dealmaster: {
+          name: "@DealMaster",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.8",
+          trades: "320+",
+          reviews: "96",
+          brand: "Zomato Pro",
+          category: "Food & Dining",
+          discount: "30% OFF",
+          original: "₹200",
+          price: "₹140",
+          terms: "Valid on min order ₹799. Expires in 2 days.",
+          expiry: "Limited Time Offer: Expires in 2 days",
+          sold: "3",
+        },
+        priyasavings: {
+          name: "@PriyaSavings",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.6",
+          trades: "185+",
+          reviews: "64",
+          brand: "Amazon Pay",
+          category: "E-commerce",
+          discount: "₹50 CB",
+          original: "₹50",
+          price: "₹20",
+          terms: "Cashback on Amazon Pay. Min order ₹500.",
+          expiry: "Limited Time Offer: Expires in 3 days",
+          sold: "8",
+        },
+        travelguru: {
+          name: "@TravelGuru",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.7",
+          trades: "210+",
+          reviews: "82",
+          brand: "MakeMyTrip",
+          category: "Travel",
+          discount: "₹1000 OFF",
+          original: "₹1500",
+          price: "₹750",
+          terms: "Flat discount on domestic flights. Min booking ₹5000.",
+          expiry: "Limited Time Offer: Expires in 5 days",
+          sold: "2",
+        },
+        cityrider: {
+          name: "@CityRider",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.5",
+          trades: "98+",
+          reviews: "38",
+          brand: "Uber",
+          category: "Travel",
+          discount: "20% OFF",
+          original: "₹100",
+          price: "₹15",
+          terms: "Save on your next commute. Valid on premium rides.",
+          expiry: "Limited Time Offer: Expires in 24 hours",
+          sold: "12",
+        },
+        flyhigh: {
+          name: "@FlyHigh",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.3",
+          trades: "76+",
+          reviews: "28",
+          brand: "Indigo Flights",
+          category: "Travel",
+          discount: "₹500 OFF",
+          original: "₹1000",
+          price: "₹250",
+          terms: "Flat discount on domestic flight bookings via Indigo.",
+          expiry: "Limited Time Offer: Expires in 4 days",
+          sold: "6",
+        },
+        freshdeals: {
+          name: "@FreshDeals",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME",
+          rating: "4.4",
+          trades: "132+",
+          reviews: "52",
+          brand: "Blinkit",
+          category: "Grocery",
+          discount: "₹100 CB",
+          original: "₹100",
+          price: "₹40",
+          terms: "Cashback on grocery refill. Min order ₹750.",
+          expiry: "Limited Time Offer: Expires in 2 days",
+          sold: "9",
+        },
+        styleicon: {
+          name: "@StyleIcon",
+          avatar:
+            "https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs",
+          rating: "4.2",
+          trades: "65+",
+          reviews: "22",
+          brand: "Myntra",
+          category: "Fashion",
+          discount: "Extra 10% OFF",
+          original: "₹500",
+          price: "₹80",
+          terms: "Additional discount on top of ongoing seasonal sales.",
+          expiry: "Limited Time Offer: Expires in 6 days",
+          sold: "4",
+        },
+      };
+
+      // Load coupon data from URL parameters
+      const params = new URLSearchParams(window.location.search);
+      const sellerKey = params.get("seller") || "arjundeals";
+      const data = sellers[sellerKey] || sellers.arjundeals;
+
+      // Update brand info
+      document.getElementById("coupon-brand").textContent = data.brand;
+      document.getElementById("coupon-logo").src = data.avatar;
+      document.getElementById("coupon-logo").alt = data.brand;
+      document.getElementById("coupon-category").textContent = data.category;
+
+      // Update coupon details
+      document.getElementById("coupon-discount").textContent = data.discount;
+      document.getElementById("coupon-original-value").textContent =
+        data.original;
+      document.getElementById("coupon-terms").textContent = data.terms;
+      document.getElementById("coupon-expiry").textContent = data.expiry;
+
+      // Update seller info
+      const sellerNameLink = document.getElementById("seller-name-link");
+      sellerNameLink.textContent = data.name;
+      sellerNameLink.href = "profile.html?seller=" + sellerKey;
+      document.getElementById("seller-avatar").src = data.avatar;
+      document.getElementById("seller-avatar").alt = data.name;
+      document.getElementById("seller-rating").textContent = data.rating;
+      document.getElementById("seller-reviews").textContent = data.reviews;
+      document.getElementById("seller-trades").textContent = data.trades;
+
+      // Update pricing
+      document.getElementById("pay-amount").textContent = data.price;
+      document.getElementById("pay-mobile").textContent = data.price;
+
+      // Update sold count
+      document.getElementById("sold-count").textContent = data.sold;
+    </script>
+  </body>
+</html>

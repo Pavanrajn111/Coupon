@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffdbd0",
+                        "primary-container": "#ff6b35",
+                        "surface-container-high": "#ebe8e1",
+                        "surface-container-highest": "#e5e2db",
+                        "outline": "#8d7168",
+                        "surface-variant": "#e5e2db",
+                        "on-secondary-fixed-variant": "#374667",
+                        "on-tertiary-fixed": "#241a00",
+                        "background": "#fcf9f2",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "on-primary-fixed": "#390c00",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#5f1900",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "secondary": "#4f5e80",
+                        "on-surface-variant": "#594139",
+                        "on-background": "#1c1c18",
+                        "on-surface": "#1c1c18",
+                        "surface": "#fcf9f2",
+                        "primary": "#ab3500",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#ab3500",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-container": "#cea62b",
+                        "surface-container": "#f0eee7",
+                        "secondary-container": "#c8d7fe",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#ffb59d",
+                        "outline-variant": "#e1bfb5",
+                        "on-secondary-container": "#4e5d7f",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#4f3d00",
+                        "surface-bright": "#fcf9f2",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#832600",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffe08e",
+                        "surface-container-low": "#f6f3ec",
+                        "primary-fixed-dim": "#ffb59d",
+                        "inverse-surface": "#31312c",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#755b00",
+                        "on-secondary-fixed": "#0a1b39",
+                        "surface-dim": "#dcdad3",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed-variant": "#584400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "stack-md": "16px",
+                        "container-max": "1200px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "price-display": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-sm": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "price-display": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .coupon-notch {
+            mask-image: radial-gradient(circle at left 50%, transparent 6px, black 7px), radial-gradient(circle at right 50%, transparent 6px, black 7px);
+            mask-size: 100% 50%, 100% 50%;
+            mask-repeat: no-repeat;
+            mask-position: top, bottom;
+            -webkit-mask-image: radial-gradient(circle at left 50%, transparent 6px, black 7px), radial-gradient(circle at right 50%, transparent 6px, black 7px);
+            -webkit-mask-size: 100% 50%, 100% 50%;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: top, bottom;
+        }
+        
+        /* Hide scrollbar for clean horizontal scrolls */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar Shell (Hidden on md, shown on mobile) -->
+<header class="md:hidden bg-background border-b border-surface-container-high px-gutter py-stack-sm w-full sticky top-0 z-40">
+<div class="flex justify-between items-center w-full">
+<button class="text-secondary p-2 active:scale-95 duration-100 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-lg-mobile text-display-lg-mobile font-extrabold text-on-secondary-fixed tracking-tight">CouponEx</h1>
+<button class="text-secondary p-2 active:scale-95 duration-100 transition-transform hover:bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Desktop Nav Shell (Hidden on mobile, shown on md) -->
+<header class="hidden md:flex bg-background border-b border-surface-container-high px-margin-desktop py-stack-md w-full sticky top-0 z-40 justify-center">
+<div class="w-full max-w-[1200px] flex justify-between items-center">
+<div class="flex items-center gap-stack-lg">
+<h1 class="font-display-lg text-display-lg font-extrabold text-on-secondary-fixed tracking-tight">CouponEx</h1>
+<nav class="flex gap-stack-md">
+<a class="font-headline-md text-headline-md text-primary hover:bg-surface-container-high px-3 py-1 rounded transition-colors" href="#">Home</a>
+<a class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors" href="#">Search</a>
+<a class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors" href="#">Sell</a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">account_balance_wallet</span> Wallet
+                </button>
+<button class="font-headline-md text-headline-md text-secondary hover:bg-surface-container-high px-3 py-1 rounded transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">person</span> Profile
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-md flex flex-col gap-stack-lg">
+<!-- Search & Filters -->
+<section class="flex flex-col gap-stack-sm w-full">
+<!-- Search Bar -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-surface-container-high rounded-xl font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed transition-colors text-on-background placeholder-secondary" placeholder="Search for brands, categories, or specific deals..." type="text"/>
+</div>
+<!-- Categories & Toggle -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-stack-md w-full pt-2">
+<!-- Chips Scroll -->
+<div class="flex overflow-x-auto no-scrollbar gap-2 pb-1 w-full md:w-auto">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-on-secondary-fixed bg-on-secondary-fixed text-surface-container-lowest font-body-sm text-body-sm transition-colors">All Deals</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-background font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">Food</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-background font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">E-commerce</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-background font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">Fashion</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-background font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">Grocery</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-surface-container-high bg-surface-container-lowest text-on-background font-body-sm text-body-sm hover:border-on-secondary-fixed transition-colors">Beauty</button>
+</div>
+<!-- Verified Toggle -->
+<div class="flex items-center gap-2 flex-shrink-0">
+<span class="font-body-sm text-body-sm text-secondary">Verified Sellers Only</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-9 h-5 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary-container"></div>
+</label>
+</div>
+</div>
+<!-- Brand Logos Row -->
+<div class="flex overflow-x-auto no-scrollbar gap-4 py-2 mt-2 items-center opacity-70">
+<span class="font-label-caps text-label-caps text-secondary uppercase mr-2 shrink-0">Popular Brands</span>
+<!-- Using text placeholders for brand logos as per minimalist style to avoid images where text suffices for a marketplace feel -->
+<span class="font-body-sm text-body-sm font-semibold shrink-0">Swiggy</span>
+<span class="w-1 h-1 rounded-full bg-surface-container-high shrink-0"></span>
+<span class="font-body-sm text-body-sm font-semibold shrink-0">Zomato</span>
+<span class="w-1 h-1 rounded-full bg-surface-container-high shrink-0"></span>
+<span class="font-body-sm text-body-sm font-semibold shrink-0">Amazon</span>
+<span class="w-1 h-1 rounded-full bg-surface-container-high shrink-0"></span>
+<span class="font-body-sm text-body-sm font-semibold shrink-0">Flipkart</span>
+<span class="w-1 h-1 rounded-full bg-surface-container-high shrink-0"></span>
+<span class="font-body-sm text-body-sm font-semibold shrink-0">Myntra</span>
+</div>
+</section>
+<!-- Main Grid - Asymmetric Layout -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-stack-lg items-start">
+<!-- Featured Card (Spans 7 cols on desktop) -->
+<div class="md:col-span-7 w-full">
+<h2 class="font-headline-md text-headline-md mb-stack-sm text-on-background">Featured Deal</h2>
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-xl p-6 coupon-notch relative overflow-hidden group cursor-pointer hover:border-on-secondary-fixed transition-colors">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-surface-container-high rounded-lg flex items-center justify-center font-bold text-lg">S</div>
+<div>
+<h3 class="font-headline-md text-headline-md">Swiggy Instamart</h3>
+<div class="flex items-center gap-1 text-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-caps text-label-caps uppercase">Verified Seller</span>
+</div>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-full font-label-caps text-label-caps uppercase">Expires in 2 hrs</span>
+</div>
+<div class="flex items-end justify-between mt-8">
+<div>
+<p class="text-primary-container font-display-lg text-display-lg font-bold">50% OFF</p>
+<p class="font-body-sm text-body-sm text-secondary">On orders above ₹500</p>
+</div>
+<div class="text-right">
+<p class="font-body-sm text-body-sm text-secondary line-through">Value: ₹250</p>
+<p class="font-price-display text-price-display text-on-background">Resale: ₹100</p>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-surface-container-high flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-secondary">Seller Score: 4.9★ · 450 sold</span>
+<button class="bg-primary-container text-on-primary px-4 py-2 rounded-lg font-body-sm text-body-sm hover:opacity-90 transition-opacity">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Secondary Deals Grid (Spans 5 cols on desktop, flows below on mobile) -->
+<div class="md:col-span-5 w-full flex flex-col gap-stack-sm">
+<h2 class="font-headline-md text-headline-md mb-stack-sm text-on-background md:hidden mt-4">Trending Deals</h2>
+<h2 class="font-headline-md text-headline-md mb-stack-sm text-on-background hidden md:block">Trending Now</h2>
+<!-- Deal Item 1 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-4 flex gap-4 items-center hover:border-on-secondary-fixed transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-surface-container-high rounded flex items-center justify-center font-bold shrink-0">Z</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-body-lg text-body-lg font-semibold">Zomato Pro</h4>
+<span class="text-primary-container font-bold">30% OFF</span>
+</div>
+<div class="flex items-center gap-1 text-tertiary-container mt-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Verified</span>
+<span class="text-secondary text-xs ml-2">4.8★ · 120 sold</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Exp in 2 days</span>
+<div class="font-price-display text-price-display text-sm">₹140 <span class="text-secondary text-xs line-through">₹200</span></div>
+</div>
+</div>
+</div>
+<!-- Deal Item 2 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-4 flex gap-4 items-center hover:border-on-secondary-fixed transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-surface-container-high rounded flex items-center justify-center font-bold shrink-0">A</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-body-lg text-body-lg font-semibold">Amazon Pay</h4>
+<span class="text-primary-container font-bold">₹50 CB</span>
+</div>
+<div class="flex items-center gap-1 text-tertiary-container mt-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Verified</span>
+<span class="text-secondary text-xs ml-2">4.6★ · 85 sold</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Exp in 5 days</span>
+<div class="font-price-display text-price-display text-sm">₹20 <span class="text-secondary text-xs line-through">₹50</span></div>
+</div>
+</div>
+</div>
+<!-- Deal Item 3 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-4 flex gap-4 items-center hover:border-on-secondary-fixed transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-surface-container-high rounded flex items-center justify-center font-bold shrink-0">F</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-body-lg text-body-lg font-semibold">Flipkart Plus</h4>
+<span class="text-primary-container font-bold">Free Del</span>
+</div>
+<div class="flex items-center gap-1 text-secondary mt-1">
+<span class="font-label-caps text-label-caps uppercase text-[10px]">Unverified</span>
+<span class="text-secondary text-xs ml-2">4.1★ · 12 sold</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Exp Today</span>
+<div class="font-price-display text-price-display text-sm">₹10 <span class="text-secondary text-xs line-through">₹40</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Standard Grid for more deals -->
+<section class="w-full mt-stack-md">
+<h2 class="font-headline-md text-headline-md mb-stack-sm text-on-background">More Coupons</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-stack-md">
+<!-- Grid Card 1 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-xl p-4 coupon-notch relative flex flex-col justify-between min-h-[180px] hover:border-on-secondary-fixed transition-colors">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-headline-md text-headline-md font-semibold text-on-background">Uber</h4>
+<span class="material-symbols-outlined text-secondary">local_taxi</span>
+</div>
+<p class="text-primary-container font-bold text-xl mt-1">20% OFF</p>
+<p class="font-body-sm text-body-sm text-secondary">Up to ₹50 on next ride</p>
+</div>
+<div>
+<div class="flex items-center justify-between text-xs text-secondary mb-2 mt-4 border-t border-surface-container-high pt-2">
+<div class="flex items-center gap-1 text-tertiary-container">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span>4.9★</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Exp Tomorrow</span>
+<div class="font-price-display text-price-display text-lg">₹15</div>
+</div>
+</div>
+</div>
+<!-- Grid Card 2 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-xl p-4 coupon-notch relative flex flex-col justify-between min-h-[180px] hover:border-on-secondary-fixed transition-colors">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-headline-md text-headline-md font-semibold text-on-background">MakeMyTrip</h4>
+<span class="material-symbols-outlined text-secondary">flight</span>
+</div>
+<p class="text-primary-container font-bold text-xl mt-1">FLAT ₹500</p>
+<p class="font-body-sm text-body-sm text-secondary">On domestic flights</p>
+</div>
+<div>
+<div class="flex items-center justify-between text-xs text-secondary mb-2 mt-4 border-t border-surface-container-high pt-2">
+<div class="flex items-center gap-1 text-tertiary-container">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span>4.5★</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Exp in 10 days</span>
+<div class="font-price-display text-price-display text-lg">₹250</div>
+</div>
+</div>
+</div>
+<!-- Grid Card 3 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-xl p-4 coupon-notch relative flex flex-col justify-between min-h-[180px] hover:border-on-secondary-fixed transition-colors">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-headline-md text-headline-md font-semibold text-on-background">Blinkit</h4>
+<span class="material-symbols-outlined text-secondary">shopping_basket</span>
+</div>
+<p class="text-primary-container font-bold text-xl mt-1">₹100 CB</p>
+<p class="font-body-sm text-body-sm text-secondary">On min order of ₹600</p>
+</div>
+<div>
+<div class="flex items-center justify-between text-xs text-secondary mb-2 mt-4 border-t border-surface-container-high pt-2">
+<div class="flex items-center gap-1 text-secondary">
+<!-- Unverified visual treatment -->
+</div>
+<span>3.8★</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Exp in 3 days</span>
+<div class="font-price-display text-price-display text-lg">₹40</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Hidden on md, shown on mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-2 bg-on-secondary-fixed dark:bg-on-secondary-fixed border-t border-outline z-50">
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container font-bold hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary dark:text-on-secondary opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-label-caps uppercase mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,1599 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coupon Verifications | CouponEx Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f6f3ec;
+        --surface-muted: #f0eee7;
+        --surface-border: #e5e2db;
+        --surface-container: #f0eee7;
+        --surface-container-low: #f6f3ec;
+        --surface-container-high: #ebe8e1;
+        --surface-container-highest: #e5e2db;
+        --surface-container-lowest: #ffffff;
+        --surface-variant: #e5e2db;
+        --outline: #8d7168;
+        --outline-variant: #e1bfb5;
+        --text: #1c1c18;
+        --text-soft: #4f5e80;
+        --text-muted: #7b675a;
+        --text-variant: #594139;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --primary-container: #ff6b35;
+        --primary-fixed-dim: #ffb59d;
+        --primary-fixed: #ffdbd0;
+        --navy: #0a1b39;
+        --navy-soft: #374667;
+        --error: #ba1a1a;
+        --error-container: #ffdad6;
+        --on-error-container: #93000a;
+        --success: #4ade80;
+        --shadow-soft: 0 10px 24px rgba(28, 28, 24, 0.06);
+        --shadow-hover: 0 18px 40px rgba(28, 28, 24, 0.1);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #4f5e80;
+        --secondary-container: #c8d7fe;
+        --on-secondary-container: #4e5d7f;
+        --tertiary: #755b00;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #ffffff;
+        --on-tertiary-container: #4f3d00;
+        --on-secondary-fixed: #0a1b39;
+        --on-secondary-fixed-variant: #374667;
+        --on-background: #1c1c18;
+        --on-surface-variant: #594139;
+        --card-bg: #ffffff;
+        --card-border: #e5e2db;
+        --badge-bg: rgba(255, 255, 255, 0.8);
+        --secondary-fixed-dim: #b7c6ed;
+        --hairline: #e7e2d8;
+      }
+
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: rgba(23, 31, 51, 0.78);
+        --surface-soft: rgba(13, 24, 45, 0.7);
+        --surface-muted: rgba(34, 42, 61, 0.88);
+        --surface-border: rgba(192, 193, 255, 0.18);
+        --surface-container: rgba(23, 31, 51, 0.78);
+        --surface-container-low: rgba(19, 27, 46, 0.7);
+        --surface-container-high: rgba(34, 42, 61, 0.88);
+        --surface-container-highest: rgba(45, 52, 73, 0.9);
+        --surface-container-lowest: rgba(6, 14, 32, 0.9);
+        --surface-variant: rgba(70, 69, 84, 0.8);
+        --outline: #8d7168;
+        --outline-variant: rgba(70, 69, 84, 0.8);
+        --text: #dae2fd;
+        --text-soft: #c7c4d7;
+        --text-muted: #98a2bd;
+        --text-variant: #c7c4d7;
+        --primary: #c0c1ff;
+        --primary-dark: #8083ff;
+        --primary-container: #8083ff;
+        --primary-fixed-dim: #8083ff;
+        --primary-fixed: rgba(192, 193, 255, 0.2);
+        --navy: #c0c1ff;
+        --navy-soft: #8083ff;
+        --error: #ffb4ab;
+        --error-container: rgba(255, 180, 171, 0.2);
+        --on-error-container: #ffb4ab;
+        --success: #4ade80;
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.38);
+        --shadow-hover: 0 32px 100px rgba(0, 0, 0, 0.5);
+        --on-primary: #0d0096;
+        --on-secondary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.15);
+        --on-secondary-container: #4ae176;
+        --tertiary: #ffb95f;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #4f3d00;
+        --on-tertiary-container: #ffb95f;
+        --on-secondary-fixed: #dae2fd;
+        --on-secondary-fixed-variant: #c7c4d7;
+        --on-background: #dae2fd;
+        --on-surface-variant: #c7c4d7;
+        --card-bg: rgba(23, 31, 51, 0.78);
+        --card-border: rgba(192, 193, 255, 0.18);
+        --badge-bg: rgba(11, 19, 38, 0.8);
+        --secondary-fixed-dim: rgba(74, 225, 118, 0.3);
+        --hairline: rgba(192, 193, 255, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      *::selection {
+        background: rgba(171, 53, 0, 0.16);
+        color: var(--navy);
+      }
+      html.theme-dark *::selection {
+        background: rgba(128, 131, 255, 0.25);
+        color: var(--text);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--on-background);
+        font-family:
+          Geist,
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a,
+      button {
+        color: inherit;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      /* === TOP NAV BAR (Shared with Admin Dashboard) === */
+      .admin-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 1px solid var(--surface-border);
+        backdrop-filter: blur(12px);
+      }
+      .admin-header .shell {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 72px;
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+      .admin-header-left {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .admin-brand {
+        font-family: Inter, sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--primary);
+      }
+      .admin-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-nav-link {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-variant);
+        transition: all 180ms ease;
+        cursor: pointer;
+      }
+      .admin-nav-link:hover {
+        background: var(--surface-container-low);
+        color: var(--text);
+      }
+      .admin-nav-link.active {
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+        border-radius: 0;
+        padding-bottom: 6px;
+      }
+      .admin-header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .admin-icon-btn {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        color: var(--text-variant);
+        transition: background 180ms ease;
+      }
+      .admin-icon-btn:hover {
+        background: var(--surface-container-low);
+      }
+      .admin-user-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px 4px 4px;
+        border: 1px solid var(--surface-border);
+        border-radius: 999px;
+        color: var(--text);
+        transition: background 180ms ease;
+      }
+      .admin-user-btn:hover {
+        background: var(--surface-container-low);
+      }
+      .admin-user-btn .material-symbols-outlined {
+        color: var(--primary);
+        font-variation-settings: "FILL" 1;
+      }
+      .admin-user-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .admin-settings-wrap {
+        position: relative;
+      }
+      .admin-settings-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        margin-top: 8px;
+        width: 160px;
+        background: var(--surface-container);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--surface-border);
+        padding: 8px;
+        z-index: 60;
+      }
+      .admin-settings-menu.is-open {
+        display: block;
+      }
+      .admin-settings-opt {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+      .admin-settings-opt:hover {
+        background: var(--surface-container-high);
+      }
+
+      /* === PAGE HEADER === */
+      .admin-main {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+        padding: 32px 0 60px;
+      }
+      .admin-dash-header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      @media (min-width: 768px) {
+        .admin-dash-header {
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: space-between;
+        }
+      }
+      .admin-dash-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--tertiary);
+      }
+      .admin-dash-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 4px 0 0;
+      }
+      .admin-dash-desc {
+        font-size: 0.95rem;
+        color: var(--text-variant);
+        margin: 8px 0 0;
+        max-width: 520px;
+      }
+      .admin-dash-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .admin-btn {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 180ms ease;
+        cursor: pointer;
+      }
+      .admin-btn:active {
+        transform: scale(0.95);
+      }
+      .admin-btn-secondary {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--hairline);
+        color: var(--on-secondary-fixed);
+      }
+      .admin-btn-secondary:hover {
+        background: var(--surface-container-high);
+      }
+      .admin-btn-primary {
+        background: var(--primary-container);
+        color: var(--on-primary);
+      }
+      .admin-btn-primary:hover {
+        opacity: 0.9;
+      }
+
+      /* === WORKSPACE LAYOUT (Queue + Detail) === */
+      .workspace {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      @media (min-width: 1024px) {
+        .workspace {
+          grid-template-columns: 5fr 7fr;
+        }
+      }
+
+      /* === VERIFICATION QUEUE (Left Pane) === */
+      .queue-panel {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        max-height: 80vh;
+      }
+      .queue-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        background: var(--surface-container);
+        border-bottom: 1px solid var(--surface-border);
+      }
+      .queue-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+      }
+      .queue-pending-badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 4px 12px;
+        background: var(--tertiary-container);
+        color: var(--on-tertiary-container);
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .queue-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .queue-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .queue-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .queue-list::-webkit-scrollbar-thumb {
+        background: var(--surface-border);
+        border-radius: 999px;
+      }
+
+      .queue-empty {
+        padding: 48px 20px;
+        text-align: center;
+      }
+      .queue-empty-icon {
+        font-size: 3rem;
+        color: var(--text-variant);
+        opacity: 0.4;
+        margin-bottom: 12px;
+      }
+      .queue-empty-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 4px;
+      }
+      .queue-empty-desc {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+        margin: 0;
+      }
+      .queue-empty-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 6px 12px;
+        background: var(--surface-container-low);
+        border: 1px dashed var(--surface-border);
+        border-radius: 999px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--text-variant);
+      }
+
+      .queue-item {
+        border: 1px solid var(--surface-border);
+        background: var(--surface-container-lowest);
+        padding: 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 180ms ease;
+        position: relative;
+      }
+      .queue-item:hover {
+        background: var(--surface-container-low);
+      }
+      .queue-item.active {
+        border-color: var(--primary);
+        background: var(--surface-container-high);
+      }
+      .queue-item.flagged {
+        border-left: 4px solid var(--error);
+      }
+      .queue-item-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 6px;
+        gap: 8px;
+      }
+      .queue-category {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--tertiary);
+      }
+      .queue-category.flagged-cat {
+        color: var(--error);
+      }
+      .queue-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--primary);
+      }
+      .queue-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .queue-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8rem;
+        color: var(--text-variant);
+      }
+      .queue-meta .material-symbols-outlined {
+        font-size: 16px;
+      }
+      .queue-meta.risk {
+        color: var(--error);
+        font-weight: 700;
+      }
+
+      /* === REVIEW DETAIL (Right Pane) === */
+      .detail-panel {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 24px;
+        min-height: 60vh;
+      }
+
+      .review-header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-bottom: 1px solid var(--surface-border);
+        padding-bottom: 20px;
+        margin-bottom: 24px;
+      }
+      @media (min-width: 768px) {
+        .review-header {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+      }
+      .review-case-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--tertiary);
+      }
+      .review-case-badge .material-symbols-outlined {
+        font-size: 16px;
+      }
+      .review-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+      }
+      .review-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 180ms ease;
+        white-space: nowrap;
+      }
+      .action-btn:active {
+        transform: scale(0.95);
+      }
+      .action-flag {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--hairline);
+        color: var(--text);
+      }
+      .action-flag:hover {
+        background: var(--surface-container-high);
+      }
+      .action-reject {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--hairline);
+        color: var(--error);
+      }
+      .action-reject:hover {
+        background: var(--error-container);
+        border-color: var(--error);
+      }
+      .action-approve {
+        background: var(--primary-container);
+        color: var(--on-primary);
+      }
+      .action-approve:hover {
+        opacity: 0.9;
+      }
+
+      /* Detail grid */
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      @media (min-width: 1024px) {
+        .detail-grid {
+          grid-template-columns: 7fr 5fr;
+        }
+      }
+      .proof-card {
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        padding: 16px;
+        background: var(--surface-container-lowest);
+      }
+      .proof-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .proof-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+      }
+      .proof-enlarge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--primary);
+      }
+      .proof-enlarge .material-symbols-outlined {
+        font-size: 16px;
+      }
+      .proof-viewer {
+        border: 1px dashed var(--surface-border);
+        border-radius: 12px;
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface-container);
+        gap: 12px;
+        text-align: center;
+        padding: 24px;
+      }
+      .proof-viewer .material-symbols-outlined {
+        font-size: 48px;
+        color: var(--text-variant);
+        opacity: 0.4;
+      }
+      .proof-viewer p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .proof-img {
+        max-width: 80%;
+        border-radius: 8px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      /* Side stats column */
+      .detail-side {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .info-card {
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        padding: 16px;
+        background: var(--surface-container-lowest);
+      }
+      .info-card-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+        margin-bottom: 8px;
+      }
+      .info-card-label .material-symbols-outlined {
+        font-size: 18px;
+        color: var(--tertiary);
+      }
+      .trust-value-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .trust-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 2rem;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .trust-total {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .trust-bar {
+        height: 6px;
+        background: var(--surface-container);
+        border-radius: 999px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .trust-fill {
+        height: 100%;
+        background: var(--tertiary);
+        border-radius: 999px;
+        transition: width 300ms ease;
+      }
+      .trust-note {
+        margin: 12px 0 0;
+        font-size: 0.8rem;
+        font-style: italic;
+        color: var(--text-variant);
+      }
+
+      .ocr-row {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .ocr-field {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .ocr-field-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+      }
+      .ocr-field-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1rem;
+        color: var(--text);
+      }
+      .ocr-field-value.merchant-match {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--success);
+      }
+
+      /* Full width meta (Merchant Category / Claimed Value / Listing Fee) */
+      .meta-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      @media (min-width: 768px) {
+        .meta-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .meta-card {
+        background: var(--surface-container);
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .meta-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .meta-value {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .meta-value .material-symbols-outlined {
+        color: var(--primary);
+      }
+      .detail-note {
+        font-size: 0.75rem;
+        color: var(--text-variant);
+        margin-top: 6px;
+      }
+
+      /* Audit trail */
+      .audit-card {
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        padding: 16px;
+        background: var(--surface-container-lowest);
+      }
+      .audit-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+        margin: 0 0 16px;
+      }
+      .timeline {
+        position: relative;
+        padding-left: 24px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 4px;
+        bottom: 4px;
+        width: 2px;
+        background: var(--surface-border);
+      }
+      .timeline-item {
+        position: relative;
+        padding-bottom: 12px;
+      }
+      .timeline-item:last-child {
+        padding-bottom: 0;
+      }
+      .timeline-dot {
+        position: absolute;
+        left: -24px;
+        top: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: var(--tertiary);
+        border: 2px solid var(--surface-container-lowest);
+      }
+      .timeline-dot.current {
+        background: var(--primary);
+      }
+      .timeline-text {
+        font-size: 0.8rem;
+        color: var(--text-variant);
+        margin: 0;
+      }
+
+      /* Detail empty state */
+      .detail-empty {
+        text-align: center;
+        padding: 80px 24px;
+      }
+      .detail-empty-icon {
+        font-size: 3.5rem;
+        color: var(--text-variant);
+        opacity: 0.4;
+        margin-bottom: 12px;
+      }
+      .detail-empty-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 4px;
+      }
+      .detail-empty-desc {
+        font-size: 0.9rem;
+        color: var(--text-variant);
+        margin: 0 auto;
+        max-width: 440px;
+      }
+
+      /* Agent footer */
+      .agent-footer {
+        margin-top: 24px;
+        border-top: 1px solid var(--surface-border);
+        padding-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        justify-content: space-between;
+        opacity: 0.6;
+      }
+      @media (min-width: 768px) {
+        .agent-footer {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+      .agent-id {
+        font-size: 0.8rem;
+        color: var(--text-variant);
+        margin: 0;
+      }
+      .agent-links {
+        display: flex;
+        gap: 16px;
+      }
+      .agent-links a {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-variant);
+        transition: color 180ms ease;
+      }
+      .agent-links a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+
+      /* === FOOTER (Shared with Admin Dashboard) === */
+      .admin-footer {
+        background: var(--surface-container-low);
+        border-top: 1px solid var(--surface-border);
+        padding: 32px 0;
+      }
+      .admin-footer .shell {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+      @media (min-width: 768px) {
+        .admin-footer .shell {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+      .admin-footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .admin-footer-brand span {
+        font-family: Inter, sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .admin-footer-version {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+      .admin-footer-links {
+        display: flex;
+        gap: 24px;
+      }
+      .admin-footer-links a {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+        transition: color 180ms ease;
+      }
+      .admin-footer-links a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+      .admin-footer-copy {
+        font-size: 0.875rem;
+        color: var(--text-variant);
+      }
+
+      /* === TOAST === */
+      .admin-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--on-background);
+        color: var(--on-surface-variant);
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 300ms ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 100;
+      }
+      .admin-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .admin-toast .material-symbols-outlined {
+        color: var(--success);
+      }
+      .admin-toast span {
+        color: #ffffff;
+        font-size: 0.875rem;
+      }
+
+      /* === MOBILE RESPONSIVE === */
+      @media (max-width: 768px) {
+        .admin-nav {
+          display: none;
+        }
+        .admin-main {
+          width: min(100% - 20px, 1200px);
+        }
+        .admin-dash-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+        .admin-btn {
+          width: 100%;
+          text-align: center;
+        }
+        .queue-panel {
+          max-height: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav Bar (Shared with Admin Dashboard) -->
+    <header class="admin-header">
+      <div class="shell">
+        <div class="admin-header-left">
+          <span class="admin-brand">CouponEx</span>
+          <nav class="admin-nav" aria-label="Admin navigation">
+            <a class="admin-nav-link" href="admin-dashboard.html">Dashboard</a>
+            <a class="admin-nav-link" href="admin-identity.html">Identity</a>
+            <a class="admin-nav-link active" href="admin-verifications.html">Verifications</a>
+            <a class="admin-nav-link" href="admin-payments.html">Payments</a>
+            <a class="admin-nav-link" href="admin-payout-verifications.html">Payout Accounts</a>
+          </nav>
+        </div>
+        <div class="admin-header-right">
+          <div class="admin-settings-wrap">
+            <button
+              id="settings-toggle"
+              class="admin-icon-btn"
+              type="button"
+              aria-label="Settings"
+            >
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <div id="settings-menu" class="admin-settings-menu" role="menu">
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="setTheme('dark')"
+              >
+                Dark mode
+              </button>
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="setTheme('light')"
+              >
+                Light mode
+              </button>
+              <button
+                class="admin-settings-opt"
+                type="button"
+                role="menuitem"
+                onclick="logout()"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+          <button class="admin-user-btn" type="button" onclick="window.location.href='admin-profile.html'">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="admin-user-label">Admin</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Page Header -->
+      <div class="admin-dash-header">
+        <div>
+          <span class="admin-dash-label">Coupon Verification Suite</span>
+          <h1 class="admin-dash-title">Verification Queue</h1>
+          <p class="admin-dash-desc">
+            Review seller-submitted coupon proofs, verify merchant and value, then approve or reject.
+          </p>
+        </div>
+        <div class="admin-dash-actions">
+          <button class="admin-btn admin-btn-secondary" type="button" onclick="showToast('Export queue report queued.')">Export Queue</button>
+          <button class="admin-btn admin-btn-primary" type="button" onclick="showToast('Bulk action not required right now.')">Bulk Actions</button>
+        </div>
+      </div>
+
+      <!-- Workspace: Queue + Detail -->
+      <div class="workspace">
+        <!-- Left Pane: Verification Queue -->
+        <aside class="queue-panel">
+          <div class="queue-header">
+            <h2 class="queue-title">Verification Queue</h2>
+            <span class="queue-pending-badge" id="queue-badge">0 PENDING</span>
+          </div>
+          <div class="queue-list" id="queue-list">
+            <!-- Queue items rendered dynamically -->
+          </div>
+        </aside>
+
+        <!-- Right Pane: Verification Review Detail -->
+        <section class="detail-panel" id="detail-panel">
+          <!-- Detail renders dynamically -->
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer (Shared with Admin Dashboard) -->
+    <footer class="admin-footer">
+      <div class="shell">
+        <div class="admin-footer-brand">
+          <span>CouponEx</span>
+          <span class="admin-footer-version">Admin Verifications v2.4.0</span>
+        </div>
+        <div class="admin-footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="admin-dashboard.html">Back to Dashboard</a>
+        </div>
+        <div class="admin-footer-copy">
+          &copy; 2026 CouponEx India. Secure 256-bit SSL Encrypted.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="admin-toast" id="admin-toast">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span>Action completed successfully.</span>
+    </div>
+
+    <script>
+      /* ============================================================
+         COUPON VERIFICATION DATA MODEL
+         ------------------------------------------------------------
+         This array holds the entire verification queue. It is
+         intentionally empty right now because the platform is not
+         yet deployed.
+
+         When deployments start, the backend should populate this
+         array (e.g. fetch("/api/admin/verifications")) with objects
+         following the exact shape below so the left queue and right
+         detail pane render automatically.
+
+         IMPORTANT FIELD RULES:
+         - merchant        : Taken FROM THE COUPON ITSELF. This is the
+                             merchant/store the coupon was purchased for.
+         - merchantCategory: Also derived from the coupon's merchant
+                             data (Food, Electronics, Retail, Travel...).
+         - claimedValue    : The ACTUAL COUPON PRICE (face value) as
+                             stored on the coupon.
+         - listingFee      : The CURRENT (discounted) listing price the
+                             buyer paid — i.e. coupon price reduced by
+                             the applied discount.
+
+         {
+           caseId:      "CPN-0000-X",
+           couponTitle: "Amazon Fashion Voucher",
+           category:    "RETAIL",
+           merchant:    "Amazon India",          // from coupon
+           merchantCategory: "Fashion & Lifestyle", // from coupon
+           claimedValue: "₹500.00",              // actual coupon price
+           listingFee:   "₹45.00",               // price after discount
+           discountText: "₹500 OFF",
+           sellerName:   "Arjun Sharma",
+           trustScore:   94,
+           trustNote:    "Consistent high-value seller with zero dispute history.",
+           extractedCode: "AMZ-4492-QLP-002",
+           expiryDate:   "Dec 31, 2026",
+           uploadedAgo:  "12m ago",
+           riskFlag:     false,                  // true = duplicate risk
+           riskNote:     "Duplicate Risk Detected",
+           proofImage:   "",                     // URL to uploaded proof
+           timeline: [
+             "14:02 - Automated IP check passed (Location: Bangalore, IN)",
+             "14:03 - Image Metadata Analysis: No manipulation detected",
+             "14:05 - Pending Manual Review (Current Stage)"
+           ]
+         }
+
+         When users start selling coupons, this queue will populate
+         and the merchant / claimed value / listing fee fields will
+         automatically pull from the coupon object as described above.
+      ============================================================ */
+      let verificationQueue = [];
+
+      async function loadVerifications() {
+        try {
+          const apiVerif = window.location.protocol === "file:" ? "http://localhost:8000/api/admin/verifications" : "/api/admin/verifications";
+          const res = await fetch(apiVerif);
+          const data = await res.json();
+          if (data.success && data.queue) {
+            verificationQueue = data.queue.map(c => ({
+              caseId: "CPN-" + c.id,
+              couponId: c.id,
+              couponTitle: c.brand + " Voucher",
+              category: c.category.toUpperCase(),
+              merchant: c.brand,
+              merchantCategory: c.category,
+              claimedValue: "₹" + c.originalValue,
+              listingFee: "₹" + c.askingPrice,
+              discountText: "₹" + (c.originalValue - c.askingPrice) + " OFF",
+              sellerName: c.fullName || "@" + c.username,
+              trustScore: 94,
+              trustNote: "Verified seller.",
+              extractedCode: c.code,
+              expiryDate: c.expiryDate,
+              uploadedAgo: "Recent",
+              riskFlag: false,
+              riskNote: "",
+              proofImage: c.image || "",
+              timeline: [
+                "IP check passed",
+                "Pending Manual Review"
+              ]
+            }));
+          }
+        } catch (err) {
+          // Fallback from localStorage
+          const localCoupons = JSON.parse(localStorage.getItem("couponex_coupons") || "[]");
+          const pending = localCoupons.filter(c => c.status === "pending");
+          verificationQueue = pending.map(c => ({
+            caseId: "CPN-" + c.id,
+            couponId: c.id,
+            couponTitle: c.brand + " Voucher",
+            category: c.category.toUpperCase(),
+            merchant: c.brand,
+            merchantCategory: c.category,
+            claimedValue: "₹" + c.originalValue,
+            listingFee: "₹" + c.askingPrice,
+            discountText: "₹" + (c.originalValue - c.askingPrice) + " OFF",
+            sellerName: "@" + c.userId,
+            trustScore: 90,
+            trustNote: "Offline queue.",
+            extractedCode: c.code,
+            expiryDate: c.expiryDate,
+            uploadedAgo: "Recent",
+            riskFlag: false,
+            riskNote: "",
+            proofImage: c.image || "",
+            timeline: ["Offline mode", "Pending Review"]
+          }));
+        }
+        renderQueue();
+      }
+
+      window.loadVerificationQueue = function (queue) {
+        verificationQueue = Array.isArray(queue) ? queue : [];
+        renderQueue();
+        renderDetail();
+      };
+
+      let selectedCaseId = null;
+
+      /* ----- QUEUE RENDERING ----- */
+      function renderQueue() {
+        const list = document.getElementById("queue-list");
+        const badge = document.getElementById("queue-badge");
+        badge.textContent = verificationQueue.length + " PENDING";
+
+        if (verificationQueue.length === 0) {
+          list.innerHTML =
+            '<div class="queue-empty">' +
+              '<div class="queue-empty-icon"><span class="material-symbols-outlined">verified_user</span></div>' +
+              '<h3 class="queue-empty-title">No coupons to verify</h3>' +
+              '<p class="queue-empty-desc">Seller coupon submissions will appear here automatically with merchant category, claimed value and listing fee.</p>' +
+              '<div class="queue-empty-hint">' +
+                '<span class="material-symbols-outlined">database</span>' +
+                "Awaiting live coupon data — format ready for deployment" +
+              "</div>" +
+            "</div>";
+          return;
+        }
+
+        // Ensure a selection exists
+        if (!selectedCaseId || !verificationQueue.find((c) => c.caseId === selectedCaseId)) {
+          selectedCaseId = verificationQueue[0].caseId;
+        }
+
+        list.innerHTML = verificationQueue
+          .map((c) => {
+            const isActive = c.caseId === selectedCaseId ? " active" : "";
+            const isFlagged = c.riskFlag ? " flagged" : "";
+            return (
+              '<div class="queue-item' + isActive + isFlagged + '" data-case="' + c.caseId + '" onclick="selectCase(\'' + c.caseId + '\')">' +
+                '<div class="queue-item-top">' +
+                  '<span class="queue-category' + (c.riskFlag ? " flagged-cat" : "") + '">' + c.category + "</span>" +
+                  '<span class="queue-value">' + c.discountText + "</span>" +
+                "</div>" +
+                '<p class="queue-name">' + c.couponTitle + "</p>" +
+                (c.riskFlag
+                  ? '<div class="queue-meta risk"><span class="material-symbols-outlined" style="font-variation-settings: \'FILL\' 1;">warning</span>' + c.riskNote + "</div>"
+                  : '<div class="queue-meta"><span class="material-symbols-outlined">person</span>' + c.sellerName + " • Trust Score: " + c.trustScore + "%</div>") +
+              "</div>"
+            );
+          })
+          .join("");
+
+        // Auto-select first item if nothing selected
+        if (!selectedCaseId && verificationQueue.length > 0) {
+          selectedCaseId = verificationQueue[0].caseId;
+        }
+        renderDetail();
+      }
+
+      /* ----- DETAIL RENDERING ----- */
+      function renderDetail() {
+        const panel = document.getElementById("detail-panel");
+        const coupon = verificationQueue.find((c) => c.caseId === selectedCaseId);
+
+        if (!coupon) {
+          panel.innerHTML =
+            '<div class="detail-empty">' +
+              '<div class="detail-empty-icon"><span class="material-symbols-outlined">document_scanner</span></div>' +
+              '<h3 class="detail-empty-title">Select a coupon to review</h3>' +
+              '<p class="detail-empty-desc">When sellers submit coupons for verification, the full review workspace will display the proof image, OCR extraction, merchant category, claimed value, listing fee and security audit trail here.</p>' +
+            "</div>";
+          return;
+        }
+
+        const proofHtml = coupon.proofImage
+          ? '<img class="proof-img" src="' + coupon.proofImage + '" alt="Uploaded coupon proof" />'
+          : '<span class="material-symbols-outlined">image_not_supported</span><p>Digital certificate proof will render here when the seller uploads a coupon image.</p>';
+
+        const timelineHtml = (coupon.timeline || []).map(
+          (t, i) =>
+            '<div class="timeline-item">' +
+              '<div class="timeline-dot' + (i === (coupon.timeline || []).length - 1 ? " current" : "") + '"></div>' +
+              '<p class="timeline-text">' + t + "</p>" +
+            "</div>",
+        ).join("");
+
+        panel.innerHTML =
+          '<div class="review-header">' +
+            "<div>" +
+              '<span class="review-case-badge"><span class="material-symbols-outlined">folder_special</span>' + coupon.caseId + " • Uploaded " + coupon.uploadedAgo + "</span>" +
+              '<h1 class="review-title">' + coupon.couponTitle + " Verification</h1>" +
+            "</div>" +
+            '<div class="review-actions">' +
+              '<button class="action-btn action-flag" type="button" onclick="flagCoupon(\'' + coupon.caseId + '\')"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> FLAG</button>' +
+              '<button class="action-btn action-reject" type="button" onclick="rejectCoupon(\'' + coupon.caseId + '\')"><span class="material-symbols-outlined" style="font-size:16px;">close</span> REJECT</button>' +
+              '<button class="action-btn action-approve" type="button" onclick="approveCoupon(\'' + coupon.caseId + '\')"><span class="material-symbols-outlined" style="font-size:16px; font-variation-settings: \'FILL\' 1;">check_circle</span> APPROVE</button>' +
+            "</div>" +
+          "</div>" +
+
+          '<div class="detail-grid">' +
+            '<div class="proof-card">' +
+              '<div class="proof-head">' +
+                '<span class="proof-label">Digital Certificate Proof</span>' +
+                '<button class="proof-enlarge" type="button" onclick="showToast(\'Opening enlarged proof view.\')"><span class="material-symbols-outlined">zoom_in</span> ENLARGE</button>' +
+              "</div>" +
+              '<div class="proof-viewer">' + proofHtml + "</div>" +
+            "</div>" +
+
+            '<div class="detail-side">' +
+              '<div class="info-card">' +
+                '<div class="info-card-label"><span>SELLER TRUST SCORE</span><span class="material-symbols-outlined">verified_user</span></div>' +
+                '<div class="trust-value-row"><span class="trust-value">' + coupon.trustScore + "</span><span class='trust-total'>/ 100</span></div>" +
+                '<div class="trust-bar"><div class="trust-fill" style="width:' + coupon.trustScore + '%;"></div></div>' +
+                '<p class="trust-note">"' + coupon.trustNote + '"</p>' +
+              "</div>" +
+              '<div class="info-card">' +
+                '<div class="info-card-label"><span>OCR EXTRACTION</span><span class="material-symbols-outlined">document_scanner</span></div>' +
+                '<div class="ocr-row">' +
+                  '<div class="ocr-field"><span class="ocr-field-label">EXTRACTED CODE</span><span class="ocr-field-value">' + coupon.extractedCode + "</span></div>" +
+                  '<div class="ocr-field"><span class="ocr-field-label">EXPIRY DATE</span><span class="ocr-field-value">' + coupon.expiryDate + "</span></div>" +
+                  '<div class="ocr-field"><span class="ocr-field-label">MERCHANT MATCH</span><span class="ocr-field-value merchant-match"><span class="material-symbols-outlined" style="font-size:16px;">check_circle</span>' + coupon.merchant + " (Verified)</span></div>" +
+                "</div>" +
+              "</div>" +
+            "</div>" +
+          "</div>" +
+
+          '<div class="meta-grid" style="margin-top:16px;">' +
+            '<div class="meta-card">' +
+              '<span class="meta-label">MERCHANT CATEGORY</span>' +
+              '<div class="meta-value"><span class="material-symbols-outlined">shopping_bag</span>' + coupon.merchantCategory + "</div>" +
+              '<div class="detail-note">Derived from the coupon merchant: ' + coupon.merchant + "</div>" +
+            "</div>" +
+            '<div class="meta-card">' +
+              '<span class="meta-label">CLAIMED VALUE</span>' +
+              '<div class="meta-value"><span class="material-symbols-outlined">payments</span>' + coupon.claimedValue + "</div>" +
+              '<div class="detail-note">Actual coupon price</div>' +
+            "</div>" +
+            '<div class="meta-card">' +
+              '<span class="meta-label">LISTING FEE</span>' +
+              '<div class="meta-value"><span class="material-symbols-outlined">receipt</span>' + coupon.listingFee + "</div>" +
+              '<div class="detail-note">Current price after discount</div>' +
+            "</div>" +
+          "</div>" +
+
+          '<div class="audit-card" style="margin-top:16px;">' +
+            '<h4 class="audit-title">SECURITY AUDIT TRAIL</h4>' +
+            '<div class="timeline">' + timelineHtml + "</div>" +
+          "</div>" +
+
+          '<div class="agent-footer">' +
+            '<p class="agent-id">Verification Agent ID: #AG-7721</p>' +
+            '<div class="agent-links">' +
+              '<a href="#" onclick="showToast(\'Opening audit logs.\'); return false;">Audit Logs</a>' +
+              '<a href="#" onclick="showToast(\'Escalation raised to support.\'); return false;">Support Escalate</a>' +
+            "</div>" +
+          "</div>";
+      }
+
+      /* ----- CASE ACTIONS ----- */
+      function selectCase(caseId) {
+        selectedCaseId = caseId;
+        document.querySelectorAll(".queue-item").forEach((item) => {
+          item.classList.toggle("active", item.dataset.case === caseId);
+        });
+        renderDetail();
+      }
+
+      async function verifyCouponAction(caseId, action) {
+        const item = verificationQueue.find(v => v.caseId === caseId);
+        if (!item) return;
+
+        try {
+          const apiVerify = window.location.protocol === "file:" ? "http://localhost:8000/api/admin/verify-coupon" : "/api/admin/verify-coupon";
+          const res = await fetch(apiVerify, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ couponId: item.couponId, action })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast("Coupon " + action + "d successfully!");
+            // Also update local storage if the seller is logged in on this browser
+            updateLocalCouponStatus(item.couponId, action === 'approve' ? 'active' : 'rejected');
+            loadVerifications();
+          } else {
+            alert(data.error || "Failed to process verification.");
+          }
+        } catch (err) {
+          // Offline update
+          updateLocalCouponStatus(item.couponId, action === 'approve' ? 'active' : 'rejected');
+          showToast("Coupon " + action + "d successfully! (Offline)");
+          loadVerifications();
+        }
+      }
+
+      function updateLocalCouponStatus(couponId, status) {
+        const localCoupons = JSON.parse(localStorage.getItem("couponex_coupons") || "[]");
+        const idx = localCoupons.findIndex(c => c.id === couponId);
+        if (idx !== -1) {
+          localCoupons[idx].status = status;
+          localStorage.setItem("couponex_coupons", JSON.stringify(localCoupons));
+
+          if (status === 'active') {
+            const uId = localCoupons[idx].userId;
+            const currentUsrStr = localStorage.getItem("couponex_user");
+            if (currentUsrStr) {
+              const currentUsr = JSON.parse(currentUsrStr);
+              if (currentUsr.id === uId) {
+                currentUsr.balance = (currentUsr.balance || 0) + localCoupons[idx].askingPrice;
+                localStorage.setItem("couponex_user", JSON.stringify(currentUsr));
+              }
+            }
+          }
+        }
+      }
+
+      function approveCoupon(caseId) {
+        verifyCouponAction(caseId, 'approve');
+      }
+
+      function rejectCoupon(caseId) {
+        verifyCouponAction(caseId, 'reject');
+      }
+
+      function flagCoupon(caseId) {
+        const coupon = verificationQueue.find((c) => c.caseId === caseId);
+        if (!coupon) return;
+        coupon.riskFlag = true;
+        coupon.riskNote = "Flagged for Manual Review";
+        showToast("Flagged " + coupon.caseId + " for manual review.");
+        renderQueue();
+      }
+
+      /* ----- SHARED ADMIN UTILITIES ----- */
+      const settingsToggle = document.getElementById("settings-toggle");
+      const settingsMenu = document.getElementById("settings-menu");
+
+      settingsToggle.addEventListener("click", () => {
+        settingsMenu.classList.toggle("is-open");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (
+          !settingsToggle.contains(e.target) &&
+          !settingsMenu.contains(e.target)
+        ) {
+          settingsMenu.classList.remove("is-open");
+        }
+      });
+
+      function setTheme(theme) {
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem("couponex-theme", theme);
+        settingsMenu.classList.remove("is-open");
+      }
+
+      function logout() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+
+      let toastTimer = null;
+      function showToast(message) {
+        const toast = document.getElementById("admin-toast");
+        toast.querySelector("span:last-child").textContent =
+          message || "Action completed successfully.";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      /* ----- INIT ----- */
+      loadVerifications();
+
+      // Admin-only guard
+      const userData = localStorage.getItem("couponex_user");
+      if (userData) {
+        const user = JSON.parse(userData);
+        if (user.role !== "admin") {
+          window.location.href = "dashboard.html";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          document.body.className = theme === "light" ? "theme-light" : "";
+        });
+      })();
+    </script>
+    <style>
+      .cart-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top: 24px;
+      }
+      @media (min-width: 768px) {
+        .cart-container {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+      .cart-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .cart-item:hover {
+        border-color: var(--primary);
+      }
+      .cart-item-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .badge-verified {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(206, 166, 43, 0.1);
+        border: 1px solid var(--tertiary);
+        color: var(--tertiary);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        width: fit-content;
+      }
+      .cart-item-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        margin: 0;
+      }
+      .cart-item-desc {
+        font-size: 0.875rem;
+        color: var(--text-soft);
+        margin: 0;
+      }
+      .cart-item-price {
+        text-align: right;
+        background: var(--surface-soft);
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        border-left: 2px dashed var(--border);
+        min-width: 120px;
+      }
+      .cart-price-val {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .cart-price-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 4px;
+        display: block;
+      }
+      .summary-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        position: sticky;
+        top: 24px;
+      }
+      .summary-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-strong);
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        color: var(--text-soft);
+      }
+      .summary-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+        margin-top: 16px;
+        margin-bottom: 24px;
+      }
+      .summary-total-label {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-strong);
+      }
+      .summary-total-val {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .escrow-alert {
+        display: flex;
+        gap: 12px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        padding: 16px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 20px;
+        align-items: center;
+      }
+      .escrow-alert span {
+        color: var(--tertiary);
+      }
+      .escrow-alert-text {
+        font-size: 0.85rem;
+        color: var(--text-soft);
+        line-height: 1.4;
+      }
+      .checkout-btn {
+        width: 100%;
+        background: var(--primary);
+        color: var(--button-primary-text);
+        padding: 14px;
+        border: 0;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: filter 0.2s;
+      }
+      .checkout-btn:hover {
+        filter: brightness(1.1);
+      }
+    </style>
+      <script src="header.js"></script>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page">
+      <div class="shell stack">
+        <h1 class="section-title-new" style="font-size: 2.25rem; font-weight: 800; margin-top: 12px; margin-bottom: 4px;">Shopping Cart</h1>
+        <p style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 24px;">Review items in your cart and complete checkout securely.</p>
+
+        <div class="cart-container">
+          <!-- Left list -->
+          <div>
+            <div class="cart-item">
+              <div class="cart-item-details">
+                <span class="badge-verified">
+                  <span class="material-symbols-outlined" style="font-size: 14px;">verified</span> Verified
+                </span>
+                <h3 class="cart-item-title">Amazon 20% Off Electronics</h3>
+                <p class="cart-item-desc">Min spend ₹2000. Valid until Oct 31, 2026.</p>
+              </div>
+              <div class="cart-item-price">
+                <span class="cart-price-val">150 C</span>
+                <span class="cart-price-label">Price</span>
+              </div>
+            </div>
+
+            <div class="cart-item">
+              <div class="cart-item-details">
+                <span class="badge-verified">
+                  <span class="material-symbols-outlined" style="font-size: 14px;">verified</span> Verified
+                </span>
+                <h3 class="cart-item-title">Flipkart ₹500 Flat Discount</h3>
+                <p class="cart-item-desc">Min spend ₹2000. Valid until Nov 15, 2026.</p>
+              </div>
+              <div class="cart-item-price">
+                <span class="cart-price-val">45 C</span>
+                <span class="cart-price-label">Price</span>
+              </div>
+            </div>
+
+            <div class="cart-item">
+              <div class="cart-item-details">
+                <h3 class="cart-item-title">Swiggy Free Delivery Pass</h3>
+                <p class="cart-item-desc">10 free deliveries valid for 1 month.</p>
+              </div>
+              <div class="cart-item-price">
+                <span class="cart-price-val">20 C</span>
+                <span class="cart-price-label">Price</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right summary -->
+          <div class="summary-card">
+            <h2 class="summary-title">Order Summary</h2>
+            <div class="summary-row">
+              <span>Subtotal (3 items)</span>
+              <span>215 C</span>
+            </div>
+            <div class="summary-row">
+              <span>Platform Fee</span>
+              <span>5 C</span>
+            </div>
+            <div class="summary-total-row">
+              <span class="summary-total-label">Total Amount</span>
+              <span class="summary-total-val">220 C</span>
+            </div>
+
+            <div class="escrow-alert">
+              <span class="material-symbols-outlined">lock</span>
+              <div class="escrow-alert-text">Secure escrow transaction. Credits held in escrow until verified.</div>
+            </div>
+
+            <button class="checkout-btn" type="button">
+              Proceed to Checkout
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+        }
+
+        
+          document.addEventListener("click", () => {
+            profileDropdown.classList.remove("show");
+          });
+          profileDropdown.addEventListener("click", (e) => {
+            e.stopPropagation();
+          });
+        }
+      });
+
+      function logoutUser() {
+        localStorage.removeItem("couponex_user");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

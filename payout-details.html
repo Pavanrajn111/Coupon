@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment & Payout Details | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme = savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.classList.toggle("theme-dark", theme === "dark");
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --surface-border: #cbd5e1;
+        --text: #0f172a;
+        --text-soft: #475569;
+        --primary: #ff6b35;
+        --shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      }
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: #161f35;
+        --surface-soft: #1e2742;
+        --surface-border: rgba(192, 193, 255, 0.2);
+        --text: #f2f5ff;
+        --text-soft: #c0c7dc;
+        --primary: #ff6b35;
+        --shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+      }
+      body { margin: 0; font-family: Geist, Inter, sans-serif; background: var(--bg); color: var(--text); }
+      .container { max-width: 760px; margin: 32px auto 80px; padding: 0 16px; }
+      
+      .card {
+        background: var(--surface); border: 1px solid var(--surface-border); border-radius: 20px;
+        padding: 32px; box-shadow: var(--shadow);
+      }
+      .form-group { margin-bottom: 20px; }
+      label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-soft); margin-bottom: 6px; }
+      input, select {
+        width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--surface-border);
+        background: var(--surface-soft); color: var(--text); box-sizing: border-box; font-size: 0.95rem;
+      }
+      .btn {
+        width: 100%; padding: 14px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; background: var(--primary); color: #fff; text-transform: uppercase; letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <div class="container">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--surface-border); padding-bottom:16px; margin-bottom:24px;">
+          <div>
+            <h1 style="margin:0 0 4px; font-size:1.5rem; font-weight:800;">Payment & Payout Details</h1>
+            <p style="margin:0; font-size:0.875rem; color:var(--text-soft);">Configure your bank account or UPI details to receive seller payouts.</p>
+          </div>
+          <div id="status-pill-wrap">
+            <!-- Dynamic Status Pill -->
+          </div>
+        </div>
+
+        <!-- Security Warning / Info -->
+        <div style="background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.2); border-radius:12px; padding:16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+          <span class="material-symbols-outlined" style="color:#2563eb; font-size:24px;">lock</span>
+          <div style="font-size:0.85rem; color:var(--text);">
+            Your banking details are encrypted and securely stored for automated seller payouts. Modifying verified information will require re-verification by an admin.
+          </div>
+        </div>
+
+        <div id="rejection-alert" style="display:none; background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.2); border-radius:12px; padding:16px; margin-bottom:24px; color:#dc2626; font-size:0.875rem;">
+          <strong>Payout Account Rejected:</strong> <span id="rejection-reason-text"></span>
+        </div>
+
+        <form id="payout-form" onsubmit="submitPayoutAccount(event)">
+          <div class="form-group">
+            <label>ACCOUNT HOLDER FULL NAME</label>
+            <input type="text" id="acc-name" required placeholder="Name as per bank record..." />
+          </div>
+
+          <div class="form-group">
+            <label>BANK NAME</label>
+            <input type="text" id="acc-bank" required placeholder="e.g. HDFC Bank, ICICI Bank..." />
+          </div>
+
+          <div class="form-group">
+            <label>ACCOUNT NUMBER</label>
+            <input type="text" id="acc-number" required placeholder="Enter bank account number..." />
+          </div>
+
+          <div class="form-group">
+            <label>IFSC CODE</label>
+            <input type="text" id="acc-ifsc" required placeholder="e.g. HDFC0001234..." style="text-transform:uppercase;" />
+          </div>
+
+          <div class="form-group">
+            <label>UPI ID (OPTIONAL)</label>
+            <input type="text" id="acc-upi" placeholder="username@upi" />
+          </div>
+
+          <button class="btn" type="submit" id="submit-btn">Submit for Verification</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const storedUser = JSON.parse(localStorage.getItem("couponex_user") || "null") || { id: 1 };
+
+      async function loadPayoutDetails() {
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/payout-account/${storedUser.id}`);
+          const data = await res.json();
+          const pillWrap = document.getElementById("status-pill-wrap");
+
+          if (data.success && data.account) {
+            const a = data.account;
+            document.getElementById("acc-name").value = a.accountHolderName || "";
+            document.getElementById("acc-bank").value = a.bankName || "";
+            document.getElementById("acc-number").value = a.accountNumber || "";
+            document.getElementById("acc-ifsc").value = a.ifscCode || "";
+            document.getElementById("acc-upi").value = a.upiId || "";
+
+            if (a.status === 'VERIFIED') {
+              pillWrap.innerHTML = `
+                <span style="padding:6px 14px; border-radius:20px; background:rgba(16,185,129,0.15); color:#10b981; font-weight:700; font-size:0.75rem;">
+                  ✓ VERIFIED
+                </span>
+              `;
+            } else if (a.status === 'REJECTED') {
+              pillWrap.innerHTML = `
+                <span style="padding:6px 14px; border-radius:20px; background:rgba(220,38,38,0.15); color:#dc2626; font-weight:700; font-size:0.75rem;">
+                  ✕ REJECTED
+                </span>
+              `;
+              if (a.rejectionReason) {
+                document.getElementById("rejection-alert").style.display = "block";
+                document.getElementById("rejection-reason-text").textContent = a.rejectionReason;
+              }
+            } else {
+              pillWrap.innerHTML = `
+                <span style="padding:6px 14px; border-radius:20px; background:rgba(217,119,6,0.15); color:#d97706; font-weight:700; font-size:0.75rem;">
+                  ⏳ PENDING VERIFICATION
+                </span>
+              `;
+            }
+          } else {
+            pillWrap.innerHTML = `
+              <span style="padding:6px 14px; border-radius:20px; background:var(--surface-soft); color:var(--text-soft); font-weight:700; font-size:0.75rem;">
+                NOT SUBMITTED
+              </span>
+            `;
+          }
+        } catch (err) {
+          console.log("Error loading payout details:", err);
+        }
+      }
+
+      async function submitPayoutAccount(e) {
+        e.preventDefault();
+        const btn = document.getElementById("submit-btn");
+        btn.textContent = "Submitting...";
+        btn.disabled = true;
+
+        const payload = {
+          userId: storedUser.id,
+          accountHolderName: document.getElementById("acc-name").value.trim(),
+          bankName: document.getElementById("acc-bank").value.trim(),
+          accountNumber: document.getElementById("acc-number").value.trim(),
+          ifscCode: document.getElementById("acc-ifsc").value.trim().toUpperCase(),
+          upiId: document.getElementById("acc-upi").value.trim(),
+          payoutMethod: "BANK_TRANSFER"
+        };
+
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/payout-account`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.success) {
+            alert(data.message);
+            loadPayoutDetails();
+          } else {
+            alert(data.error || "Submission failed.");
+          }
+        } catch (err) {
+          alert("Unable to submit payout details.");
+        } finally {
+          btn.textContent = "Submit for Verification";
+          btn.disabled = false;
+        }
+      }
+
+      loadPayoutDetails();
+    </script>
+  </body>
+</html>

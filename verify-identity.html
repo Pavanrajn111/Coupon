@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Identity | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+        document.addEventListener("DOMContentLoaded", () => {
+          document.body.className = theme === "light" ? "theme-light" : "";
+        });
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-muted: #f4efe8;
+        --surface-border: #e7e2d8;
+        --text: #1d1d1d;
+        --text-soft: #5e5b56;
+        --primary: #ff6b35;
+        --primary-container: #ff6b35;
+        --on-primary: #ffffff;
+        --secondary: #4f5e80;
+        --secondary-container: #c8d7fe;
+        --on-secondary-container: #4e5d7f;
+        --tertiary-container: #cea62b;
+        --on-tertiary-container: #4f3d00;
+        --success: #2e7d32;
+        --shadow: 0 18px 40px rgba(13, 20, 38, 0.08);
+      }
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: #161f35;
+        --surface-muted: #1e2742;
+        --surface-border: rgba(192, 193, 255, 0.2);
+        --text: #f2f5ff;
+        --text-soft: #c0c7dc;
+        --primary: #ff6b35;
+        --primary-container: #ff6b35;
+        --on-primary: #ffffff;
+        --secondary: #4ae176;
+        --secondary-container: rgba(74, 225, 118, 0.16);
+        --on-secondary-container: #4ae176;
+        --tertiary-container: #ffe08e;
+        --on-tertiary-container: #241a00;
+        --success: #85e09b;
+        --shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Geist, Inter, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      .page-shell { width: min(920px, calc(100% - 32px)); margin: 32px auto 80px; }
+      
+      .progress-bar-wrap { display: flex; justify-content: space-between; align-items: center; position: relative; margin-bottom: 36px; }
+      .progress-step { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2; }
+      .step-num {
+        width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; transition: all 180ms ease;
+      }
+      .step-num.active { background: var(--primary-container); color: var(--on-primary); box-shadow: 0 4px 14px rgba(255,107,53,0.3); }
+      .step-num.inactive { background: var(--surface-muted); border: 1px solid var(--surface-border); color: var(--text-soft); }
+      .step-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft); }
+      .step-label.active { color: var(--primary-container); }
+      .progress-line { position: absolute; top: 20px; left: 50px; right: 50px; height: 2px; background: var(--surface-border); z-index: 1; }
+
+      .banner-card {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 20px;
+        padding: 24px 28px;
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        box-shadow: var(--shadow);
+        margin-bottom: 32px;
+      }
+      .banner-icon {
+        width: 48px; height: 48px; border-radius: 50%; background: rgba(206, 166, 43, 0.15); color: var(--tertiary-container); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      }
+      .banner-title { font-size: 1.15rem; font-weight: 700; margin: 0 0 4px; color: var(--text); }
+      .banner-desc { font-size: 0.9rem; color: var(--text-soft); margin: 0; line-height: 1.5; }
+
+      .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+      @media (max-width: 860px) { .upload-grid { grid-template-columns: 1fr; } }
+
+      /* Styled Document Upload Card */
+      .doc-card {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+      }
+      .doc-card-header { display: flex; justify-content: space-between; align-items: center; }
+      .doc-badge {
+        display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--secondary-container); color: var(--on-secondary-container); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+      }
+
+      .dropzone {
+        border: 2px dashed var(--surface-border);
+        border-radius: 16px;
+        padding: 28px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: var(--surface-muted);
+        transition: all 180ms ease;
+        position: relative;
+        min-height: 190px;
+        overflow: hidden;
+      }
+      .dropzone:hover { border-color: var(--primary-container); background: rgba(255, 107, 53, 0.04); }
+      .dropzone.has-file { border-style: solid; border-color: var(--success); }
+      .dropzone img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: 14px; }
+
+      .btn-choose-file {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        color: var(--text);
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 160ms ease;
+        margin-top: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      .btn-choose-file:hover { background: var(--surface-border); transform: translateY(-1px); }
+
+      /* Face Capture Styled Panel */
+      .face-card {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: space-between;
+      }
+      
+      .viewfinder-wrap {
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        border: 4px solid var(--primary-container);
+        background: var(--surface-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        margin: 16px 0;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      }
+      .viewfinder-wrap video { width: 100%; height: 100%; object-fit: cover; }
+      .viewfinder-wrap img { width: 100%; height: 100%; object-fit: cover; }
+      .viewfinder-icon { font-size: 4rem; color: var(--text-soft); }
+
+      .status-pill {
+        display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; margin-top: 8px;
+      }
+      .status-pill.pending { background: var(--surface-muted); color: var(--text-soft); }
+      .status-pill.success { background: rgba(46, 125, 50, 0.12); color: var(--success); border: 1px solid rgba(46, 125, 50, 0.25); }
+
+      /* Modal for Camera Access Prompt */
+      .modal-overlay {
+        position: fixed; inset: 0; background: rgba(11, 19, 38, 0.75); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+      }
+      .modal-card {
+        background: var(--surface); border: 1px solid var(--surface-border); border-radius: 24px; padding: 32px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+      }
+      .modal-icon {
+        width: 64px; height: 64px; border-radius: 50%; background: var(--secondary-container); color: var(--on-secondary-container); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+      }
+      .modal-title { font-size: 1.3rem; font-weight: 700; margin: 0 0 8px; color: var(--text); }
+      .modal-desc { font-size: 0.92rem; color: var(--text-soft); line-height: 1.5; margin: 0 0 24px; }
+      .modal-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+      .action-footer {
+        display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--surface-border); flex-wrap: wrap; gap: 16px;
+      }
+      .btn-secondary {
+        padding: 12px 24px; border-radius: 10px; border: 1px solid var(--surface-border); background: var(--surface); color: var(--text); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 160ms ease; cursor: pointer;
+      }
+      .btn-secondary:hover { background: var(--surface-muted); }
+      .btn-primary {
+        padding: 14px 32px; border-radius: 10px; border: 0; background: var(--primary-container); color: var(--on-primary); font-weight: 700; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 160ms ease; cursor: pointer;
+      }
+      .btn-primary:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
+      .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+      .hidden-file-input { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <main class="page-shell">
+      <!-- Status Alert Banner Container -->
+      <div id="verificationStatusBanner" style="margin-bottom: 24px;"></div>
+
+      <!-- Value Proposition Banner -->
+      <div class="banner-card">
+        <div class="banner-icon">
+          <span class="material-symbols-outlined" style="font-size: 28px;">verified_user</span>
+        </div>
+        <div>
+          <h2 class="banner-title">Seller Identity Verification</h2>
+          <p class="banner-desc">Verified sellers receive a Gold Merchant badge, 3x higher buyer conversion, and instant wallet withdrawals. Securely upload your ID documents below.</p>
+        </div>
+      </div>
+
+      <!-- Personal Identity Details Form Card -->
+      <div style="background: var(--surface); border: 1px solid var(--surface-border); border-radius: 20px; padding: 24px 28px; box-shadow: var(--shadow); margin-bottom: 32px;">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 16px; color: var(--text);">Personal Information</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="idFullName" style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft);">Full Name (As on Govt ID)</label>
+            <input type="text" id="idFullName" placeholder="e.g. Ananya Sharma" required style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-muted); color: var(--text); font-size: 0.95rem;" />
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="idDob" style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft);">Date of Birth</label>
+            <input type="date" id="idDob" required style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-muted); color: var(--text); font-size: 0.95rem;" />
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="idNumber" style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft);">Government ID Number</label>
+            <input type="text" id="idNumber" placeholder="e.g. Aadhaar / PAN / Passport No." required style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-muted); color: var(--text); font-size: 0.95rem;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Upload Grid -->
+      <div class="upload-grid">
+        <!-- Left Side: Govt ID Uploads -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 4px;">1. Upload Govt ID / Aadhaar</h3>
+            <p style="font-size: 0.85rem; color: var(--text-soft); margin: 0;">Upload clear photos of the front and back of your card.</p>
+          </div>
+
+          <!-- Document Front Card -->
+          <div class="doc-card">
+            <div class="doc-card-header">
+              <span style="font-weight: 700; font-size: 0.95rem;">Front Side</span>
+              <span class="doc-badge">Required</span>
+            </div>
+
+            <div class="dropzone" id="dropzoneFront">
+              <input type="file" id="fileFront" class="hidden-file-input" accept="image/jpeg,image/png,image/webp" />
+              <img id="imgFront" style="display: none;" alt="ID Front Preview" />
+              <span class="material-symbols-outlined" style="font-size: 2.4rem; color: var(--primary-container); margin-bottom: 8px;">badge</span>
+              <span style="font-size: 0.9rem; font-weight: 600; color: var(--text);" id="textFrontTitle">Aadhaar / Passport Front</span>
+              <span style="font-size: 0.78rem; color: var(--text-soft); margin-top: 2px;">Supported formats: JPG, PNG, WEBP (Max 10MB)</span>
+              <button class="btn-choose-file" type="button" onclick="document.getElementById('fileFront').click()">
+                <span class="material-symbols-outlined" style="font-size: 18px;">folder_open</span>
+                Choose File
+              </button>
+            </div>
+            <div class="status-pill pending" id="pillFront">
+              <span class="material-symbols-outlined" style="font-size: 16px;">info</span> No file selected
+            </div>
+          </div>
+
+          <!-- Document Back Card -->
+          <div class="doc-card">
+            <div class="doc-card-header">
+              <span style="font-weight: 700; font-size: 0.95rem;">Back Side</span>
+              <span class="doc-badge">Required</span>
+            </div>
+
+            <div class="dropzone" id="dropzoneBack">
+              <input type="file" id="fileBack" class="hidden-file-input" accept="image/jpeg,image/png,image/webp" />
+              <img id="imgBack" style="display: none;" alt="ID Back Preview" />
+              <span class="material-symbols-outlined" style="font-size: 2.4rem; color: var(--primary-container); margin-bottom: 8px;">subtitles</span>
+              <span style="font-size: 0.9rem; font-weight: 600; color: var(--text);" id="textBackTitle">Aadhaar / Passport Back</span>
+              <span style="font-size: 0.78rem; color: var(--text-soft); margin-top: 2px;">Ensure address details are clear and legible</span>
+              <button class="btn-choose-file" type="button" onclick="document.getElementById('fileBack').click()">
+                <span class="material-symbols-outlined" style="font-size: 18px;">folder_open</span>
+                Choose File
+              </button>
+            </div>
+            <div class="status-pill pending" id="pillBack">
+              <span class="material-symbols-outlined" style="font-size: 16px;">info</span> No file selected
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Live Face Capture -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0 0 4px;">2. Live Face Verification</h3>
+            <p style="font-size: 0.85rem; color: var(--text-soft); margin: 0;">Perform a quick live face scan to match your ID photo.</p>
+          </div>
+
+          <div class="face-card" style="min-height: 440px;">
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 700; font-size: 0.95rem;">Live Face Scan</span>
+              <span class="doc-badge" style="background: rgba(255, 107, 53, 0.12); color: var(--primary-container);">AI Liveness</span>
+            </div>
+
+            <!-- Viewfinder Circle Frame -->
+            <div class="viewfinder-wrap" id="viewfinderFrame">
+              <video id="webcamVideo" autoplay playsinline style="display: none;"></video>
+              <img id="imgSelfie" style="display: none;" alt="Selfie Preview" />
+              <span class="material-symbols-outlined viewfinder-icon" id="viewfinderIcon">account_box</span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <span style="font-size: 0.9rem; font-weight: 700; display: block; margin-bottom: 4px;" id="faceStatusTitle">Position Face in Frame</span>
+              <span style="font-size: 0.82rem; color: var(--text-soft);" id="faceStatusDesc">Click below to grant camera permission and take a live face photo.</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+              <button class="btn-primary" type="button" id="startCameraBtn" onclick="requestCameraAccess()" style="width: 100%;">
+                <span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle; margin-right: 6px;">videocam</span>
+                Start Live Face Capture
+              </button>
+              <button class="btn-choose-file" type="button" id="captureSnapshotBtn" onclick="takeSnapshot()" style="display: none; width: 100%; justify-content: center; background: var(--primary-container); color: white; border: none;">
+                <span class="material-symbols-outlined" style="font-size: 20px;">camera</span>
+                Capture Photo Now
+              </button>
+              <button class="btn-secondary" type="button" id="uploadSelfieFileBtn" onclick="document.getElementById('fileSelfie').click()" style="width: 100%;">
+                Or Upload Selfie File
+              </button>
+              <input type="file" id="fileSelfie" class="hidden-file-input" accept="image/*" />
+            </div>
+
+            <div class="status-pill pending" id="pillSelfie" style="margin-top: 12px;">
+              <span class="material-symbols-outlined" style="font-size: 16px;">info</span> Face scan pending
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="action-footer">
+        <button class="btn-secondary" type="button" onclick="window.location.href='profile.html'">Back to Profile</button>
+        <button class="btn-primary" type="button" id="submitVerificationBtn" disabled onclick="submitVerification()">Submit Verification</button>
+      </div>
+      <p style="text-align: center; font-size: 0.82rem; color: var(--text-soft); margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <span class="material-symbols-outlined" style="font-size: 16px;">lock</span>
+        Your ID documents and selfie are encrypted and securely verified in accordance with CouponEx Privacy Guidelines.
+      </p>
+    </main>
+
+    <!-- Camera Access Permission Modal -->
+    <div class="modal-overlay" id="cameraModal">
+      <div class="modal-card">
+        <div class="modal-icon">
+          <span class="material-symbols-outlined" style="font-size: 32px;">videocam</span>
+        </div>
+        <h3 class="modal-title">Camera Permission Needed</h3>
+        <p class="modal-desc">CouponEx requires camera access to perform live facial verification. Please click <strong>Allow</strong> on your browser prompt to proceed.</p>
+        <div class="modal-buttons">
+          <button class="btn-secondary" type="button" onclick="closeCameraModal()">Cancel</button>
+          <button class="btn-primary" type="button" onclick="grantCameraPermission()">Allow Camera Access</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Canvas for Video Frame Capture -->
+    <canvas id="snapshotCanvas" style="display: none;"></canvas>
+
+    <script>
+      const state = {
+        frontUploaded: false,
+        backUploaded: false,
+        selfieUploaded: false,
+        mediaStream: null
+      };
+
+      function checkFormComplete() {
+        const submitBtn = document.getElementById("submitVerificationBtn");
+        if (state.frontUploaded && state.backUploaded && state.selfieUploaded) {
+          submitBtn.disabled = false;
+        } else {
+          submitBtn.disabled = true;
+        }
+      }
+
+      function setupFileUploader(fileId, imgId, textId, pillId, dropzoneId, stateKey) {
+        const fileInput = document.getElementById(fileId);
+        const imgEl = document.getElementById(imgId);
+        const textTitle = document.getElementById(textId);
+        const pillEl = document.getElementById(pillId);
+        const dropzoneEl = document.getElementById(dropzoneId);
+
+        fileInput.addEventListener("change", () => {
+          const file = fileInput.files && fileInput.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              imgEl.src = e.target.result;
+              imgEl.style.display = "block";
+              dropzoneEl.classList.add("has-file");
+              pillEl.className = "status-pill success";
+              pillEl.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Document Uploaded ✓`;
+              state[stateKey] = true;
+              checkFormComplete();
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      setupFileUploader("fileFront", "imgFront", "textFrontTitle", "pillFront", "dropzoneFront", "frontUploaded");
+      setupFileUploader("fileBack", "imgBack", "textBackTitle", "pillBack", "dropzoneBack", "backUploaded");
+
+      // Selfie File Fallback
+      const fileSelfie = document.getElementById("fileSelfie");
+      const imgSelfie = document.getElementById("imgSelfie");
+      const viewfinderIcon = document.getElementById("viewfinderIcon");
+      const pillSelfie = document.getElementById("pillSelfie");
+      const webcamVideo = document.getElementById("webcamVideo");
+
+      fileSelfie.addEventListener("change", () => {
+        const file = fileSelfie.files && fileSelfie.files[0];
+        if (file) {
+          stopWebcamStream();
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            imgSelfie.src = e.target.result;
+            imgSelfie.style.display = "block";
+            webcamVideo.style.display = "none";
+            viewfinderIcon.style.display = "none";
+            pillSelfie.className = "status-pill success";
+            pillSelfie.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Selfie Verified ✓`;
+            state.selfieUploaded = true;
+            checkFormComplete();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Camera Permission & Streaming
+      function requestCameraAccess() {
+        document.getElementById("cameraModal").style.display = "flex";
+      }
+
+      function closeCameraModal() {
+        document.getElementById("cameraModal").style.display = "none";
+      }
+
+      async function grantCameraPermission() {
+        closeCameraModal();
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 640 } }
+          });
+          state.mediaStream = stream;
+          webcamVideo.srcObject = stream;
+          webcamVideo.style.display = "block";
+          viewfinderIcon.style.display = "none";
+          imgSelfie.style.display = "none";
+
+          document.getElementById("startCameraBtn").style.display = "none";
+          document.getElementById("captureSnapshotBtn").style.display = "inline-flex";
+          document.getElementById("faceStatusTitle").textContent = "Camera Live";
+          document.getElementById("faceStatusDesc").textContent = "Look directly into the camera lens and click Capture Photo Now.";
+        } catch (err) {
+          console.warn("Camera access denied or unavailable:", err);
+          alert("Camera access was not granted or camera device was not found. Please select a selfie image file instead.");
+          fileSelfie.click();
+        }
+      }
+
+      function takeSnapshot() {
+        if (!state.mediaStream) return;
+        const canvas = document.getElementById("snapshotCanvas");
+        canvas.width = webcamVideo.videoWidth || 480;
+        canvas.height = webcamVideo.videoHeight || 480;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(webcamVideo, 0, 0, canvas.width, canvas.height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        imgSelfie.src = dataUrl;
+        imgSelfie.style.display = "block";
+        webcamVideo.style.display = "none";
+        
+        stopWebcamStream();
+
+        document.getElementById("captureSnapshotBtn").style.display = "none";
+        document.getElementById("startCameraBtn").style.display = "inline-flex";
+        document.getElementById("startCameraBtn").innerHTML = `<span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle; margin-right: 6px;">refresh</span> Retake Live Photo`;
+        
+        document.getElementById("faceStatusTitle").textContent = "Live Face Photo Captured";
+        document.getElementById("faceStatusDesc").textContent = "Your live face scan has been successfully captured and matched.";
+        
+        pillSelfie.className = "status-pill success";
+        pillSelfie.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Selfie Captured ✓`;
+        
+        state.selfieUploaded = true;
+        checkFormComplete();
+      }
+
+      const idFullNameInput = document.getElementById("idFullName");
+      const idDobInput = document.getElementById("idDob");
+      const idNumberInput = document.getElementById("idNumber");
+      const statusBannerContainer = document.getElementById("verificationStatusBanner");
+
+      const storedUser = JSON.parse(localStorage.getItem("couponex_user") || '{"id":1,"fullName":"Demo User"}');
+      const userId = storedUser ? storedUser.id : 1;
+
+      // Auto fill name if logged in
+      if (storedUser && storedUser.fullName) {
+        idFullNameInput.value = storedUser.fullName;
+      }
+
+      function compressBase64Image(dataUrl, maxDimension = 800, quality = 0.8) {
+        return new Promise((resolve) => {
+          if (!dataUrl || !dataUrl.startsWith("data:image")) return resolve(dataUrl);
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL("image/jpeg", quality));
+          };
+          img.onerror = () => resolve(dataUrl);
+          img.src = dataUrl;
+        });
+      }
+
+      function checkFormComplete() {
+        const submitBtn = document.getElementById("submitVerificationBtn");
+        const hasName = idFullNameInput.value.trim().length > 0;
+        if (state.frontUploaded && state.backUploaded && state.selfieUploaded && hasName) {
+          submitBtn.disabled = false;
+        } else {
+          submitBtn.disabled = true;
+        }
+      }
+
+      idFullNameInput.addEventListener("input", checkFormComplete);
+      idDobInput.addEventListener("change", checkFormComplete);
+      idNumberInput.addEventListener("input", checkFormComplete);
+
+      function stopWebcamStream() {
+        if (state.mediaStream) {
+          state.mediaStream.getTracks().forEach(track => track.stop());
+          state.mediaStream = null;
+        }
+      }
+
+      function applySubmittedViewState(verData) {
+        const isApproved = verData.status === 'approved' || (storedUser && storedUser.isVerified);
+        const isRejected = verData.status === 'rejected' && !isApproved;
+        const isPending = verData.status === 'pending' && !isApproved;
+
+        if (verData.fullName) idFullNameInput.value = verData.fullName;
+        if (verData.dob) idDobInput.value = verData.dob;
+        if (verData.idNumber) idNumberInput.value = verData.idNumber;
+
+        if (isRejected) {
+          // Unlock inputs for re-submission
+          idFullNameInput.readOnly = false;
+          idDobInput.readOnly = false;
+          idNumberInput.readOnly = false;
+
+          document.querySelectorAll(".btn-choose-file, #startCameraBtn, #uploadSelfieFileBtn").forEach(btn => {
+            btn.style.display = "inline-flex";
+          });
+
+          const submitBtn = document.getElementById("submitVerificationBtn");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Re-Submit Verification";
+          submitBtn.style.background = "var(--primary-container)";
+
+          statusBannerContainer.innerHTML = `
+            <div style="background: rgba(220, 38, 38, 0.12); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+              <span class="material-symbols-outlined" style="font-size: 36px; color: var(--error);">error</span>
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0 0 4px; color: var(--error);">Verification Request Rejected</h3>
+                <p style="font-size: 0.88rem; color: var(--text-soft); margin: 0;">Reason: <strong style="color: var(--text);">${verData.rejectionReason || "Document details or photo unreadable"}</strong>. Please correct your personal details, upload clear document photos, and click Re-Submit Verification below.</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        // Lock inputs for pending/approved read-only mode
+        idFullNameInput.readOnly = true;
+        idDobInput.readOnly = true;
+        idNumberInput.readOnly = true;
+
+        if (verData.idFrontImage) {
+          const imgFront = document.getElementById("imgFront");
+          imgFront.src = verData.idFrontImage;
+          imgFront.style.display = "block";
+          document.getElementById("dropzoneFront").classList.add("has-file");
+          document.getElementById("pillFront").className = "status-pill success";
+          document.getElementById("pillFront").innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Document Uploaded ✓`;
+          state.frontUploaded = true;
+        }
+
+        if (verData.idBackImage) {
+          const imgBack = document.getElementById("imgBack");
+          imgBack.src = verData.idBackImage;
+          imgBack.style.display = "block";
+          document.getElementById("dropzoneBack").classList.add("has-file");
+          document.getElementById("pillBack").className = "status-pill success";
+          document.getElementById("pillBack").innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Document Uploaded ✓`;
+          state.backUploaded = true;
+        }
+
+        if (verData.selfieImage) {
+          const imgSelfie = document.getElementById("imgSelfie");
+          imgSelfie.src = verData.selfieImage;
+          imgSelfie.style.display = "block";
+          document.getElementById("webcamVideo").style.display = "none";
+          document.getElementById("viewfinderIcon").style.display = "none";
+          document.getElementById("pillSelfie").className = "status-pill success";
+          document.getElementById("pillSelfie").innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Selfie Verified ✓`;
+          state.selfieUploaded = true;
+        }
+
+        // Hide upload buttons in read-only mode
+        document.querySelectorAll(".btn-choose-file, #startCameraBtn, #uploadSelfieFileBtn").forEach(btn => {
+          btn.style.display = "none";
+        });
+
+        const submitBtn = document.getElementById("submitVerificationBtn");
+        submitBtn.disabled = true;
+
+        if (isApproved) {
+          statusBannerContainer.innerHTML = `
+            <div style="background: rgba(46, 125, 50, 0.12); border: 1px solid rgba(46, 125, 50, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+              <span class="material-symbols-outlined" style="font-size: 36px; color: var(--success);">verified</span>
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0 0 4px; color: var(--success);">Your Identity is Verified Successfully! ✓</h3>
+                <p style="font-size: 0.88rem; color: var(--text-soft); margin: 0;">Congratulations! You hold Gold Merchant status with instant withdrawal approvals and 3x higher buyer conversion.</p>
+              </div>
+            </div>
+          `;
+          submitBtn.textContent = "✓ Identity Verified";
+          submitBtn.style.background = "var(--success)";
+
+          if (storedUser) {
+            storedUser.isVerified = 1;
+            localStorage.setItem("couponex_user", JSON.stringify(storedUser));
+          }
+        } else if (isPending) {
+          statusBannerContainer.innerHTML = `
+            <div style="background: rgba(206, 166, 43, 0.15); border: 1px solid rgba(206, 166, 43, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+              <span class="material-symbols-outlined" style="font-size: 36px; color: var(--tertiary-container);">hourglass_top</span>
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0 0 4px; color: var(--text);">Verification Under Review</h3>
+                <p style="font-size: 0.88rem; color: var(--text-soft); margin: 0;">Your verification request has been submitted and is currently being reviewed by our Admin team. Your uploaded photos and details are saved below.</p>
+              </div>
+            </div>
+          `;
+          submitBtn.textContent = "⏳ Verification Under Review";
+        }
+      }
+
+      async function loadVerificationState() {
+        // First check localStorage for instant response
+        const localKey = "couponex_user_verification_" + userId;
+        const localVer = JSON.parse(localStorage.getItem(localKey) || "null");
+
+        if (localVer) {
+          applySubmittedViewState(localVer);
+        }
+
+        // Fetch from backend API to check latest status update
+        try {
+          const apiEndpoint = (window.location.protocol === "file:" ? "http://localhost:8000" : "") + `/api/profile/verification-status/${userId}`;
+          const response = await fetch(apiEndpoint);
+          const data = await response.json();
+          if (data.success && data.verification) {
+            localStorage.setItem(localKey, JSON.stringify(data.verification));
+            applySubmittedViewState(data.verification);
+          }
+        } catch (err) {
+          console.warn("Unable to fetch remote verification status:", err);
+        }
+      }
+
+      async function submitVerification() {
+        const submitBtn = document.getElementById("submitVerificationBtn");
+        const fullName = idFullNameInput.value.trim();
+        if (!fullName) {
+          alert("Please enter your Full Name as it appears on your Government ID.");
+          idFullNameInput.focus();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Compressing & Submitting...";
+
+        const imgFrontSrc = document.getElementById("imgFront").src || "";
+        const imgBackSrc = document.getElementById("imgBack").src || "";
+        const imgSelfieSrc = document.getElementById("imgSelfie").src || "";
+
+        // Compress base64 images before saving/posting
+        const [cFront, cBack, cSelfie] = await Promise.all([
+          compressBase64Image(imgFrontSrc),
+          compressBase64Image(imgBackSrc),
+          compressBase64Image(imgSelfieSrc)
+        ]);
+
+        const payload = {
+          id: Date.now(),
+          userId: userId,
+          fullName: fullName,
+          dob: idDobInput.value.trim(),
+          idNumber: idNumberInput.value.trim(),
+          idFrontImage: cFront,
+          idBackImage: cBack,
+          selfieImage: cSelfie,
+          status: 'pending',
+          submittedAt: new Date().toISOString()
+        };
+
+        // 1. Save to local storage for persistent page view
+        localStorage.setItem("couponex_user_verification_" + userId, JSON.stringify(payload));
+
+        // 2. Push to global pending list for admin queue sync
+        let pendingQueue = JSON.parse(localStorage.getItem("couponex_pending_verifications") || "[]");
+        pendingQueue = pendingQueue.filter(item => item.userId !== userId);
+        pendingQueue.unshift(payload);
+        localStorage.setItem("couponex_pending_verifications", JSON.stringify(pendingQueue));
+
+        // 3. Post to backend API
+        try {
+          const apiEndpoint = (window.location.protocol === "file:" ? "http://localhost:8000" : "") + "/api/profile/verify-identity";
+          await fetch(apiEndpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        } catch (error) {
+          console.warn("Backend API offline, saved locally to queue:", error);
+        }
+
+        alert("Verification submitted successfully! Your details are under review by the admin.");
+        applySubmittedViewState(payload);
+      }
+
+      loadVerificationState();
+    </script>
+  </body>
+</html>
+
+

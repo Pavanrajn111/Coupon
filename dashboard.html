@@ -1,0 +1,1944 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | CouponEx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="header.js"></script>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem("couponex-theme");
+        const theme =
+          savedTheme ||
+          (window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
+        document.documentElement.classList.toggle(
+          "theme-dark",
+          theme === "dark",
+        );
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #fcf9f2;
+        --surface: #ffffff;
+        --surface-soft: #f6f3ec;
+        --surface-muted: #f0eee7;
+        --surface-border: #e5e2db;
+        --surface-container: #f0eee7;
+        --surface-container-low: #f6f3ec;
+        --surface-container-high: #ebe8e1;
+        --surface-container-highest: #e5e2db;
+        --surface-container-lowest: #ffffff;
+        --outline: #8d7168;
+        --outline-variant: #e1bfb5;
+        --text: #1c1c18;
+        --text-soft: #4f5e80;
+        --text-muted: #7b675a;
+        --text-variant: #594139;
+        --primary: #ff6b35;
+        --primary-dark: #ab3500;
+        --navy: #0a1b39;
+        --navy-soft: #374667;
+        --success: #cea62b;
+        --error-bg: #ffdad6;
+        --error-text: #93000a;
+        --shadow-soft: 0 10px 24px rgba(28, 28, 24, 0.06);
+        --shadow-hover: 0 18px 40px rgba(28, 28, 24, 0.1);
+        --on-primary: #ffffff;
+        --on-secondary: #ffffff;
+        --secondary: #4f5e80;
+        --tertiary: #755b00;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #ffffff;
+        --on-secondary-fixed: #0a1b39;
+        --primary-fixed: #ffdbd0;
+        --on-primary-fixed-variant: #832600;
+        --on-surface-variant: #594139;
+        --on-background: #1c1c18;
+        --card-bg: #ffffff;
+        --card-border: #e5e2db;
+        --input-bg: #ffffff;
+        --badge-bg: rgba(255, 255, 255, 0.8);
+      }
+
+      html.theme-dark {
+        --bg: #0b1326;
+        --surface: rgba(23, 31, 51, 0.78);
+        --surface-soft: rgba(13, 24, 45, 0.7);
+        --surface-muted: rgba(34, 42, 61, 0.88);
+        --surface-border: rgba(192, 193, 255, 0.18);
+        --surface-container: rgba(23, 31, 51, 0.78);
+        --surface-container-low: rgba(19, 27, 46, 0.7);
+        --surface-container-high: rgba(34, 42, 61, 0.88);
+        --surface-container-highest: rgba(45, 52, 73, 0.9);
+        --surface-container-lowest: rgba(6, 14, 32, 0.9);
+        --outline: #8d7168;
+        --outline-variant: rgba(70, 69, 84, 0.8);
+        --text: #dae2fd;
+        --text-soft: #c7c4d7;
+        --text-muted: #98a2bd;
+        --text-variant: #c7c4d7;
+        --primary: #c0c1ff;
+        --primary-dark: #8083ff;
+        --navy: #c0c1ff;
+        --navy-soft: #8083ff;
+        --success: #4ae176;
+        --error-bg: rgba(255, 180, 171, 0.2);
+        --error-text: #ffb4ab;
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.38);
+        --shadow-hover: 0 32px 100px rgba(0, 0, 0, 0.5);
+        --on-primary: #0d0096;
+        --on-secondary: #ffffff;
+        --secondary: #4ae176;
+        --tertiary: #ffb95f;
+        --tertiary-container: #cea62b;
+        --on-tertiary: #4f3d00;
+        --on-secondary-fixed: #dae2fd;
+        --primary-fixed: rgba(192, 193, 255, 0.2);
+        --on-primary-fixed-variant: #c0c1ff;
+        --on-surface-variant: #c7c4d7;
+        --on-background: #dae2fd;
+        --card-bg: rgba(23, 31, 51, 0.78);
+        --card-border: rgba(192, 193, 255, 0.18);
+        --input-bg: rgba(23, 31, 51, 0.78);
+        --badge-bg: rgba(11, 19, 38, 0.8);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      *::selection {
+        background: rgba(171, 53, 0, 0.16);
+        color: var(--navy);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Geist,
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      a,
+      button {
+        color: inherit;
+      }
+      a {
+        text-decoration: none;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+      }
+      input::placeholder {
+        color: var(--text-soft);
+        opacity: 1;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .shell {
+        width: min(1200px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      .page {
+        padding: 20px 0 110px;
+      }
+      .stack {
+        display: grid;
+        gap: 28px;
+      }
+
+      /* === NEW DASHBOARD CONTENT STYLES === */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .search-section-new {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background: var(--surface-container-low);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid var(--surface-border);
+      }
+      .search-wrap-new {
+        position: relative;
+      }
+      .search-wrap-new .material-symbols-outlined {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--outline);
+      }
+      .search-input-new {
+        width: 100%;
+        padding: 14px 16px 14px 48px;
+        background: var(--input-bg);
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 1rem;
+        outline: none;
+      }
+      .search-input-new:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(var(--primary), 0.1);
+      }
+      .filters-row-new {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      @media (min-width: 1024px) {
+        .filters-row-new {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+      .chips-scroll-new {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 0;
+      }
+      .chip-new {
+        white-space: nowrap;
+        padding: 8px 20px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid var(--surface-border);
+        background: var(--card-bg);
+        color: var(--text-variant);
+        cursor: pointer;
+        transition: all 180ms ease;
+      }
+      .chip-new:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      .chip-new.active {
+        background: var(--primary);
+        color: var(--on-primary);
+        border-color: var(--primary);
+      }
+      .verified-toggle-new {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 8px;
+      }
+      .verified-toggle-new span {
+        font-size: 0.9rem;
+        color: var(--text-variant);
+        font-weight: 500;
+      }
+      .toggle-switch {
+        position: relative;
+        display: inline-flex;
+        cursor: pointer;
+      }
+      .toggle-switch input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .toggle-track-new {
+        width: 44px;
+        height: 24px;
+        border-radius: 999px;
+        background: var(--surface-container-highest);
+        transition: background 180ms ease;
+      }
+      .toggle-track-new::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid var(--surface-border);
+        transition: transform 180ms ease;
+      }
+      .toggle-switch input:checked + .toggle-track-new {
+        background: var(--primary);
+      }
+      .toggle-switch input:checked + .toggle-track-new::after {
+        transform: translateX(20px);
+      }
+
+      .brands-row-new {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--surface-border);
+        margin-top: 4px;
+        overflow-x: auto;
+      }
+      .brands-label-new {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--outline);
+        flex-shrink: 0;
+      }
+      .brand-item {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-variant);
+        cursor: pointer;
+        transition: color 180ms ease;
+        white-space: nowrap;
+      }
+      .brand-item:hover {
+        color: var(--primary);
+      }
+      .brand-dot-new {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--outline-variant);
+        flex-shrink: 0;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .section-title-new {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .section-title-new .material-symbols-outlined {
+        color: var(--primary);
+      }
+      .see-more {
+        color: var(--primary);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .see-more:hover {
+        text-decoration: underline;
+      }
+
+      /* Featured Deal Card */
+      .featured-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--card-border);
+        display: flex;
+        flex-direction: column;
+        transition: box-shadow 300ms ease;
+      }
+      @media (min-width: 768px) {
+        .featured-card {
+          flex-direction: row;
+        }
+      }
+      .featured-card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+      .featured-image-wrap {
+        position: relative;
+        overflow: hidden;
+        min-height: 200px;
+        background: linear-gradient(
+          135deg,
+          var(--surface-muted) 0%,
+          var(--surface-border) 100%
+        );
+      }
+      @media (min-width: 768px) {
+        .featured-image-wrap {
+          width: 50%;
+        }
+      }
+      .featured-image-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: var(--primary);
+        opacity: 0.3;
+      }
+      .featured-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 10;
+        background: var(--badge-bg);
+        backdrop-filter: blur(8px);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--primary);
+        border: 1px solid rgba(var(--primary), 0.2);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .featured-content {
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      @media (min-width: 768px) {
+        .featured-content {
+          width: 50%;
+        }
+      }
+      .featured-category {
+        color: var(--primary);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .featured-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.2;
+      }
+      .featured-desc {
+        color: var(--text-variant);
+        margin-bottom: 24px;
+        font-size: 1rem;
+      }
+      .featured-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 24px;
+        border-top: 1px solid var(--surface-border);
+      }
+      .featured-seller {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .seller-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--surface-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: var(--text);
+      }
+      .seller-name {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      .buy-btn {
+        background: var(--primary);
+        color: var(--on-primary);
+        font-weight: 700;
+        padding: 12px 40px;
+        border-radius: 12px;
+        transition: all 180ms ease;
+      }
+      .buy-btn:hover {
+        filter: brightness(1.1);
+        transform: scale(0.98);
+      }
+
+      /* Trending Grid */
+      .trending-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      @media (min-width: 768px) {
+        .trending-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 1024px) {
+        .trending-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .trend-card-new {
+        background: var(--card-bg);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--card-border);
+        display: flex;
+        flex-direction: column;
+        transition: box-shadow 300ms ease;
+      }
+      .trend-card-new:hover {
+        box-shadow: var(--shadow-hover);
+      }
+      .trend-image-wrap {
+        position: relative;
+        aspect-ratio: 16/8;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          var(--surface-muted) 0%,
+          var(--surface-border) 100%
+        );
+      }
+      .trend-image-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: var(--primary);
+        opacity: 0.25;
+      }
+      .trend-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        background: var(--badge-bg);
+        backdrop-filter: blur(8px);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--primary);
+        border: 1px solid rgba(var(--primary), 0.1);
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .trend-content {
+        padding: 24px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .trend-category {
+        color: var(--primary);
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .trend-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .trend-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+      }
+      .trend-seller {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .trend-seller-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--surface-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.7rem;
+      }
+      .trend-seller-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .trend-buy-btn {
+        background: var(--secondary);
+        color: var(--on-secondary);
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: all 180ms ease;
+      }
+      .trend-buy-btn:hover {
+        filter: brightness(1.1);
+      }
+
+      /* More Coupons Grid */
+      .more-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      @media (min-width: 640px) {
+        .more-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 768px) {
+        .more-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (min-width: 1024px) {
+        .more-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .more-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--card-border);
+        display: flex;
+        flex-direction: column;
+        height: 360px;
+        transition: box-shadow 300ms ease;
+      }
+      .more-card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+      .more-image-wrap {
+        position: relative;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(
+          135deg,
+          var(--surface-muted) 0%,
+          var(--surface-border) 100%
+        );
+      }
+      .more-image-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: var(--primary);
+        opacity: 0.2;
+      }
+      .more-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        background: var(--badge-bg);
+        backdrop-filter: blur(8px);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        color: var(--primary);
+        border: 1px solid rgba(var(--primary), 0.1);
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .more-content {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .more-category {
+        color: var(--primary);
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .more-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .more-desc {
+        color: var(--text-variant);
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .more-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .more-seller {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .more-seller-avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--surface-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.6rem;
+      }
+      .more-seller-name {
+        font-weight: 600;
+        font-size: 0.75rem;
+      }
+      .more-buy-btn {
+        background: var(--secondary);
+        color: var(--on-secondary);
+        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        transition: all 180ms ease;
+      }
+      .more-buy-btn:hover {
+        filter: brightness(1.1);
+      }
+
+      .load-more-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 32px;
+      }
+      .user-coupon-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--card-border);
+        display: flex;
+        flex-direction: column;
+        height: 360px;
+        transition: box-shadow 300ms ease;
+      }
+      .user-coupon-card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+      .user-coupon-image-wrap {
+        position: relative;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(
+          135deg,
+          var(--surface-muted) 0%,
+          var(--surface-border) 100%
+        );
+      }
+      .user-coupon-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .user-coupon-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        background: var(--badge-bg);
+        backdrop-filter: blur(8px);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        color: var(--primary);
+        border: 1px solid rgba(var(--primary), 0.1);
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .user-coupon-content {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .user-coupon-category {
+        color: var(--primary);
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .user-coupon-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .user-coupon-desc {
+        color: var(--text-variant);
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .user-coupon-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .user-coupon-seller {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .user-coupon-seller-avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--surface-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.6rem;
+      }
+      .user-coupon-seller-name {
+        font-weight: 600;
+        font-size: 0.75rem;
+      }
+      .user-coupon-buy-btn {
+        background: var(--secondary);
+        color: var(--on-secondary);
+        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        transition: all 180ms ease;
+      }
+      .user-coupon-buy-btn:hover {
+        filter: brightness(1.1);
+      }
+      .user-coupons-section {
+        margin-top: 32px;
+      }
+      .user-coupons-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      @media (min-width: 640px) {
+        .user-coupons-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 768px) {
+        .user-coupons-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (min-width: 1024px) {
+        .user-coupons-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .load-more-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 32px;
+        border-radius: 999px;
+        border: 1px solid var(--outline);
+        color: var(--text-variant);
+        font-weight: 700;
+        transition: all 180ms ease;
+      }
+      .load-more-btn:hover {
+        background: var(--surface-container-high);
+      }
+
+      /* Footer */
+      .dash-footer {
+        background: var(--surface-container);
+        border-top: 1px solid var(--surface-border);
+        padding: 32px 0;
+        margin-top: 32px;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      @media (min-width: 768px) {
+        .footer-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .footer-brand .material-symbols-outlined {
+        color: var(--primary);
+        font-size: 1.5rem;
+      }
+      .footer-brand h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      .footer-desc {
+        color: var(--text-variant);
+        font-size: 0.9rem;
+      }
+      .footer-col h3 {
+        font-weight: 700;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        color: var(--outline);
+      }
+      .footer-col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .footer-col ul li a {
+        color: var(--text-variant);
+        font-size: 0.9rem;
+        transition: color 180ms ease;
+      }
+      .footer-col ul li a:hover {
+        color: var(--primary);
+      }
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 40px auto 0;
+        padding-top: 24px;
+        border-top: 1px solid var(--surface-border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        font-size: 0.75rem;
+        color: var(--outline);
+      }
+      @media (min-width: 768px) {
+        .footer-bottom {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+      .footer-social {
+        display: flex;
+        gap: 16px;
+      }
+      .footer-social a {
+        color: var(--outline);
+        transition: color 180ms ease;
+      }
+      .footer-social a:hover {
+        color: var(--primary);
+      }
+
+      /* View toggle buttons */
+      .view-toggle {
+        display: flex;
+        gap: 4px;
+      }
+      .view-btn {
+        padding: 6px;
+        border-radius: 8px;
+        border: 1px solid var(--surface-border);
+        color: var(--text-variant);
+        transition: all 180ms ease;
+      }
+      .view-btn:hover {
+        background: var(--surface-container-high);
+      }
+      .view-btn.active {
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      /* Bottom Nav */
+      .bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        align-items: center;
+        justify-content: space-around;
+        height: 72px;
+        padding: 0 10px;
+        background: var(--navy);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        z-index: 50;
+      }
+      .bottom-link {
+        display: grid;
+        justify-items: center;
+        gap: 4px;
+        min-width: 56px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition:
+          color 180ms ease,
+          transform 180ms ease;
+      }
+      .bottom-link:hover,
+      .bottom-link:focus-visible {
+        color: #ffffff;
+        transform: translateY(-1px);
+        outline: none;
+      }
+      .bottom-link.active {
+        color: var(--primary);
+      }
+
+      @media (max-width: 768px) {
+        .shell {
+          width: min(100% - 20px, 1200px);
+        }
+        .page {
+          padding-top: 16px;
+        }
+        .bottom-nav {
+          display: flex;
+        }
+      }
+      @media (max-width: 540px) {
+        .featured-content {
+          padding: 20px;
+        }
+        .featured-title {
+          font-size: 1.5rem;
+        }
+        .buy-btn {
+          width: 100%;
+          text-align: center;
+        }
+        .featured-footer {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <!-- Main Content (NEW DESIGN) -->
+    <main class="page">
+      <div class="shell stack">
+        <!-- Search & Filters Section -->
+        <section class="search-section-new">
+          <div class="search-wrap-new">
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >search</span
+            >
+            <input
+              class="search-input-new"
+              type="text"
+              placeholder="Search for brands, categories, or specific deals..."
+            />
+          </div>
+          <div class="filters-row-new">
+            <div class="chips-scroll-new no-scrollbar">
+              <button class="chip-new active" type="button">All Deals</button>
+              <button class="chip-new" type="button">Food & Dining</button>
+              <button class="chip-new" type="button">E-commerce</button>
+              <button class="chip-new" type="button">Travel</button>
+              <button class="chip-new" type="button">Fashion</button>
+              <button class="chip-new" type="button">Beauty</button>
+            </div>
+            <div class="verified-toggle-new">
+              <span>Verified Sellers Only</span>
+              <label class="toggle-switch" aria-label="Verified sellers only">
+                <input checked type="checkbox" />
+                <span class="toggle-track-new"></span>
+              </label>
+            </div>
+          </div>
+          <div class="brands-row-new no-scrollbar">
+            <span class="brands-label-new">Popular Brands</span>
+            <span class="brand-item">Swiggy</span>
+            <span class="brand-dot-new"></span>
+            <span class="brand-item">Zomato</span>
+            <span class="brand-dot-new"></span>
+            <span class="brand-item">Amazon</span>
+            <span class="brand-dot-new"></span>
+            <span class="brand-item">Flipkart</span>
+            <span class="brand-dot-new"></span>
+            <span class="brand-item">Myntra</span>
+          </div>
+        </section>
+
+        <!-- Featured Deal Section -->
+        <section>
+          <div class="section-header">
+            <h2 class="section-title-new">
+              <span class="material-symbols-outlined">auto_awesome</span>
+              Featured Deal
+            </h2>
+            <a class="see-more" href="search.html">See more</a>
+          </div>
+          <div
+            class="featured-card"
+            onclick="location.href = 'coupon-detail.html?seller=arjundeals'"
+            style="cursor: pointer"
+          >
+            <div class="featured-image-wrap">
+              <img
+                alt="50% OFF Swiggy Instamart"
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFkU22Nu2Znbhd7N9R37Mc81GGdvcExyQoiNUHQEYn1VaRvD6ygPtCZmRd656aMCTewOlbGb_DBtIPiiK5HLR2DC3wRgiIX0z2saHD_MxYxc1OhYJYmhiKDA5RItpbEMTYR9Dyq2HNSzPwz2a-b2em9GeAyYoNIuWgPVXYkf3cXzKfRfPYGLEdN7w3uUCnLp8-3X5bqW3JBRKVn0Jn_DdZk9IJvuR_AJK3sSG9-Fz4j5vt_GTXNlslorDuLGF1k-LK-clb2EjJAR0"
+                style="
+                  position: absolute;
+                  inset: 0;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                "
+              />
+              <span class="featured-badge">
+                <span
+                  class="material-symbols-outlined"
+                  style="
+                    font-size: 14px;
+                    font-variation-settings: &quot;FILL&quot; 1;
+                  "
+                  >verified</span
+                >
+                Verified
+              </span>
+            </div>
+            <div class="featured-content">
+              <div>
+                <span class="featured-category">Food & Dining</span>
+                <h3 class="featured-title">50% OFF Swiggy Instamart</h3>
+                <p class="featured-desc">
+                  Get massive discounts on your groceries. Instant delivery,
+                  minimum order value ₹500. Limited time offer from top-rated
+                  seller.
+                </p>
+              </div>
+              <div class="featured-footer">
+                <div class="featured-seller">
+                  <img
+                    alt="@ArjunDeals"
+                    class="seller-avatar"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"
+                    style="border-radius: 50%; object-fit: cover"
+                  />
+                  <span class="seller-name">@ArjunDeals</span>
+                </div>
+                <button
+                  class="buy-btn"
+                  type="button"
+                  onclick="
+                    event.stopPropagation();
+                    location.href = 'coupon-detail.html?seller=arjundeals';
+                  "
+                >
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Trending Now Section -->
+        <section>
+          <div class="section-header">
+            <h2 class="section-title-new">
+              <span class="material-symbols-outlined">trending_up</span>
+              Trending Now
+            </h2>
+          </div>
+          <div class="trending-grid">
+            <!-- Trending Card 1 -->
+            <div
+              class="trend-card-new"
+              onclick="location.href = 'coupon-detail.html?seller=dealmaster'"
+              style="cursor: pointer"
+            >
+              <div class="trend-image-wrap">
+                <img
+                  alt="30% OFF Zomato Pro"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi4tq0wBjapD3Tzr_caikCAV4wcEQz0d4rddnp_H1NFzOHwJKUMOpUrrgE7pUzWIXSpRWTN3y3E7hytRPZp4bvtl9mJG6CQjMJr4lt8S-9WNPg-YTf_wRjoI-yJJpERenF1qzcPj4No8GIJwIzqkkzXAhK36t120ktVBJL_aeiwGEGorxR3RmCdy6kpesBw_5mf6zw1x1lWPw5hU7M16b6aaxgxQsOuGLoq7c0dWLTtXHYV0acdesrfZoktuZlCbtZMKWaAFwlPHg"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+                <span class="trend-badge">
+                  <span
+                    class="material-symbols-outlined"
+                    style="
+                      font-size: 12px;
+                      font-variation-settings: &quot;FILL&quot; 1;
+                    "
+                    >verified</span
+                  >
+                  Verified
+                </span>
+              </div>
+              <div class="trend-content">
+                <div>
+                  <span class="trend-category">Food & Dining</span>
+                  <h4 class="trend-title">30% OFF Zomato Pro</h4>
+                </div>
+                <div class="trend-footer">
+                  <div class="trend-seller">
+                    <img
+                      alt="@DealMaster"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"
+                      style="
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="trend-seller-name">@DealMaster</span>
+                  </div>
+                  <button
+                    class="trend-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=dealmaster';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trending Card 2 -->
+            <div
+              class="trend-card-new"
+              onclick="location.href = 'coupon-detail.html?seller=priyasavings'"
+              style="cursor: pointer"
+            >
+              <div class="trend-image-wrap">
+                <img
+                  alt="₹50 CB Amazon Pay"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7veNecVIkHLD1a1SWYOgCHrpvgbZCHKKWjW6-l1TcA-csR7NGyTWWA5VBgeZoiDQpjwuEO4S88iqMtNSVzzFSJXDv4QMnGzXGO5UbiTKZKp6IhE5HWwu0pN1RyiQRi7HXoDamBMZOASCFnDyNzgFUAB7zUkvr97c_yWU1B2E2eS9q9TgPGgs2iu04JWCcnrPJKDioY0vcNT0P2LmNBNxa6p6iQ7RwuQqz_qFbI1qE4cqPydvbLnMvByy3OzcNxzjKsYJU_GbNK7o"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+                <span class="trend-badge">
+                  <span
+                    class="material-symbols-outlined"
+                    style="
+                      font-size: 12px;
+                      font-variation-settings: &quot;FILL&quot; 1;
+                    "
+                    >verified</span
+                  >
+                  Verified
+                </span>
+              </div>
+              <div class="trend-content">
+                <div>
+                  <span class="trend-category">E-commerce</span>
+                  <h4 class="trend-title">₹50 CB Amazon Pay</h4>
+                </div>
+                <div class="trend-footer">
+                  <div class="trend-seller">
+                    <img
+                      alt="@PriyaSavings"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"
+                      style="
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="trend-seller-name">@PriyaSavings</span>
+                  </div>
+                  <button
+                    class="trend-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=priyasavings';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trending Card 3 -->
+            <div
+              class="trend-card-new"
+              onclick="location.href = 'coupon-detail.html?seller=travelguru'"
+              style="cursor: pointer"
+            >
+              <div class="trend-image-wrap">
+                <img
+                  alt="₹1000 OFF MakeMyTrip"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvJzkzE1LJYn6G3MlNk1YEp_eD2BSUz1XhYOVeyLIBOfoPxk_cGCC9DgxlDqUixWsYE5L9DHRc67P6g_K6iz-M5kwN2WZW0kMSA0CCpt_Nwou3Aast3uMJuDqIzDxdA8t8WX-HqEHj3S4xZEHi7R3ptkDyr8dSzgCFAhVUYly9eWcfwRaoyjbF_PXk2Lz4iOBg35cRG17zy0uysHQ07EiTCCzntPux1qngPNPD-DCaPo_H8dB9CJEEtjBzkTB7Z_Kk_-Bfr9ZzN48"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+                <span class="trend-badge">
+                  <span
+                    class="material-symbols-outlined"
+                    style="
+                      font-size: 12px;
+                      font-variation-settings: &quot;FILL&quot; 1;
+                    "
+                    >verified</span
+                  >
+                  Verified
+                </span>
+              </div>
+              <div class="trend-content">
+                <div>
+                  <span class="trend-category">Travel</span>
+                  <h4 class="trend-title">₹1000 OFF MakeMyTrip</h4>
+                </div>
+                <div class="trend-footer">
+                  <div class="trend-seller">
+                    <img
+                      alt="@TravelGuru"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"
+                      style="
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="trend-seller-name">@TravelGuru</span>
+                  </div>
+                  <button
+                    class="trend-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=travelguru';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- More Coupons Section -->
+        <section>
+          <div class="section-header">
+            <h2 class="section-title-new">
+              <span class="material-symbols-outlined">apps</span> More Coupons
+            </h2>
+            <div class="view-toggle">
+              <button
+                class="view-btn active"
+                type="button"
+                aria-label="Grid view"
+              >
+                <span class="material-symbols-outlined">grid_view</span>
+              </button>
+              <button class="view-btn" type="button" aria-label="List view">
+                <span class="material-symbols-outlined">view_list</span>
+              </button>
+            </div>
+          </div>
+          <div class="more-grid">
+            <!-- More Item 1 -->
+            <div
+              class="more-card"
+              onclick="location.href = 'coupon-detail.html?seller=cityrider'"
+              style="cursor: pointer"
+            >
+              <div class="more-image-wrap">
+                <img
+                  alt="20% OFF Uber Ride"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNKwn7VMeKd_4GXAF6VVfnF3u-OtfrGYd5mLFlM6J_AzSy-BM_Q8LhAJG-S6Af6v8SZAHUafIneRwtM5zF0pUzpDIcM0PfM43jaReZwYFutOsOC-H68q_0e-VhmP8qluWVHuBpKBE9fReTQcVVc0vl5R5SYHIPsvbi2qcNyZkCeXEsETf1OALGykOictBp92d5x5v2SdQHqMw4RkHELJ2fmY9uCTIb4ZGMFJ_wKodweWwB4uEVkB0FPPPF4MX4fVLOE3NMyJrmMVc"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+                <span class="more-badge">
+                  <span
+                    class="material-symbols-outlined"
+                    style="
+                      font-size: 10px;
+                      font-variation-settings: &quot;FILL&quot; 1;
+                    "
+                    >verified</span
+                  >
+                  Verified
+                </span>
+              </div>
+              <div class="more-content">
+                <div>
+                  <span class="more-category">Travel</span>
+                  <h4 class="more-title">20% OFF Uber Ride</h4>
+                  <p class="more-desc">
+                    Save on your next commute. Valid on premium rides only.
+                  </p>
+                </div>
+                <div class="more-footer">
+                  <div class="more-seller">
+                    <img
+                      alt="@CityRider"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="more-seller-name">@CityRider</span>
+                  </div>
+                  <button
+                    class="more-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=cityrider';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- More Item 2 -->
+            <div
+              class="more-card"
+              onclick="location.href = 'coupon-detail.html?seller=flyhigh'"
+              style="cursor: pointer"
+            >
+              <div class="more-image-wrap">
+                <img
+                  alt="₹500 OFF Flights"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnLcB0UHDiVZtGEY_7RmAunhl5mDC-UUDTKVJtjV5XcaR_s6h36ARMT0H-7xlrSRuokPDYQT33zsIS49S15EjEPreAe-zpgEROJDx21X6Gdw10Y3LdioqSarcKLFmqs507hApBYF3dxoigkHxOMCNu5SlvyOOLhsSVBqLgLt5OScb8gc-ZqHPDcpOZxaj_Y6JCf_BmvLDaYVCSrHBue09ThYyLGcQBjsbUe5y0EwEtg9BjKTDL7Rl5dfC8EDjhftQcHgMwKyACJiA"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+                <span class="more-badge">
+                  <span
+                    class="material-symbols-outlined"
+                    style="
+                      font-size: 10px;
+                      font-variation-settings: &quot;FILL&quot; 1;
+                    "
+                    >verified</span
+                  >
+                  Verified
+                </span>
+              </div>
+              <div class="more-content">
+                <div>
+                  <span class="more-category">Travel</span>
+                  <h4 class="more-title">₹500 OFF Flights</h4>
+                  <p class="more-desc">
+                    Flat discount on domestic flight bookings via Indigo.
+                  </p>
+                </div>
+                <div class="more-footer">
+                  <div class="more-seller">
+                    <img
+                      alt="@FlyHigh"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="more-seller-name">@FlyHigh</span>
+                  </div>
+                  <button
+                    class="more-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=flyhigh';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- More Item 3 -->
+            <div
+              class="more-card"
+              onclick="location.href = 'coupon-detail.html?seller=freshdeals'"
+              style="cursor: pointer"
+            >
+              <div class="more-image-wrap">
+                <img
+                  alt="₹100 CB Blinkit"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcXZad7DMSWxtghLrmMNdhIWw3714sZID8yTwxVSUIaOlUSvP04-wH48zjlx3NfoveBUmRxNa--iLbDUe7SzGtAKGqKw6e2MqbF5BRU9gSlnlzPlKMDyebVGQqBYRW-5h8dDAQkisu5azP46eAI5HcZhWJT0fMes9WOLt02EAY4P8ETZzWNkg5mghUWvUSpbq-BhiaE3MgK2RMjeMcxqk_B9Jylov_iPx62aEfOB3kXfQmom1Qut_hPh-CVeAK-r9svCPOuuFgS2g"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+              </div>
+              <div class="more-content">
+                <div>
+                  <span class="more-category">Grocery</span>
+                  <h4 class="more-title">₹100 CB Blinkit</h4>
+                  <p class="more-desc">
+                    Cashback on your next grocery refill. Min order ₹750.
+                  </p>
+                </div>
+                <div class="more-footer">
+                  <div class="more-seller">
+                    <img
+                      alt="@FreshDeals"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEv6kEnB_oDYEvtXi2252u_iEfpYTjnfl0z7cg7ZlXEwiWsv5Baf8t0B3yEkJjJTejWj_anfMEzL38kl8eNiBvqtPwKuYWAFmR56lLeQ7yypFUqOiI-qk62nrs72pIGhf_4NH7abNQsGyaxhD5C1Uv7xE9EA0x4DuqznW7ojtdo9DOEPMynsGdOLEYCWK9i-4ZFs6rcGod2JFvMCz82T0NaC9rMI1YCHTEqLnyECsxTnSHIXlmyoGHOWwX7XB6K9QdRFVxulGwoME"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="more-seller-name">@FreshDeals</span>
+                  </div>
+                  <button
+                    class="more-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=freshdeals';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- More Item 4 -->
+            <div
+              class="more-card"
+              onclick="location.href = 'coupon-detail.html?seller=styleicon'"
+              style="cursor: pointer"
+            >
+              <div class="more-image-wrap">
+                <img
+                  alt="Extra 10% OFF Myntra"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXkSiJuhAThfqo2r-KBxbtbB_6jdeDM973p0ZXgMrtEj3Fqs_VfutaMrj8eolnRs4vJFT_xpjosHEQG1vTuy9QfTkgZWShaF52zhc4MgZWmgnUBmBZ7V6IS4_0YgNV8Hsw_7gL8h5NT-xE9AWHfD9DwE6xbxv8dtVCMCABKUEULCB3UOUt0gpeCVxUltlimeRSvGhs1Nul5zXBqLqPoCYsmLmp-Cz_Bx3Rx2_wDxHzEkgCm1fUD84o-rfpvV4mp6Ng5NgOUoMJ2H8"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  "
+                />
+                <span class="more-badge">
+                  <span
+                    class="material-symbols-outlined"
+                    style="
+                      font-size: 10px;
+                      font-variation-settings: &quot;FILL&quot; 1;
+                    "
+                    >verified</span
+                  >
+                  Verified
+                </span>
+              </div>
+              <div class="more-content">
+                <div>
+                  <span class="more-category">Fashion</span>
+                  <h4 class="more-title">Extra 10% OFF Myntra</h4>
+                  <p class="more-desc">
+                    Additional discount on top of ongoing seasonal sales.
+                  </p>
+                </div>
+                <div class="more-footer">
+                  <div class="more-seller">
+                    <img
+                      alt="@StyleIcon"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuA08AvlSKrfJTKLY7bKMbXTv3qAsjwtbd_5eWc_67AE9YbIOE_QJmE87iUs7hTe5EkZzBEfLzqWmDRnre0xPC9QR6HKURoFEideloocY66YkJvQaUdW9XCYrnNgjGVWWsbX_5vV94OC6nvjn58xA7qGrTpiXlsyg6jW5W4qySPI6xaNuLDL3_TZZEh2dDjKk5Joe-YupOw79YoHvxe8G9g13EiGU6HqQB7MB4CK6l6tA3vjSV4pC_pCWFUYvEizz-PaV-9FK5sryqs"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                    />
+                    <span class="more-seller-name">@StyleIcon</span>
+                  </div>
+                  <button
+                    class="more-buy-btn"
+                    type="button"
+                    onclick="
+                      event.stopPropagation();
+                      location.href = 'coupon-detail.html?seller=styleicon';
+                    "
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="load-more-wrap">
+            <button class="load-more-btn" type="button">
+              Load More Coupons
+              <span class="material-symbols-outlined">expand_more</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- User Listed Coupons Section (dynamically populated) -->
+        <section class="user-coupons-section" id="user-coupons-section" style="display: none">
+          <div class="section-header">
+            <h2 class="section-title-new">
+              <span class="material-symbols-outlined">local_offer</span>
+              Your Listings
+            </h2>
+            <a class="see-more" href="sell.html">+ List New</a>
+          </div>
+          <div class="user-coupons-grid" id="user-coupons-grid"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer (NEW DESIGN) -->
+    <footer class="dash-footer">
+      <div class="shell">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-brand">
+              <span class="material-symbols-outlined">confirmation_number</span>
+              <h2>CouponEx</h2>
+            </div>
+            <p class="footer-desc">
+              The most trusted marketplace for buying and selling unused digital
+              coupons and gift cards.
+            </p>
+          </div>
+          <div class="footer-col">
+            <h3>Marketplace</h3>
+            <ul>
+              <li><a href="search.html">Browse All</a></li>
+              <li><a href="search.html">Featured Brands</a></li>
+              <li><a href="sell.html">Sell Your Coupon</a></li>
+              <li><a href="search.html">Verified Sellers</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Support</h3>
+            <ul>
+              <li><a href="#">How it works</a></li>
+              <li><a href="#">Trust & Safety</a></li>
+              <li><a href="support.html">Help Center</a></li>
+              <li><a href="support.html">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Legal</h3>
+            <ul>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Cookie Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="shell footer-bottom">
+        <span>&copy; 2026 CouponEx Marketplace. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" aria-label="Social"
+            ><span class="material-symbols-outlined">public</span></a
+          >
+          <a href="#" aria-label="Chat"
+            ><span class="material-symbols-outlined">chat</span></a
+          >
+          <a href="#" aria-label="Email"
+            ><span class="material-symbols-outlined">mail</span></a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Load user-created coupons and display them in the dashboard
+      async function loadUserCoupons() {
+        const userData = localStorage.getItem("couponex_user");
+        if (!userData) return;
+
+        const user = JSON.parse(userData);
+        const section = document.getElementById("user-coupons-section");
+        const grid = document.getElementById("user-coupons-grid");
+
+        let coupons = [];
+
+        // Try backend API first
+        try {
+          const apiEndpoint =
+            window.location.protocol === "file:"
+              ? `http://localhost:8000/api/profile/${user.id}`
+              : `/api/profile/${user.id}`;
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+          const response = await fetch(apiEndpoint, {
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+          const data = await response.json();
+
+          if (data.success && data.coupons && data.coupons.length > 0) {
+            coupons = data.coupons;
+          }
+        } catch (error) {
+          // Backend not available - use localStorage
+          console.log("Using localStorage coupons for dashboard");
+        }
+
+        // If no coupons from API, check localStorage
+        if (coupons.length === 0) {
+          coupons = JSON.parse(
+            localStorage.getItem("couponex_coupons") || "[]",
+          ).filter((c) => c.userId === user.id);
+        }
+
+        if (coupons.length === 0) {
+          section.style.display = "none";
+          return;
+        }
+
+        section.style.display = "block";
+        grid.innerHTML = "";
+
+        coupons.forEach((coupon) => {
+          const card = document.createElement("div");
+          card.className = "user-coupon-card";
+          card.style.cursor = "pointer";
+          card.onclick = () => {
+            if (coupon.status === "pending") {
+              alert("This coupon is currently pending verification by our admin team.");
+            } else if (coupon.status === "rejected") {
+              alert("This coupon was rejected. Please review submission details.");
+            } else {
+              location.href = "verify-identity.html";
+            }
+          };
+
+          const imageHtml = coupon.image
+            ? `<img class="user-coupon-image" src="${coupon.image}" alt="${coupon.brand}" />`
+            : `<div class="user-coupon-image" style="display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--primary);opacity:0.2;"><span class="material-symbols-outlined">confirmation_number</span></div>`;
+
+          let statusText = "Listed";
+          let statusIcon = "verified";
+          let badgeColor = "var(--success)";
+          if (coupon.status === "pending") {
+            statusText = "Pending Verification";
+            statusIcon = "schedule";
+            badgeColor = "var(--text-soft)";
+          } else if (coupon.status === "rejected") {
+            statusText = "Rejected";
+            statusIcon = "cancel";
+            badgeColor = "var(--error-text)";
+          }
+
+          card.innerHTML = `
+            <div class="user-coupon-image-wrap">
+              ${imageHtml}
+              <span class="user-coupon-badge" style="background:${badgeColor}; color:#fff; display:flex; align-items:center; gap:4px;">
+                <span class="material-symbols-outlined" style="font-size:10px;font-variation-settings:'FILL' 1;">${statusIcon}</span>
+                ${statusText}
+              </span>
+            </div>
+            <div class="user-coupon-content">
+              <div>
+                <span class="user-coupon-category">${coupon.category || "General"}</span>
+                <h4 class="user-coupon-title">${coupon.brand}</h4>
+                <p class="user-coupon-desc">${coupon.description || "No description provided."}</p>
+              </div>
+              <div class="user-coupon-footer">
+                <div class="user-coupon-seller">
+                  <div class="user-coupon-seller-avatar">${(user.fullName || "U").charAt(0).toUpperCase()}</div>
+                  <span class="user-coupon-seller-name">@${user.username}</span>
+                </div>
+                <button class="user-coupon-buy-btn" type="button" onclick="event.stopPropagation(); if('${coupon.status}' === 'active') { location.href='verify-identity.html' } else { alert('Voucher not active yet.') }">
+                  ₹${coupon.askingPrice || 0}
+                </button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      // Load user coupons on page load
+      loadUserCoupons();
+
+
+    </script>
+
+    <!-- Bottom Navigation (PRESERVED) -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a class="bottom-link active" href="dashboard.html">
+        <span
+          class="material-symbols-outlined"
+          aria-hidden="true"
+          style="
+            font-variation-settings:
+              &quot;FILL&quot; 1,
+              &quot;wght&quot; 600,
+              &quot;GRAD&quot; 0,
+              &quot;opsz&quot; 24;
+          "
+          >home</span
+        >
+        <span>Home</span>
+      </a>
+      <a class="bottom-link" href="search.html">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <span>Search</span>
+      </a>
+      <a class="bottom-link" href="sell.html">
+        <span class="material-symbols-outlined" aria-hidden="true"
+          >add_circle</span
+        >
+        <span>Sell</span>
+      </a>
+      <a class="bottom-link" href="wallet.html">
+        <span class="material-symbols-outlined" aria-hidden="true"
+          >account_balance_wallet</span
+        >
+        <span>Wallet</span>
+      </a>
+      <a class="bottom-link" href="verify-identity.html">
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        <span>Profile</span>
+      </a>
+    </nav>
+  </body>
+</html>

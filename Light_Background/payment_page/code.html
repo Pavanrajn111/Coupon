@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Checkout | CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Physical ticket notch metaphor from style guidance */
+        .coupon-card-notch {
+            position: relative;
+            background: white;
+            border: 1px solid #E7E2D8;
+        }
+        .coupon-card-notch::before,
+        .coupon-card-notch::after {
+            content: '';
+            position: absolute;
+            left: -9px;
+            width: 16px;
+            height: 16px;
+            background: #FAF7F0; /* Background color level 0 */
+            border: 1px solid #E7E2D8;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .coupon-card-notch::after {
+            left: auto;
+            right: -9px;
+        }
+
+        /* Custom scrollbar for side nav */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E7E2D8;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3ec",
+                        "surface-container-high": "#ebe8e1",
+                        "primary": "#ab3500",
+                        "outline": "#8d7168",
+                        "secondary-fixed-dim": "#b7c6ed",
+                        "primary-fixed-dim": "#ffb59d",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#d8e2ff",
+                        "tertiary-fixed": "#ffe08e",
+                        "inverse-surface": "#31312c",
+                        "inverse-primary": "#ffb59d",
+                        "on-secondary-container": "#4e5d7f",
+                        "on-primary-fixed-variant": "#832600",
+                        "on-primary-fixed": "#390c00",
+                        "on-background": "#1c1c18",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#e1bfb5",
+                        "tertiary-fixed-dim": "#ecc246",
+                        "on-secondary-fixed": "#0a1b39",
+                        "on-tertiary-container": "#4f3d00",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0eee7",
+                        "surface": "#fcf9f2",
+                        "tertiary": "#755b00",
+                        "on-surface-variant": "#594139",
+                        "surface-variant": "#e5e2db",
+                        "error-container": "#ffdad6",
+                        "secondary": "#4f5e80",
+                        "on-primary-container": "#5f1900",
+                        "on-secondary-fixed-variant": "#374667",
+                        "surface-bright": "#fcf9f2",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1c1c18",
+                        "surface-dim": "#dcdad3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "background": "#fcf9f2",
+                        "primary-fixed": "#ffdbd0",
+                        "secondary-container": "#c8d7fe",
+                        "tertiary-container": "#cea62b",
+                        "surface-tint": "#ab3500",
+                        "surface-container-highest": "#e5e2db",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "primary-container": "#ff6b35"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "stack-lg": "32px",
+                        "gutter": "16px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "display-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "price-display": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-lg antialiased">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full bg-surface z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-display-lg text-display-lg text-primary tracking-tighter">CouponEx</span>
+<nav class="hidden md:flex gap-8">
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">Marketplace</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">My Coupons</a>
+<a class="font-body-lg text-body-lg text-on-surface-variant hover:text-on-surface transition-colors" href="#">Support</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full" data-icon="account_circle">account_circle</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-margin-desktop max-w-container-max mx-auto min-h-screen">
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Side: Payment Method Selector -->
+<aside class="col-span-12 md:col-span-3">
+<div class="sticky top-24 bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col h-fit">
+<div class="p-6 border-b border-outline-variant">
+<h2 class="font-label-caps text-label-caps text-primary uppercase tracking-widest">Payment Methods</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Secure Checkout</p>
+</div>
+<nav class="flex flex-col">
+<button class="flex items-center gap-4 px-6 py-4 text-left font-label-caps text-label-caps transition-all duration-200 text-primary border-r-4 border-primary bg-surface-container-high font-bold group" id="tab-upi" onclick="switchTab('upi')">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>UPI &amp; Wallets</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-4 text-left font-label-caps text-label-caps transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low group" id="tab-cards" onclick="switchTab('cards')">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors" data-icon="credit_card">credit_card</span>
+<span>Cards</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-4 text-left font-label-caps text-label-caps transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low group" id="tab-netbanking" onclick="switchTab('netbanking')">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors" data-icon="account_balance">account_balance</span>
+<span>Net Banking</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-4 text-left font-label-caps text-label-caps transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low group" id="tab-emi" onclick="switchTab('emi')">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors" data-icon="payments">payments</span>
+<span>EMI Options</span>
+</button>
+</nav>
+</div>
+</aside>
+<!-- Center: Active Payment Container -->
+<section class="col-span-12 md:col-span-6 flex flex-col gap-stack-lg">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-lg min-h-[400px]" id="payment-content">
+<!-- UPI CONTENT (Default) -->
+<div class="payment-view" id="content-upi">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Pay using UPI</h3>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<label class="flex items-center gap-4 p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-all group">
+<input class="text-primary focus:ring-primary h-4 w-4" name="upi-method" type="radio"/>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary" data-icon="smartphone">smartphone</span>
+</div>
+<span class="font-body-lg text-body-lg">PhonePe / GPay</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 border border-outline-variant rounded-lg cursor-pointer hover:border-primary transition-all group">
+<input class="text-primary focus:ring-primary h-4 w-4" name="upi-method" type="radio"/>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary" data-icon="qr_code_2">qr_code_2</span>
+</div>
+<span class="font-body-lg text-body-lg">Enter UPI ID</span>
+</div>
+</label>
+</div>
+<div class="space-y-4">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">Enter UPI ID</label>
+<div class="relative">
+<input class="w-full p-4 bg-white border border-outline-variant rounded-lg font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed transition-all placeholder:text-surface-variant" placeholder="username@upi" type="text"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-primary font-bold text-label-caps uppercase tracking-wider">Verify</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+                                Securely verify your identity for this transaction.
+                            </p>
+</div>
+<button class="w-full mt-12 bg-primary text-white py-4 rounded-lg font-headline-md text-headline-md hover:bg-on-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                            Pay ₹200.00
+                            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- CARDS CONTENT (Hidden) -->
+<div class="payment-view hidden" id="content-cards">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Credit / Debit Cards</h3>
+<div class="space-y-6">
+<div class="grid grid-cols-1 gap-4">
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">Card Number</label>
+<input class="w-full p-4 bg-white border border-outline-variant rounded-lg font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed transition-all" placeholder="0000 0000 0000 0000" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">Expiry Date</label>
+<input class="w-full p-4 bg-white border border-outline-variant rounded-lg font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed transition-all" placeholder="MM / YY" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">CVV</label>
+<input class="w-full p-4 bg-white border border-outline-variant rounded-lg font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed transition-all" placeholder="123" type="password"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">Name on Card</label>
+<input class="w-full p-4 bg-white border border-outline-variant rounded-lg font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed transition-all" placeholder="John Doe" type="text"/>
+</div>
+</div>
+<button class="w-full mt-12 bg-primary text-white py-4 rounded-lg font-headline-md text-headline-md hover:bg-on-primary-container transition-all active:scale-[0.98]">
+                            Pay ₹200.00
+                        </button>
+</div>
+<!-- NETBANKING CONTENT (Hidden) -->
+<div class="payment-view hidden" id="content-netbanking">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Popular Banks</h3>
+<div class="grid grid-cols-3 gap-4 mb-8">
+<button class="p-4 border border-outline-variant rounded-lg hover:border-primary flex flex-col items-center gap-2 group transition-all">
+<span class="material-symbols-outlined text-3xl group-hover:text-primary" data-icon="account_balance">account_balance</span>
+<span class="font-label-caps text-label-caps">HDFC</span>
+</button>
+<button class="p-4 border border-outline-variant rounded-lg hover:border-primary flex flex-col items-center gap-2 group transition-all">
+<span class="material-symbols-outlined text-3xl group-hover:text-primary" data-icon="account_balance">account_balance</span>
+<span class="font-label-caps text-label-caps">ICICI</span>
+</button>
+<button class="p-4 border border-outline-variant rounded-lg hover:border-primary flex flex-col items-center gap-2 group transition-all">
+<span class="material-symbols-outlined text-3xl group-hover:text-primary" data-icon="account_balance">account_balance</span>
+<span class="font-label-caps text-label-caps">SBI</span>
+</button>
+</div>
+<select class="w-full p-4 bg-white border border-outline-variant rounded-lg font-body-lg text-body-lg focus:outline-none focus:border-on-secondary-fixed appearance-none cursor-pointer">
+<option>Select another Bank</option>
+<option>Axis Bank</option>
+<option>Kotak Mahindra</option>
+<option>Yes Bank</option>
+</select>
+<button class="w-full mt-12 bg-primary text-white py-4 rounded-lg font-headline-md text-headline-md hover:bg-on-primary-container transition-all active:scale-[0.98]">
+                            Pay ₹200.00
+                        </button>
+</div>
+<!-- EMI CONTENT (Hidden) -->
+<div class="payment-view hidden" id="content-emi">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">EMI Options</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Available for transactions above ₹3000. Currently not available for this pack.</p>
+<div class="p-8 border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center text-center opacity-50">
+<span class="material-symbols-outlined text-4xl mb-2" data-icon="info">info</span>
+<span class="font-label-caps text-label-caps">Ineligible for EMI</span>
+</div>
+</div>
+</div>
+<!-- Trust Badges -->
+<div class="flex justify-center gap-stack-lg items-center text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#C9A227]" data-icon="verified_user">verified_user</span>
+<span class="font-label-caps text-label-caps">Secure Transaction</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#C9A227]" data-icon="shield">shield</span>
+<span class="font-label-caps text-label-caps">SSL Encrypted</span>
+</div>
+</div>
+</section>
+<!-- Right Side: Order Summary -->
+<aside class="col-span-12 md:col-span-3">
+<div class="coupon-card-notch rounded-lg p-6 flex flex-col gap-4 shadow-sm">
+<div class="border-b border-outline-variant pb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Order Summary</h2>
+</div>
+<div class="flex flex-col gap-4 py-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">Regular Pack</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">200 Credits Bundle</span>
+</div>
+<span class="font-price-display text-price-display text-on-surface">₹200</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-sm text-body-sm">Platform Fee</span>
+<span class="font-price-display text-[14px]">FREE</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-sm text-body-sm">GST (18%)</span>
+<span class="font-price-display text-[14px]">Included</span>
+</div>
+</div>
+<div class="border-t border-outline-variant pt-4 mt-2">
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-on-surface">Total</span>
+<span class="font-price-display text-display-lg text-primary">₹200.00</span>
+</div>
+</div>
+<div class="mt-4 bg-surface-container-low p-3 rounded flex items-center gap-3">
+<span class="material-symbols-outlined text-[#C9A227]" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Earn 20 Loyalty Points</span>
+</div>
+</div>
+<div class="mt-6 p-4 border border-outline-variant rounded-lg bg-surface flex items-center gap-4 group cursor-pointer hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="confirmation_number">confirmation_number</span>
+<div class="flex-1">
+<p class="font-label-caps text-label-caps text-on-surface">Apply Coupon</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Check for available discounts</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-8 max-w-container-max mx-auto gap-stack-md">
+<span class="font-body-sm text-body-sm text-on-surface-variant">© 2024 CouponEx India. Secure 256-bit SSL Encrypted.</span>
+<div class="flex gap-8">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Refund Policy</a>
+</div>
+</div>
+</footer>
+<script>
+        function switchTab(tabName) {
+            // Hide all payment views
+            document.querySelectorAll('.payment-view').forEach(view => {
+                view.classList.add('hidden');
+            });
+
+            // Remove active styles from all buttons
+            document.querySelectorAll('aside nav button').forEach(btn => {
+                btn.classList.remove('text-primary', 'border-r-4', 'border-primary', 'bg-surface-container-high', 'font-bold');
+                btn.classList.add('text-on-surface-variant', 'hover:text-on-surface', 'hover:bg-surface-container-low');
+            });
+
+            // Show selected view
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+
+            // Set active style for selected button
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.add('text-primary', 'border-r-4', 'border-primary', 'bg-surface-container-high', 'font-bold');
+            activeBtn.classList.remove('text-on-surface-variant', 'hover:text-on-surface', 'hover:bg-surface-container-low');
+        }
+
+        // Simple validation visualization
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.classList.remove('border-outline-variant');
+                input.classList.add('border-on-secondary-fixed');
+            });
+            input.addEventListener('blur', () => {
+                input.classList.add('border-outline-variant');
+                input.classList.remove('border-on-secondary-fixed');
+            });
+        });
+    </script>
+</body></html>

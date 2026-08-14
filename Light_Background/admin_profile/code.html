@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Profile - CouponEx</title>
+<!-- Material Symbols for Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter, Geist, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#4e5d7f",
+                    "tertiary-container": "#cea62b",
+                    "background": "#fcf9f2",
+                    "tertiary-fixed": "#ffe08e",
+                    "surface-container-high": "#ebe8e1",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#31312c",
+                    "on-primary-container": "#5f1900",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-bright": "#fcf9f2",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#ffdbd0",
+                    "surface-container-low": "#f6f3ec",
+                    "on-secondary-fixed-variant": "#374667",
+                    "surface-variant": "#e5e2db",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#ecc246",
+                    "outline-variant": "#e1bfb5",
+                    "on-secondary-fixed": "#0a1b39",
+                    "inverse-on-surface": "#f3f0ea",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#ffb59d",
+                    "on-surface": "#1c1c18",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "error-container": "#ffdad6",
+                    "on-background": "#1c1c18",
+                    "on-primary-fixed": "#390c00",
+                    "tertiary": "#755b00",
+                    "on-primary-fixed-variant": "#832600",
+                    "on-tertiary-container": "#4f3d00",
+                    "primary": "#ab3500",
+                    "secondary-fixed-dim": "#b7c6ed",
+                    "surface-container-highest": "#e5e2db",
+                    "secondary-container": "#c8d7fe",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#ffb59d",
+                    "surface-tint": "#ab3500",
+                    "on-error": "#ffffff",
+                    "surface": "#fcf9f2",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#f0eee7",
+                    "outline": "#8d7168",
+                    "on-surface-variant": "#594139",
+                    "surface-dim": "#dcdad3",
+                    "secondary": "#4f5e80",
+                    "primary-container": "#ff6b35"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-md": "16px",
+                    "gutter": "16px",
+                    "stack-lg": "32px",
+                    "stack-sm": "8px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "40px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "body-lg": [
+                            "Geist"
+                    ],
+                    "body-sm": [
+                            "Geist"
+                    ],
+                    "display-lg-mobile": [
+                            "Inter"
+                    ],
+                    "price-display": [
+                            "JetBrains Mono"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "Geist"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "30px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "price-display": [
+                            "18px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom overrides to match strict styling rules */
+        .coupon-notch {
+            -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 8px, black 9px), radial-gradient(circle at 100% 50%, transparent 8px, black 9px);
+            -webkit-mask-composite: source-in;
+            mask-image: radial-gradient(circle at 0 50%, transparent 8px, black 9px), radial-gradient(circle at 100% 50%, transparent 8px, black 9px);
+            mask-composite: intersect;
+        }
+        
+        /* Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ff6b35; /* primary-container */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ff6b35; /* primary-container */
+        }
+        .toggle-checkbox:focus + .toggle-label {
+            box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg text-body-lg min-h-screen antialiased flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface dark:bg-on-surface fixed top-0 w-full z-50 border-b border-outline-variant dark:border-outline flat no shadows">
+<div class="flex justify-between items-center px-margin-desktop h-16 w-full max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">
+                FintechAdmin
+            </div>
+<!-- Navigation Links (Hidden on Mobile, Displayed on md+) -->
+<nav class="hidden md:flex items-center gap-8 h-full">
+<a class="h-full flex items-center text-on-secondary-container dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary-fixed transition-colors cursor-pointer active:opacity-80" href="#">Dashboard</a>
+<a class="h-full flex items-center text-on-secondary-container dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary-fixed transition-colors cursor-pointer active:opacity-80" href="#">Verifications</a>
+<a class="h-full flex items-center text-on-secondary-container dark:text-on-secondary-fixed-variant hover:text-primary dark:hover:text-primary-fixed transition-colors cursor-pointer active:opacity-80" href="#">Payments</a>
+</nav>
+<!-- Actions (Search on right, Trailing Icons, Profile Image) -->
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-surface-container-highest border border-outline-variant rounded-full text-sm focus:outline-none focus:border-on-surface transition-colors w-48" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="Admin profile photo" class="w-full h-full object-cover" data-alt="A professional headshot of an Indian male in his late 30s, wearing a crisp light blue dress shirt against a plain white background. The lighting is studio quality, soft and even, highlighting his approachable yet authoritative expression. The image is high resolution, suitable for a corporate profile picture in a modern fintech application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN5cp2M9WerKaXol6NDyXcJMaVn6l43kLjePkuvck8c7QRsEaVA7k59o88DnCHqTIeyAquMAmpAMqEMQSErXXv1KiPH1lJM6uun47sovqd8JIcgqg3Rdv0artC3LVJrF1D-l4OG5zZXQGt9AmWYvs-_UAErUPwSI5rEzq9UshhihGKw6TEQjibCAflL7l3M2r1gFo37om-MMzX27wq7IuI0HdTN6KaO6QyqLUL3zpBCVZRZY8DJlDK"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 pt-16 w-full max-w-container-max mx-auto relative">
+<!-- SideNavBar (Shared Component) -->
+<!-- Only visible on md+ as per design rules for destinations -->
+<aside class="bg-surface-container-low dark:bg-on-secondary-fixed h-[calc(100vh-64px)] w-64 pt-20 border-r border-outline-variant dark:border-outline flat no shadows fixed left-0 top-16 hidden md:flex flex-col gap-2 z-40 overflow-y-auto shrink-0">
+<!-- Header section of sidenav -->
+<div class="px-5 mb-6">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant shrink-0">
+<img alt="Admin User Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of an Indian male in his late 30s, wearing a crisp light blue dress shirt against a plain white background. The lighting is studio quality, soft and even, highlighting his approachable yet authoritative expression. The image is high resolution, suitable for a corporate profile picture in a modern fintech application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG439S852MWTAyHEzjnxzPOKPLm0z4wEe4TIHVY1L2TY0nANSbbIjN7zHrKfzqy810o2usfS4eJE1Jrc9z7YPqoNZNalj56DIdlHZg7NsTCW6mCRbRyzaEc_GnPg2JFUywyaURuwJsyX-eE0wZiFwDAA2eVIlV1pVcmdMURwTg2zphHMHqPeOYKdoT9h7LJ40LRM68zWQgWy3IuLinKc-tz5MpLLtqPVkLazlmuwhxT-I_QJ8K16r3"/>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-medium text-on-surface">Admin Settings</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Manage your account</div>
+</div>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<!-- Profile is ACTIVE -->
+<div class="px-2">
+<a class="text-on-primary-container dark:text-on-primary-fixed bg-primary-container dark:bg-primary-fixed-dim rounded-lg font-bold cursor-pointer flex items-center gap-3 p-3 mx-2 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span>Profile</span>
+</a>
+</div>
+<div class="px-2">
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant hover:bg-surface-container-high dark:hover:bg-on-secondary-fixed-variant transition-all cursor-pointer flex items-center gap-3 p-3 mx-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span>Security</span>
+</a>
+</div>
+<div class="px-2">
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant hover:bg-surface-container-high dark:hover:bg-on-secondary-fixed-variant transition-all cursor-pointer flex items-center gap-3 p-3 mx-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Team Management</span>
+</a>
+</div>
+<div class="px-2">
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant hover:bg-surface-container-high dark:hover:bg-on-secondary-fixed-variant transition-all cursor-pointer flex items-center gap-3 p-3 mx-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>Activity Logs</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-margin-desktop bg-background min-h-[calc(100vh-64px)] overflow-y-auto">
+<div class="max-w-4xl mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-stack-lg gap-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Admin Profile</h1>
+<p class="text-on-surface-variant mt-1">Manage your personal information and administrative privileges.</p>
+</div>
+<div class="flex items-center gap-2">
+<!-- Trust Badge for Account Status -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface border border-tertiary-container rounded-full">
+<span class="material-symbols-outlined text-tertiary-container text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-caps text-label-caps text-tertiary-container">ACTIVE / VERIFIED</span>
+</div>
+</div>
+</div>
+<!-- Content Grid (Asymmetric Bento-style layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Personal Info (Spans 8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Profile Card -->
+<div class="bg-surface border border-surface-variant rounded-lg p-6">
+<div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-8">
+<div class="w-24 h-24 rounded-full bg-surface-variant overflow-hidden border border-outline-variant shrink-0 relative group cursor-pointer">
+<img alt="Aditya Kumar" class="w-full h-full object-cover" data-alt="A professional headshot of an Indian male in his late 30s, wearing a crisp light blue dress shirt against a plain white background. The lighting is studio quality, soft and even, highlighting his approachable yet authoritative expression. The image is high resolution, suitable for a corporate profile picture in a modern fintech application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRwMrNUMJ6Z--23t719gtjvDtmhk6PHsyxumn1zG9xlILEGV4SRvcRfuOcIZ7KwBf7E7TMKVYhRYHwTNyHtc4-manmrwlQvtFgIn3Ko4lzuLuc-h8gjZIMtIt9d965XTJEettzFne34PDpXGZNRh0larpgcbtnXDwBr0HUawCInP5IMU-NrnndsqYyESN_9TD5CsG7mez6-B2eiF-slbuHOgyMrC92qMTKfaqIjHFLX3mje3JhOwnO"/>
+<div class="absolute inset-0 bg-on-surface/50 hidden group-hover:flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-surface">edit</span>
+</div>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Aditya Kumar</h2>
+<p class="text-on-surface-variant font-medium">Senior Operations Lead</p>
+<div class="mt-2 inline-block px-2 py-0.5 bg-surface-container-high border border-outline-variant rounded font-price-display text-price-display text-sm text-on-surface-variant">
+                                        ADM-9928-XP
+                                    </div>
+</div>
+</div>
+<hr class="border-t border-surface-variant mb-6"/>
+<!-- Edit Form -->
+<form class="space-y-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">FULL NAME</label>
+<input class="w-full px-4 py-2.5 bg-surface border border-surface-variant rounded-lg font-body-lg text-body-lg text-on-surface focus:outline-none focus:border-on-secondary-fixed transition-colors" type="text" value="Aditya Kumar"/>
+</div>
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">ROLE / DESIGNATION</label>
+<input class="w-full px-4 py-2.5 bg-surface-container-low border border-surface-variant rounded-lg font-body-lg text-body-lg text-on-surface-variant focus:outline-none cursor-not-allowed" disabled="" type="text" value="Senior Operations Lead"/>
+</div>
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">EMAIL ADDRESS</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface border border-surface-variant rounded-lg font-body-lg text-body-lg text-on-surface focus:outline-none focus:border-on-secondary-fixed transition-colors" type="email" value="aditya.k@couponex.in"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant">PHONE NUMBER</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">phone</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface border border-surface-variant rounded-lg font-body-lg text-body-lg text-on-surface focus:outline-none focus:border-on-secondary-fixed transition-colors" type="tel" value="+91 98765 43210"/>
+</div>
+</div>
+</div>
+</form>
+</div>
+</div>
+<!-- Right Column: Privileges & Actions (Spans 4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Administrative Privileges Card -->
+<div class="bg-surface border border-surface-variant rounded-lg p-6">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-on-surface text-[20px]">admin_panel_settings</span>
+<h3 class="font-headline-md text-headline-md text-on-surface text-base">Administrative Privileges</h3>
+</div>
+<div class="space-y-4">
+<!-- Toggle 1 -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">Verify Coupons</span>
+<span class="text-xs text-on-surface-variant mt-0.5">Approve new listings</span>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-surface-variant transition-all duration-200 z-10" id="toggle_verify" name="toggle_verify" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-surface-variant cursor-pointer transition-colors duration-200" for="toggle_verify"></label>
+</div>
+</div>
+<hr class="border-t border-surface-variant/50"/>
+<!-- Toggle 2 -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">Release Payments</span>
+<span class="text-xs text-on-surface-variant mt-0.5">Authorize final payouts</span>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-surface-variant transition-all duration-200 z-10" id="toggle_payments" name="toggle_payments" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-surface-variant cursor-pointer transition-colors duration-200" for="toggle_payments"></label>
+</div>
+</div>
+<hr class="border-t border-surface-variant/50"/>
+<!-- Toggle 3 -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">Manage Disputes</span>
+<span class="text-xs text-on-surface-variant mt-0.5">Resolve buyer/seller flags</span>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-surface-variant transition-all duration-200 z-10" id="toggle_disputes" name="toggle_disputes" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-surface-variant cursor-pointer transition-colors duration-200" for="toggle_disputes"></label>
+</div>
+</div>
+<hr class="border-t border-surface-variant/50"/>
+<!-- Toggle 4 -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">Access System Logs</span>
+<span class="text-xs text-on-surface-variant mt-0.5">View raw activity data</span>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-surface-variant transition-all duration-200 z-10" id="toggle_logs" name="toggle_logs" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-surface-variant cursor-pointer transition-colors duration-200" for="toggle_logs"></label>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-3 mt-auto pt-6">
+<button class="w-full py-3 px-4 bg-primary-container text-on-primary rounded-lg font-medium hover:bg-primary-container/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">save</span>
+                                Save Changes
+                            </button>
+<button class="w-full py-3 px-4 bg-surface border border-on-secondary-fixed text-on-secondary-fixed rounded-lg font-medium hover:bg-surface-container-low transition-colors">
+                                Discard Changes
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

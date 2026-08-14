@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment &amp; Credit Approvals | CouponEx Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Geist:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#241a00",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#832600",
+                    "surface": "#fcf9f2",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1c1c18",
+                    "inverse-on-surface": "#f3f0ea",
+                    "primary-container": "#ff6b35",
+                    "on-secondary-fixed": "#0a1b39",
+                    "tertiary-container": "#cea62b",
+                    "surface-dim": "#dcdad3",
+                    "primary-fixed": "#ffdbd0",
+                    "on-primary-fixed": "#390c00",
+                    "surface-container-highest": "#e5e2db",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-primary-container": "#5f1900",
+                    "primary-fixed-dim": "#ffb59d",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e5e2db",
+                    "surface-container": "#f0eee7",
+                    "on-surface": "#1c1c18",
+                    "error": "#ba1a1a",
+                    "secondary": "#4f5e80",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#755b00",
+                    "on-surface-variant": "#594139",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#374667",
+                    "secondary-fixed-dim": "#b7c6ed",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#ab3500",
+                    "surface-bright": "#fcf9f2",
+                    "outline-variant": "#e1bfb5",
+                    "outline": "#8d7168",
+                    "inverse-surface": "#31312c",
+                    "on-tertiary-container": "#4f3d00",
+                    "background": "#fcf9f2",
+                    "tertiary-fixed": "#ffe08e",
+                    "primary": "#ab3500",
+                    "surface-container-high": "#ebe8e1",
+                    "on-secondary-container": "#4e5d7f",
+                    "surface-container-low": "#f6f3ec",
+                    "secondary-container": "#c8d7fe",
+                    "inverse-primary": "#ffb59d",
+                    "tertiary-fixed-dim": "#ecc246"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-mobile": "20px",
+                    "stack-lg": "32px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "margin-desktop": "40px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Inter"],
+                    "body-lg": ["Geist"],
+                    "headline-md": ["Inter"],
+                    "price-display": ["JetBrains Mono"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Geist"],
+                    "label-caps": ["Geist"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "price-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .coupon-notch {
+            position: relative;
+        }
+        .coupon-notch::before, .coupon-notch::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            width: 16px;
+            height: 16px;
+            background-color: #FAF7F0; /* level 0 background */
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .coupon-notch::before { top: -8px; }
+        .coupon-notch::after { bottom: -8px; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .active-pill {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        body {
+            background-color: #FAF7F0;
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface">
+<!-- TopNavBar from Shared Components -->
+<nav class="fixed top-0 w-full z-50 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-10">
+<span class="font-display-lg text-display-lg text-primary dark:text-primary-fixed-dim font-extrabold tracking-tighter">CouponEx</span>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-lg text-body-lg cursor-pointer active:scale-95" href="#">Marketplace</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-lg text-body-lg cursor-pointer active:scale-95" href="#">My Coupons</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-lg text-body-lg cursor-pointer active:scale-95" href="#">Support</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="cursor-pointer hover:bg-surface-container-low p-2 rounded-full transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</div>
+<div class="flex items-center gap-3 cursor-pointer hover:bg-surface-container-low pl-2 pr-4 py-1.5 rounded-full transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+<span class="font-label-caps text-label-caps">ADMIN PANEL</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-stack-lg px-margin-desktop max-w-container-max mx-auto">
+<!-- Header & Summary Section (Asymmetric Layout) -->
+<header class="grid grid-cols-12 gap-gutter mb-stack-lg items-end">
+<div class="col-span-12 md:col-span-5">
+<h1 class="font-display-lg text-display-lg mb-2">Payment Verifications</h1>
+<p class="text-on-surface-variant font-body-lg text-body-lg">Verify pending top-up requests and release credits to user accounts.</p>
+</div>
+<div class="col-span-12 md:col-span-7 flex gap-gutter justify-end">
+<!-- Summary Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-lg flex flex-col min-w-[200px]">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Pending Reviews</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary">42</span>
+<span class="material-symbols-outlined text-tertiary text-sm">pending_actions</span>
+</div>
+</div>
+<!-- Summary Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-lg flex flex-col min-w-[200px]">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Daily Total Approved</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-secondary-fixed">₹ 1,42,800</span>
+<span class="text-price-display font-price-display text-primary text-sm">+12%</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area: High-Density Verifications -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Side Navigation Pillar -->
+<aside class="hidden md:block col-span-3">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-2 sticky top-28">
+<div class="px-4 py-4 border-b border-outline-variant mb-2">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant">FILTER BY METHOD</h3>
+</div>
+<div class="flex flex-col gap-1">
+<button class="flex items-center gap-3 px-4 py-3 rounded text-primary border-r-4 border-primary bg-surface-container-high font-bold transition-all duration-200">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps">All Requests</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-caps text-label-caps">UPI &amp; Wallets</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-label-caps text-label-caps">Cards</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-all duration-200">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-caps text-label-caps">Net Banking</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Table Container -->
+<section class="col-span-12 md:col-span-9">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container text-on-surface-variant border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps">User &amp; ID</th>
+<th class="px-6 py-4 font-label-caps text-label-caps">Method</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-right">Amount (Credits/₹)</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-center">Status</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-bold">Arjun Sharma</span>
+<span class="text-body-sm text-on-surface-variant font-price-display">TXN_9928341</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container w-fit rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="text-body-sm">UPI</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex flex-col">
+<span class="font-price-display text-primary text-body-lg">5,000 CR</span>
+<span class="text-body-sm text-on-surface-variant">₹ 4,750.00</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Pending
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-end gap-2">
+<button class="bg-primary hover:bg-on-primary-container text-white px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95 flex items-center gap-2">
+                                            Verify &amp; Release
+                                        </button>
+<button class="border border-outline-variant hover:bg-error-container hover:text-on-error-container px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95">
+                                            Reject
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-bold">Priya Verma</span>
+<span class="text-body-sm text-on-surface-variant font-price-display">TXN_9928452</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container w-fit rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-[18px]">credit_card</span>
+<span class="text-body-sm">VISA • 4242</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex flex-col">
+<span class="font-price-display text-primary text-body-lg">12,000 CR</span>
+<span class="text-body-sm text-on-surface-variant">₹ 11,400.00</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Pending
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-end gap-2">
+<button class="bg-primary hover:bg-on-primary-container text-white px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95 flex items-center gap-2">
+                                            Verify &amp; Release
+                                        </button>
+<button class="border border-outline-variant hover:bg-error-container hover:text-on-error-container px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95">
+                                            Reject
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-bold">Vikram Iyer</span>
+<span class="text-body-sm text-on-surface-variant font-price-display">TXN_9928771</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container w-fit rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+<span class="text-body-sm">HDFC Bank</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex flex-col">
+<span class="font-price-display text-primary text-body-lg">25,000 CR</span>
+<span class="text-body-sm text-on-surface-variant">₹ 23,750.00</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="px-2 py-1 bg-error-container text-on-error-container font-label-caps text-label-caps rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Disputed
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-end gap-2">
+<button class="bg-primary hover:bg-on-primary-container text-white px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95 flex items-center gap-2">
+                                            Verify &amp; Release
+                                        </button>
+<button class="border border-outline-variant hover:bg-error-container hover:text-on-error-container px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95">
+                                            Reject
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-bold">Sneha Reddy</span>
+<span class="text-body-sm text-on-surface-variant font-price-display">TXN_9928900</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container w-fit rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="text-body-sm">PhonePe</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex flex-col">
+<span class="font-price-display text-primary text-body-lg">1,500 CR</span>
+<span class="text-body-sm text-on-surface-variant">₹ 1,425.00</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-center">
+<span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Pending
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex justify-end gap-2">
+<button class="bg-primary hover:bg-on-primary-container text-white px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95 flex items-center gap-2">
+                                            Verify &amp; Release
+                                        </button>
+<button class="border border-outline-variant hover:bg-error-container hover:text-on-error-container px-4 py-2 rounded-lg font-label-caps text-label-caps transition-all active:scale-95">
+                                            Reject
+                                        </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="bg-surface-container-low px-6 py-4 flex justify-between items-center border-t border-outline-variant">
+<span class="text-body-sm text-on-surface-variant">Showing 4 of 42 pending verifications</span>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- System Logs / Trust Section -->
+<section class="mt-stack-lg border-t border-outline-variant pt-stack-lg">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">security</span>
+                Security &amp; Audit Trail
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="p-stack-md bg-surface-container-lowest border border-outline-variant rounded-lg">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">shield_with_heart</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold">SSL Encrypted</h4>
+</div>
+<p class="text-body-sm text-on-surface-variant">All verification sessions are secured with 256-bit SSL encryption. Transaction data is hashed and salted at the database level.</p>
+</div>
+<div class="p-stack-md bg-surface-container-lowest border border-outline-variant rounded-lg">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container">history_edu</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold">Action Logs</h4>
+</div>
+<p class="text-body-sm text-on-surface-variant">Every verification and rejection is logged with the admin's ID, timestamp, and IP address for compliance auditing.</p>
+</div>
+<div class="p-stack-md bg-surface-container-lowest border border-outline-variant rounded-lg">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white">verified_user</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold">Auto-Flagging</h4>
+</div>
+<p class="text-body-sm text-on-surface-variant">Unusual credit patterns or high-frequency top-ups from single accounts are automatically flagged for higher-level review.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer from Shared Components -->
+<footer class="w-full py-8 bg-surface-container-low dark:bg-surface-dim border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-container-max mx-auto gap-stack-md">
+<span class="font-display-lg text-display-lg text-primary">CouponEx</span>
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm underline-offset-4 hover:underline" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm underline-offset-4 hover:underline" href="#">Refund Policy</a>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">© 2024 CouponEx India. Secure 256-bit SSL Encrypted.</span>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Interaction logic for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.innerText.includes('Verify & Release')) {
+                    const row = this.closest('tr');
+                    row.style.transition = 'all 0.5s ease';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        row.remove();
+                    }, 500);
+                } else if (this.innerText.includes('Reject')) {
+                    const row = this.closest('tr');
+                    row.classList.add('bg-error-container/20');
+                    alert('Request flagged for rejection. Please provide a reason.');
+                }
+            });
+        });
+    </script>
+</body></html>

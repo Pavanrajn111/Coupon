@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CouponEx | Premium Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#908fa0",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "surface-container-highest": "#2d3449",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-surface": "#dae2fd",
+                    "surface-bright": "#31394d",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#2a1700",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-primary-fixed": "#07006c",
+                    "on-background": "#dae2fd",
+                    "surface-dim": "#0b1326",
+                    "secondary-fixed-dim": "#4ae176",
+                    "on-secondary": "#003915",
+                    "surface-container": "#171f33",
+                    "on-primary-container": "#0d0096",
+                    "inverse-on-surface": "#283044",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffddb8",
+                    "secondary-fixed": "#6bff8f",
+                    "on-tertiary-container": "#3e2400",
+                    "on-surface-variant": "#c7c4d7",
+                    "surface-container-high": "#222a3d",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#e1e0ff",
+                    "primary-container": "#8083ff",
+                    "on-secondary-container": "#004119",
+                    "on-primary": "#1000a9",
+                    "on-secondary-fixed": "#002109",
+                    "secondary": "#4ae176",
+                    "inverse-primary": "#494bd6",
+                    "inverse-surface": "#dae2fd",
+                    "outline-variant": "#464554",
+                    "background": "#0b1326",
+                    "surface-container-low": "#131b2e",
+                    "on-secondary-fixed-variant": "#005321",
+                    "primary": "#c0c1ff",
+                    "surface-container-lowest": "#060e20",
+                    "on-tertiary": "#472a00",
+                    "surface-variant": "#2d3449",
+                    "tertiary": "#ffb95f",
+                    "surface": "#0b1326",
+                    "surface-tint": "#c0c1ff",
+                    "secondary-container": "#00b954",
+                    "tertiary-container": "#ca8100",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "lg": "40px",
+                    "margin-desktop": "48px",
+                    "base": "4px",
+                    "xl": "64px",
+                    "xs": "8px",
+                    "sm": "16px",
+                    "md": "24px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #0b1326;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .vibrant-glow {
+            box-shadow: 0 0 20px -5px rgba(192, 193, 255, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24 md:pb-0">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-surface dark:bg-surface h-16 flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop backdrop-blur-md bg-opacity-80">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" style="font-variation-settings: 'FILL' 1;">local_activity</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">CouponEx</h1>
+</div>
+<!-- Search Bar (Desktop) -->
+<div class="hidden md:flex flex-1 max-w-xl mx-8">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container border-none rounded-full py-2.5 pl-12 pr-4 text-on-surface focus:ring-2 focus:ring-primary-container transition-all" placeholder="Search for premium vouchers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<!-- Wallet Counter -->
+<div class="glass-panel px-4 py-1.5 rounded-full flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-tertiary text-[18px]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-md text-label-md text-primary dark:text-primary-fixed-dim">C: 1,250</span>
+</div>
+<!-- Avatar -->
+<div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="A professional close-up studio portrait of a young tech professional with a friendly expression. The lighting is sophisticated with cool blue and deep navy ambient tones to match a fintech dark-mode aesthetic. High resolution, sharp focus, with a blurred minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8D4mYEjV4ZtRhgVTR98kzAlnTsCsKSywxqN78kOE8iNi9a-dsxrtVkL29YPTdaMiHUijSiWdhEuHVnl-OhyIiEpNcVMijaTTbCTYpZN-liDM37A7s5Svnkw2wlJ7jlzuS0yY5sweCaxtvKL1rTqfwaSQFfshjbCxQ7DQGoxQGaetnub4d2RoJM0fE2zL9wfFcrcbULeU940XkQ5FK2P0vDXuI1IEanElna8vUbSbYaMyXTT_5FvFipgH192SxWLfYl_8C5iWP0Og"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-6">
+<!-- Search Bar (Mobile Only) -->
+<div class="md:hidden mb-6">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-xl py-3 pl-12 pr-4 text-on-surface focus:ring-2 focus:ring-primary-container" placeholder="Search brands, food, travel..." type="text"/>
+</div>
+</div>
+<!-- Category Chips -->
+<section class="mb-8">
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap shadow-lg vibrant-glow transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+                    All Deals
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant font-label-md text-label-md whitespace-nowrap transition-all">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+                    Food
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant font-label-md text-label-md whitespace-nowrap transition-all">
+<span class="material-symbols-outlined text-[18px]">flight</span>
+                    Travel
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant font-label-md text-label-md whitespace-nowrap transition-all">
+<span class="material-symbols-outlined text-[18px]">apparel</span>
+                    Fashion
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-variant font-label-md text-label-md whitespace-nowrap transition-all">
+<span class="material-symbols-outlined text-[18px]">devices</span>
+                    Electronics
+                </button>
+</div>
+</section>
+<!-- Trending Now -->
+<section class="mb-10">
+<div class="flex justify-between items-end mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Trending Now</h2>
+<button class="font-label-md text-label-md text-primary hover:underline">View all</button>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
+<!-- Trending Card 1 -->
+<div class="min-w-[280px] md:min-w-[340px] snap-start glass-panel rounded-2xl overflow-hidden group cursor-pointer transition-all hover:-translate-y-1">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500" data-alt="A high-end cinematic shot of a luxury electronic store with neon indigo and vibrant green lighting. Sleek gadgets are displayed on minimalist dark surfaces. The atmosphere is tech-forward and exclusive, with soft bokeh highlighting the premium nature of the products." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4vDuOfITaWzUNoFAWf9mpqGsPoDjRxzW8Ln6p0m39RSurlCqIAGLY0X_KYAseio25ShTKbkylaZ7LFnfLWVCRorGkhBWgFx8NMZQVCNt42hQm7JgAFawXkk84QmhEO-wUhfzbIlyedZkot3fqHeowR6YIOcHiRuQksPym-8a8KAFf69mavL2bYCSw2fW3STH_LWmFv5bdnkLcZaIMEy5EyVFHuokCU2epRSKvzbnTtfJxuu70DNYvoBLCgZoMdyGWQxjfDc2S6bA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent"></div>
+<div class="absolute top-3 right-3 bg-secondary/10 text-secondary backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 font-label-sm text-label-sm border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            Verified
+                        </div>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-tertiary mb-1 uppercase tracking-wider">Electronics</p>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">30% OFF Flagship Tech</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="font-headline-lg text-headline-lg text-primary">C: 450</span>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary transition-colors">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Trending Card 2 -->
+<div class="min-w-[280px] md:min-w-[340px] snap-start glass-panel rounded-2xl overflow-hidden group cursor-pointer transition-all hover:-translate-y-1">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500" data-alt="A gourmet dining experience in a luxury restaurant featuring high-contrast lighting and deep navy accents. A beautifully plated dish sits under a spotlight, surrounded by a sophisticated dark-themed interior. The visual style is premium and high-trust, emphasizing quality and exclusivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ9PPxzGTA10U1bsVR2sJ775LBXpdwYS2RTDVG2tlIB_1ShaJEN6nG9GbgexFdJhg2MEoA2URLkAPHpF1sr1mwguVNc9jY6rCAdJ2JzVl60DujjgliTJuGoRkuENdJzWlHT1NMRi0L1zsqmKDt8psS6rUgRith6gEmThuFdIH-0KZP2qSqqCTgVaY-zsvQCEsd3JAVQE8l7QsrGwLDQ-osCHexP37sEJALdzGbKGxwbdAWVAhH2_ubJhfnU40y09uNMB8F3Clw86c"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent"></div>
+<div class="absolute top-3 right-3 bg-secondary/10 text-secondary backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 font-label-sm text-label-sm border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            Verified
+                        </div>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-tertiary mb-1 uppercase tracking-wider">Food &amp; Dining</p>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">BOGO: Sky Lounge Dinner</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="font-headline-lg text-headline-lg text-primary">C: 120</span>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary transition-colors">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Trending Card 3 -->
+<div class="min-w-[280px] md:min-w-[340px] snap-start glass-panel rounded-2xl overflow-hidden group cursor-pointer transition-all hover:-translate-y-1">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500" data-alt="A minimalist fashion boutique with sleek architectural lines and soft Indigo backlighting. Premium garments hang on invisible racks against a deep charcoal wall. The mood is sophisticated, corporate modern, and highly stylish, with a focus on high-end retail value." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdHoDyj9hVJhzN8offnHoaSgM90e84gdGgA7z_UK6O8NSl5M5Ss5JW6QIABSxD9cfwCaQuH5bgJlVq_xhcib_qSjPhXp-HmCV9AQmfPdLSY8ur4IijFLLnGdWMFBpgN0W01RhpEHP2cAYfwVdjrWRW7iZqWwHki43gxaGGRDapRwJzAbtoEJAvBC_MyNo1tpBaq-Jw3CSq5LbhJs-FBB_48L_N4BHFyLvEFfuyXM1MSZdnmyIStXGjlFyS9EdDKjYREFMi0OttR3I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent"></div>
+<div class="absolute top-3 right-3 bg-secondary/10 text-secondary backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 font-label-sm text-label-sm border border-secondary/20">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            Verified
+                        </div>
+</div>
+<div class="p-4">
+<p class="font-label-sm text-label-sm text-tertiary mb-1 uppercase tracking-wider">Fashion</p>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">$50 Voucher: Urban Style</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="font-headline-lg text-headline-lg text-primary">C: 280</span>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary transition-colors">Buy Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Latest Coupons -->
+<section class="mb-10">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6">Latest Coupons</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Latest Card 1 -->
+<div class="glass-panel p-4 rounded-2xl flex gap-4 transition-all hover:border-primary/40 group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3">
+<div class="bg-error/10 text-error px-2 py-1 rounded-lg flex items-center gap-1 font-label-sm text-label-sm border border-error/20">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+                            Expiring Soon
+                        </div>
+</div>
+<div class="w-24 h-24 rounded-xl bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-display text-primary">shopping_bag</span>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface">Retail Giant</span>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border border-secondary/20">Verified</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-surface">20% Storewide Coupon</h4>
+<div class="mt-2 flex gap-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold">UNIVERSAL</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-primary">C: 75</span>
+<button class="text-primary font-label-md text-label-md hover:underline">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Latest Card 2 -->
+<div class="glass-panel p-4 rounded-2xl flex gap-4 transition-all hover:border-primary/40 group relative overflow-hidden">
+<div class="w-24 h-24 rounded-xl bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-display text-primary">fastfood</span>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface">Quick Bites</span>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border border-secondary/20">Verified</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-surface">Free Dessert w/ Meal</h4>
+<div class="mt-2 flex gap-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold">UNIVERSAL</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-primary">C: 15</span>
+<button class="text-primary font-label-md text-label-md hover:underline">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Latest Card 3 -->
+<div class="glass-panel p-4 rounded-2xl flex gap-4 transition-all hover:border-primary/40 group relative overflow-hidden">
+<div class="w-24 h-24 rounded-xl bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-display text-primary">flight_takeoff</span>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface">Global Airways</span>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border border-secondary/20">Verified</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-surface">$100 Flight Credit</h4>
+<div class="mt-2 flex gap-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold">UNIVERSAL</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-primary">C: 850</span>
+<button class="text-primary font-label-md text-label-md hover:underline">Buy Now</button>
+</div>
+</div>
+</div>
+<!-- Latest Card 4 -->
+<div class="glass-panel p-4 rounded-2xl flex gap-4 transition-all hover:border-primary/40 group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3">
+<div class="bg-error/10 text-error px-2 py-1 rounded-lg flex items-center gap-1 font-label-sm text-label-sm border border-error/20">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+                            Expiring Soon
+                        </div>
+</div>
+<div class="w-24 h-24 rounded-xl bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-display text-primary">sports_esports</span>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface">GameStop Pro</span>
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border border-secondary/20">Verified</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-semibold text-on-surface">1-Month Game Pass</h4>
+<div class="mt-2 flex gap-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold">UNIVERSAL</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-primary">C: 150</span>
+<button class="text-primary font-label-md text-label-md hover:underline">Buy Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-2 pb-safe bg-surface-container-lowest border-t border-outline-variant z-50 rounded-t-2xl shadow-lg">
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 transition-transform active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-sm text-label-sm">Explore</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-label-sm">Sell</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Wallet</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Add subtle interaction effects
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Search highlight logic
+        const searchInput = document.querySelector('input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('vibrant-glow');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('vibrant-glow');
+        });
+    </script>
+</body></html>

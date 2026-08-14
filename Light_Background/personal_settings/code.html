@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile Settings - CouponEx</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-container": "#cea62b",
+                      "primary": "#ab3500",
+                      "surface-container-low": "#f6f3ec",
+                      "tertiary": "#755b00",
+                      "error-container": "#ffdad6",
+                      "outline": "#8d7168",
+                      "surface-container-highest": "#e5e2db",
+                      "on-primary": "#ffffff",
+                      "inverse-on-surface": "#f3f0ea",
+                      "surface": "#fcf9f2",
+                      "primary-fixed-dim": "#ffb59d",
+                      "on-primary-container": "#5f1900",
+                      "secondary": "#4f5e80",
+                      "on-tertiary-container": "#4f3d00",
+                      "inverse-primary": "#ffb59d",
+                      "primary-container": "#ff6b35",
+                      "surface-bright": "#fcf9f2",
+                      "on-tertiary-fixed": "#241a00",
+                      "on-secondary-container": "#4e5d7f",
+                      "background": "#fcf9f2",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#ffe08e",
+                      "on-background": "#1c1c18",
+                      "surface-container-high": "#ebe8e1",
+                      "on-error": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#e1bfb5",
+                      "surface-tint": "#ab3500",
+                      "on-surface-variant": "#594139",
+                      "inverse-surface": "#31312c",
+                      "on-primary-fixed-variant": "#832600",
+                      "on-tertiary-fixed-variant": "#584400",
+                      "secondary-container": "#c8d7fe",
+                      "surface-variant": "#e5e2db",
+                      "tertiary-fixed-dim": "#ecc246",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#390c00",
+                      "on-surface": "#1c1c18",
+                      "surface-container": "#f0eee7",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-secondary-fixed": "#0a1b39",
+                      "on-secondary-fixed-variant": "#374667",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dcdad3",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#b7c6ed",
+                      "primary-fixed": "#ffdbd0"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "stack-md": "16px",
+                      "stack-lg": "32px",
+                      "container-max": "1200px",
+                      "stack-sm": "8px",
+                      "gutter": "16px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "price-display": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "30px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "price-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #0a1b39;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #0a1b39;
+        }
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+        .toggle-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg">
+<!-- Top Navigation Bar -->
+<nav class="bg-surface w-full h-16 border-b border-surface-variant flex justify-between items-center px-margin-desktop max-w-container-max mx-auto z-50 relative">
+<!-- Brand Logo -->
+<div class="font-display-lg text-display-lg text-primary flex items-center">
+            CouponEx
+        </div>
+<!-- Desktop Navigation Links -->
+<div class="hidden md:flex space-x-8 h-full items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors h-full flex items-center font-body-lg text-body-lg" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors h-full flex items-center font-body-lg text-body-lg" href="#">Search</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors h-full flex items-center font-body-lg text-body-lg" href="#">Orders</a>
+<a class="text-primary border-b-2 border-primary h-full flex items-center font-body-lg text-body-lg pt-0.5" href="#">Account</a>
+</div>
+<!-- Search Bar (Right Aligned) & Actions -->
+<div class="flex items-center space-x-4">
+<div class="relative hidden lg:block">
+<input class="border border-outline-variant rounded bg-surface-container-lowest px-4 py-2 pl-10 text-body-sm font-body-sm focus:outline-none focus:border-on-secondary-fixed transition-colors w-64" placeholder="Search coupons..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+</button>
+<button class="bg-primary-container text-on-primary font-body-sm text-body-sm px-4 py-2 rounded font-medium hover:bg-primary transition-colors ml-2 hidden sm:block">
+                List Coupon
+            </button>
+<!-- Profile Image -->
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2">
+<img alt="User Account Profile" class="w-full h-full object-cover" data-alt="A small, professional avatar portrait of a user in a well-lit studio setting. Neutral background, high quality, suitable for a digital marketplace profile. Warm, bright light mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMG_wHufs1AjQp73mdUgYMTHv6h2p_15dPubWUi8YZi12QRypB6EaqBmr3HnQdvFRM6ACBvedjLewaMiX51_aFKmgKV7PFMUeqlHKKTOiAmPbDr4oLwB2XMF1SIqbcZXX3Cosrv4KxuJpoqrY_MRf3e5SMlVM784N5qYix829nyu1KchLDpOyOR65DuIQmz2dyLAAYlwHLbLNFakTjzK5y0_LZbL1_cHn4ubjJzwhQYXFrnXytUqtD"/>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 max-w-container-max mx-auto w-full relative">
+<!-- Side Navigation -->
+<aside class="hidden md:flex flex-col bg-surface-container-low h-[calc(100vh-64px)] w-64 sticky top-16 border-r border-outline-variant py-stack-lg flex-shrink-0 z-40">
+<!-- User Header -->
+<div class="px-6 mb-8 flex flex-col items-start gap-4">
+<div class="w-16 h-16 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile picture" class="w-full h-full object-cover" data-alt="A professional headshot avatar of a user on a pristine white background. High resolution, clear lighting, suitable for a verified merchant profile in a modern fintech setting. Minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB13D0CenRaGHFv7u3HrNdcxU0LOAcp6Yld3RNclGioyczeICMrSY2F3-PFOJHAeDqoiZTql7Mp7lg29OZZjokNKeFowZRtMvcFKAdxBfR2m5R40D1tS2b2YEW5cXodGRph1qzhI8df3a627_pizjgofPO9zPyWyveTf0gXBExYK8eu1cOmMEyqx7cqv8Ld3PFbPsZZ6_IqcwNnnq7KZF45h9dJYxvQNCkioLqrnHJRt20dZHcEsemp"/>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-primary">Welcome back</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-tertiary-container text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        Verified Merchant
+                    </p>
+</div>
+<button class="mt-2 w-full py-2 px-4 bg-surface-container-lowest border border-on-secondary-fixed text-on-secondary-fixed font-body-sm rounded hover:bg-surface-container-high transition-colors text-center font-medium">
+                    Upgrade to Pro
+                </button>
+</div>
+<!-- Main Tabs -->
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm cursor-pointer" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                    Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm cursor-pointer" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">confirmation_number</span>
+                    My Coupons
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm cursor-pointer" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+                    Transaction History
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm cursor-pointer" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shield</span>
+                    Security
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-high text-on-primary-container font-bold border-l-4 border-primary rounded-r font-body-sm text-body-sm cursor-pointer active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+                    Settings
+                </a>
+</nav>
+<!-- Footer Tabs -->
+<div class="px-4 mt-auto space-y-2 pb-6 border-t border-outline-variant pt-4 mx-4">
+<a class="flex items-center gap-3 px-4 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm cursor-pointer" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+                    Help Center
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-body-sm text-body-sm cursor-pointer" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+                    Logout
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 w-full p-margin-mobile md:p-margin-desktop bg-background overflow-y-auto">
+<!-- Header -->
+<header class="mb-stack-lg">
+<h1 class="font-display-lg text-display-lg text-on-background md:font-display-lg-mobile md:text-display-lg-mobile lg:font-display-lg lg:text-display-lg">Profile Settings</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Manage your account preferences and notification settings.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter max-w-[900px]">
+<!-- Main Settings Column -->
+<div class="lg:col-span-8 flex flex-col gap-stack-lg">
+<!-- Account Preferences -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded p-6">
+<div class="flex items-center gap-2 mb-6 border-b border-surface-variant pb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">person</span>
+<h2 class="font-headline-md text-headline-md text-on-background">Account Preferences</h2>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Language</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant rounded px-4 py-3 pr-10 font-body-sm focus:outline-none focus:border-on-secondary-fixed transition-colors">
+<option>English (US)</option>
+<option>Hindi</option>
+<option>Spanish</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Timezone</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant rounded px-4 py-3 pr-10 font-body-sm focus:outline-none focus:border-on-secondary-fixed transition-colors">
+<option>(GMT+05:30) Indian Standard Time</option>
+<option>(GMT-08:00) Pacific Time</option>
+<option>(GMT+00:00) UTC</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4">
+<div>
+<h3 class="font-body-lg text-body-lg font-medium">Public Profile Visibility</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Allow other users to see your seller rating and active listings.</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle_public" name="toggle_public" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer border border-outline-variant" for="toggle_public"></label>
+</div>
+</div>
+</div>
+</section>
+<!-- Notification Settings -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded p-6">
+<div class="flex items-center gap-2 mb-6 border-b border-surface-variant pb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">notifications_active</span>
+<h2 class="font-headline-md text-headline-md text-on-background">Notification Settings</h2>
+</div>
+<div class="space-y-8">
+<!-- Email Notifications -->
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 tracking-wider">Email Notifications</h3>
+<div class="space-y-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center mt-1">
+<input checked="" class="appearance-none w-5 h-5 border border-outline-variant rounded bg-surface checked:bg-primary-container checked:border-primary-container transition-colors peer" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<span class="font-body-lg text-body-lg text-on-background font-medium group-hover:text-primary transition-colors">Order Updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Receive alerts when your coupons are bought or sold.</p>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center mt-1">
+<input class="appearance-none w-5 h-5 border border-outline-variant rounded bg-surface checked:bg-primary-container checked:border-primary-container transition-colors peer" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<span class="font-body-lg text-body-lg text-on-background font-medium group-hover:text-primary transition-colors">Promotional Offers</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Occasional emails about platform updates and top deals.</p>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex items-center justify-center mt-1">
+<input checked="" class="appearance-none w-5 h-5 border border-outline-variant rounded bg-surface checked:bg-primary-container checked:border-primary-container transition-colors peer" disabled="" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-white text-sm opacity-0 peer-checked:opacity-100 pointer-events-none" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<span class="font-body-lg text-body-lg text-on-surface-variant font-medium">Security Alerts (Required)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-75">Important notifications about your account security.</p>
+</div>
+</label>
+</div>
+</div>
+<!-- SMS/Push Notifications -->
+<div class="pt-4 border-t border-surface-variant">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 tracking-wider">Mobile Notifications</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-background">Watchlist Price Drops</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Push notifications when watched items drop in price.</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle_price" name="toggle_price" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer border border-outline-variant" for="toggle_price"></label>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-background">New Messages</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">SMS alerts for direct messages from other users.</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" id="toggle_msg" name="toggle_msg" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer border border-outline-variant" for="toggle_msg"></label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Secondary Settings Column -->
+<div class="lg:col-span-4 flex flex-col gap-stack-lg">
+<!-- Display Settings -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded p-6">
+<div class="flex items-center gap-2 mb-6 border-b border-surface-variant pb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">palette</span>
+<h2 class="font-headline-md text-headline-md text-on-background">Display</h2>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-3">Theme</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center justify-center p-3 border-2 border-primary rounded bg-surface-container-low text-primary transition-colors group">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">light_mode</span>
+<span class="font-body-sm text-xs font-medium">Light</span>
+</button>
+<button class="flex flex-col items-center justify-center p-3 border border-outline-variant rounded bg-surface text-on-surface-variant hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">dark_mode</span>
+<span class="font-body-sm text-xs font-medium">Dark</span>
+</button>
+<button class="flex flex-col items-center justify-center p-3 border border-outline-variant rounded bg-surface text-on-surface-variant hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">settings_brightness</span>
+<span class="font-body-sm text-xs font-medium">System</span>
+</button>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">Font Size</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant rounded px-4 py-3 pr-10 font-body-sm focus:outline-none focus:border-on-secondary-fixed transition-colors">
+<option>Default (Medium)</option>
+<option>Compact (Small)</option>
+<option>Comfortable (Large)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Connected Accounts -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded p-6">
+<div class="flex items-center gap-2 mb-6 border-b border-surface-variant pb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">link</span>
+<h2 class="font-headline-md text-headline-md text-on-background">Connections</h2>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col gap-3 p-4 border border-outline-variant rounded bg-surface">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-white border border-outline-variant rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-background">account_circle</span>
+</div>
+<div>
+<h4 class="font-body-sm font-semibold text-on-background">Google</h4>
+<p class="text-xs text-on-surface-variant">Connected</p>
+</div>
+</div>
+<button class="text-xs font-medium text-error hover:underline">Disconnect</button>
+</div>
+</div>
+<div class="flex flex-col gap-3 p-4 border border-outline-variant rounded bg-surface">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-on-secondary-fixed rounded flex items-center justify-center text-white font-bold text-xs">
+                                            Rz
+                                        </div>
+<div>
+<h4 class="font-body-sm font-semibold text-on-background">Razorpay</h4>
+<p class="text-xs text-on-surface-variant">Payouts active</p>
+</div>
+</div>
+<button class="text-xs font-medium text-on-surface-variant hover:text-primary transition-colors">Manage</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Buttons -->
+<div class="flex justify-end gap-4 mt-4">
+<button class="px-6 py-2 bg-surface border border-on-secondary-fixed text-on-secondary-fixed font-body-sm font-medium rounded hover:bg-surface-container-high transition-colors">
+                            Cancel
+                        </button>
+<button class="px-6 py-2 bg-primary-container text-on-primary font-body-sm font-medium rounded hover:bg-primary transition-colors shadow-sm">
+                            Save Changes
+                        </button>
+</div>
+</div>
+</div>
+<!-- Spacing before footer -->
+<div class="h-stack-lg"></div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-on-secondary-fixed w-full py-12 border-t border-outline-variant flex flex-col items-center justify-center space-y-4 px-margin-desktop z-50 relative mt-auto">
+<div class="font-headline-md text-headline-md text-surface">
+            CouponEx
+        </div>
+<div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">FAQ</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Support</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed hover:text-primary-fixed transition-colors cursor-default" href="#">Careers</a>
+</div>
+<div class="font-label-caps text-label-caps text-secondary-fixed-dim mt-4">
+            © 2024 CouponEx. Peer-to-Peer Digital Marketplace.
+        </div>
+</footer>
+</body></html>
