@@ -337,13 +337,17 @@
             <div>
               <p class="hero-label">Available Balance</p>
               <div class="hero-value">
-                <strong>0</strong>
+                <strong id="val-available-credits">0</strong>
                 <span>C</span>
+              </div>
+              <div style="display:flex; gap:16px; margin-top:10px; font-size:0.88rem; color:rgba(255,255,255,0.9);">
+                <div>Total Balance: <strong id="val-total-balance" style="font-size:1rem; font-family:'JetBrains Mono', monospace;">0 C</strong></div>
+                <div>Reserved: <strong id="val-reserved-credits" style="font-size:1rem; font-family:'JetBrains Mono', monospace;">0 C</strong></div>
               </div>
             </div>
             <div class="hero-status">
-              <p>New account</p>
-              <p>No withdrawals yet</p>
+              <p>Wallet Credits</p>
+              <p id="wallet-status-sub">Verified Account</p>
             </div>
           </div>
           <div class="hero-bottom">
@@ -605,12 +609,17 @@
         if (!currentUser) return;
 
         let balance = currentUser.balance || 0;
+        let reservedBalance = currentUser.reservedBalance || 0;
         let payouts = [];
         let topups = [];
 
         // 1. Instant synchronous render from localStorage (< 1ms)
-        const balanceElInit = document.querySelector(".hero-value strong");
-        if (balanceElInit) balanceElInit.textContent = balance;
+        const availElInit = document.getElementById("val-available-credits") || document.querySelector(".hero-value strong");
+        if (availElInit) availElInit.textContent = balance - reservedBalance;
+        const totalElInit = document.getElementById("val-total-balance");
+        if (totalElInit) totalElInit.textContent = balance + " C";
+        const resElInit = document.getElementById("val-reserved-credits");
+        if (resElInit) resElInit.textContent = reservedBalance + " C";
 
         let baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
 
@@ -624,10 +633,12 @@
           clearTimeout(timeoutId);
           const dataProfile = await resProfile.json();
 
-          // Get profile balance
+          // Get profile balance & reservedBalance
           if (dataProfile.success && dataProfile.user) {
             balance = dataProfile.user.balance || 0;
+            reservedBalance = dataProfile.user.reservedBalance || 0;
             currentUser.balance = balance;
+            currentUser.reservedBalance = reservedBalance;
             localStorage.setItem("couponex_user", JSON.stringify(currentUser));
           }
 
@@ -654,9 +665,16 @@
             .filter(t => t.userId === currentUser.id && (t.requestStatus === "Approved" || t.status === "Approved"));
         }
 
-        // Render Available Balance
-        const balanceEl = document.querySelector(".hero-value strong");
-        if (balanceEl) balanceEl.textContent = balance;
+        // Render Available, Total, and Reserved Credits
+        const availableCredits = balance - reservedBalance;
+        const availEl = document.getElementById("val-available-credits") || document.querySelector(".hero-value strong");
+        if (availEl) availEl.textContent = availableCredits;
+
+        const totalEl = document.getElementById("val-total-balance");
+        if (totalEl) totalEl.textContent = balance + " C";
+
+        const resEl = document.getElementById("val-reserved-credits");
+        if (resEl) resEl.textContent = reservedBalance + " C";
 
         // Render Wallet Status details
         const statusEl = document.querySelector(".hero-status");

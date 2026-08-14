@@ -1187,6 +1187,9 @@
         const voucherVolEl = document.getElementById("stat-voucher-volume");
         if (voucherVolEl) voucherVolEl.textContent = stats.voucherVolume;
 
+        const pendingOrderVerifEl = document.getElementById("stat-pending-order-verifications");
+        if (pendingOrderVerifEl) pendingOrderVerifEl.textContent = stats.pendingOrderVerifications || 0;
+
         const trustScoreEl = document.getElementById("stat-trust-score");
         if (trustScoreEl) trustScoreEl.innerHTML = `<span class="material-symbols-outlined">verified_user</span> ${stats.trustScore}%`;
 

@@ -103,18 +103,21 @@
           const tbody = document.getElementById("sales-tbody");
 
           if (data.success && Array.isArray(data.sales) && data.sales.length > 0) {
-            tbody.innerHTML = data.sales.map(s => `
-              <tr>
-                <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${s.orderNumber || s.orderId}</td>
-                <td><strong>${s.brand}</strong> <div style="font-size:0.75rem; color:var(--text-soft);">${s.code}</div></td>
-                <td>@${s.buyerUsername || 'buyer'}</td>
-                <td>₹${s.grossAmount}</td>
-                <td style="color:var(--text-soft);">₹${s.platformFee}</td>
-                <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--success);">₹${s.sellerNetAmount}</td>
-                <td><span class="badge badge-success">${s.orderStatus || 'COMPLETED'}</span></td>
-                <td><span class="badge badge-success">${s.payoutStatus || 'AVAILABLE'}</span></td>
-              </tr>
-            `).join("");
+            tbody.innerHTML = data.sales.map(s => {
+              const maskedCode = s.code ? (s.code.length > 4 ? s.code.slice(0, 3) + '••••' : '••••') : '';
+              return `
+                <tr>
+                  <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${s.orderNumber || s.orderId}</td>
+                  <td><strong>${s.brand}</strong> <div style="font-size:0.75rem; color:var(--text-soft);">${maskedCode}</div></td>
+                  <td>@${s.buyerUsername || 'buyer'}</td>
+                  <td>${s.grossAmount} C</td>
+                  <td style="color:var(--text-soft);">${s.platformFee} C (5%)</td>
+                  <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--success);">${s.sellerNetAmount} C</td>
+                  <td><span class="badge badge-success">${s.orderStatus || 'COMPLETED'}</span></td>
+                  <td><span class="badge badge-success">${s.earningStatus || s.payoutStatus || 'PENDING'}</span></td>
+                </tr>
+              `;
+            }).join("");
           } else {
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-soft);">No sales completed yet. List your coupons on the marketplace!</td></tr>`;
           }

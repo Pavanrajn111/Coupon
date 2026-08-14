@@ -657,7 +657,8 @@ const approveCoupon = (couponId) => {
 const getAdminStats = () => {
   const database = getDb();
   const pendingCoupons = database.prepare("SELECT COUNT(*) as count FROM coupons WHERE status = 'pending'").get().count;
-  const pendingPayouts = database.prepare("SELECT COUNT(*) as count FROM topups WHERE requestStatus = 'Pending'").get().count;
+  const pendingPayouts = database.prepare("SELECT COUNT(*) as count FROM payout_requests WHERE status IN ('REQUESTED', 'PROCESSING')").get().count;
+  const pendingOrderVerifications = database.prepare("SELECT COUNT(*) as count FROM orders WHERE verificationStatus = 'PENDING'").get().count;
   const activeSellers = database.prepare("SELECT COUNT(DISTINCT userId) as count FROM coupons").get().count;
   const voucherVolume = pendingCoupons;
 
@@ -676,12 +677,32 @@ const getAdminStats = () => {
   return {
     pendingCoupons,
     pendingPayouts,
+    pendingOrderVerifications,
     activeSellers,
     voucherVolume,
     disputes,
     trustScore: 95,
     dailyApprovedAmount
   };
+};
+
+const getAllDisputes = () => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT d.id as disputeId, d.orderId, d.reason, d.description, d.status, d.createdAt, d.resolvedAt, d.resolvedBy,
+           o.orderNumber, o.grossAmount, o.platformFee, o.sellerNetAmount, o.orderStatus, o.verificationStatus, o.redemptionStatus,
+           c.brand, c.code,
+           b.id as buyerId, b.username as buyerUsername, b.fullName as buyerName,
+           s.id as sellerId, s.username as sellerUsername, s.fullName as sellerName,
+           se.id as sellerEarningId, se.status as earningStatus
+    FROM disputes d
+    JOIN orders o ON d.orderId = o.id
+    JOIN coupons c ON o.couponId = c.id
+    JOIN users b ON d.userId = b.id
+    JOIN users s ON o.sellerId = s.id
+    LEFT JOIN seller_earnings se ON se.orderId = o.id
+    ORDER BY d.id DESC
+  `).all();
 };
 
 const getAdminPaymentStats = () => {
@@ -1174,7 +1195,7 @@ const getSellerEarningsSummary = (sellerId) => {
 const getSellerEarningsList = (sellerId, filterStatus = null) => {
   const database = getDb();
   let query = `
-    SELECT e.*, o.orderNumber, c.brand, c.code
+    SELECT e.*, o.orderNumber, o.redemptionStatus, o.redemptionWindowEndsAt, o.settlementEligibleAt, c.brand, c.code
     FROM seller_earnings e
     JOIN orders o ON e.orderId = o.id
     JOIN coupons c ON o.couponId = c.id
@@ -1932,4 +1953,5 @@ module.exports = {
   convertSingleEarningToCredits,
   getAllPendingOrderVerifications,
   getAllPendingPayoutVerifications,
+  getAllDisputes,
 };

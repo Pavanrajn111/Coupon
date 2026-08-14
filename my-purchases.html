@@ -248,24 +248,124 @@
     </main>
 
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        
-        }
+      const userData = localStorage.getItem("couponex_user");
+      let currentUser = userData ? JSON.parse(userData) : null;
 
-        
-          document.addEventListener("click", () => {
-            profileDropdown.classList.remove("show");
-          });
-          profileDropdown.addEventListener("click", (e) => {
-            e.stopPropagation();
-          });
-        }
-      });
-
-      function logoutUser() {
-        localStorage.removeItem("couponex_user");
+      if (!currentUser) {
+        alert("Please log in to view your purchases.");
         window.location.href = "login.html";
       }
+
+      async function loadPurchases() {
+        if (!currentUser) return;
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        const grid = document.querySelector(".purchases-grid");
+
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/purchases/${currentUser.id}`);
+          const data = await res.json();
+
+          if (data.success && Array.isArray(data.purchases) && data.purchases.length > 0) {
+            grid.innerHTML = data.purchases.map(p => {
+              const isApproved = p.verificationStatus === 'APPROVED' && p.couponReleased === 1;
+              const isPendingVerif = p.verificationStatus === 'PENDING';
+              const isRejected = p.verificationStatus === 'REJECTED' || p.orderStatus === 'REJECTED';
+              const isDisputed = p.disputeStatus === 'DISPUTED';
+              const isRefunded = p.orderStatus === 'REFUNDED' || p.redemptionStatus === 'REFUNDED';
+              const isConfirmed = p.redemptionStatus === 'CONFIRMED';
+              const isExpired = p.redemptionStatus === 'EXPIRED';
+
+              let statusBadgeText = "Pending Admin Verification";
+              let statusBadgeStyle = "background: rgba(217, 119, 6, 0.15); border-color: #d97706; color: #d97706;";
+              let icon = "hourglass_empty";
+
+              if (isApproved) {
+                if (isConfirmed) {
+                  statusBadgeText = "Redemption Confirmed";
+                  statusBadgeStyle = "background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981;";
+                  icon = "check_circle";
+                } else if (isDisputed) {
+                  statusBadgeText = "Dispute Under Review";
+                  statusBadgeStyle = "background: rgba(220, 38, 38, 0.15); border-color: #dc2626; color: #dc2626;";
+                  icon = "report_problem";
+                } else if (isRefunded) {
+                  statusBadgeText = "Refunded";
+                  statusBadgeStyle = "background: rgba(147, 51, 234, 0.15); border-color: #9333ea; color: #9333ea;";
+                  icon = "undo";
+                } else if (isExpired) {
+                  statusBadgeText = "Redemption Window Expired";
+                  statusBadgeStyle = "background: rgba(100, 116, 139, 0.15); border-color: #64748b; color: #64748b;";
+                  icon = "timer_off";
+                } else {
+                  statusBadgeText = "Coupon Released — Redemption Window Active";
+                  statusBadgeStyle = "background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981;";
+                  icon = "task_alt";
+                }
+              } else if (isRejected) {
+                statusBadgeText = "Purchase Rejected (Credits Refunded)";
+                statusBadgeStyle = "background: rgba(220, 38, 38, 0.15); border-color: #dc2626; color: #dc2626;";
+                icon = "cancel";
+              }
+
+              // Code visibility rule
+              const codeDisplay = isApproved ? p.code : "Coupon code will be revealed after verification.";
+              
+              // Redemption window end time format
+              const redemptionDeadlineStr = p.redemptionWindowEndsAt ? new Date(p.redemptionWindowEndsAt).toLocaleString() : "24 Hours from release";
+
+              return `
+                <div class="purchase-card purchase-card-large purchases-card-large" style="margin-bottom:16px;">
+                  <div class="purchase-logo">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                  </div>
+                  <div class="purchase-details">
+                    <div class="status-badge" style="${statusBadgeStyle}">
+                      <span class="material-symbols-outlined" style="font-size: 14px;">${icon}</span> ${statusBadgeText}
+                    </div>
+                    <h3 class="purchase-title">${p.brand || 'Digital Coupon'} Voucher</h3>
+                    <div class="purchase-merchant">Seller: @${p.sellerUsername || 'Seller'} • Payment Method: CouponEx Credits</div>
+                    <div class="purchase-meta">
+                      Purchased: ${new Date(p.createdAt).toLocaleDateString()} • Order #${p.orderNumber || p.orderId} • Price: ${p.grossAmount} C
+                    </div>
+                    ${isApproved && !isConfirmed && !isDisputed ? `
+                      <div style="font-size:0.8rem; color:var(--primary); font-weight:700; margin-top:6px;">
+                        <span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">timer</span> Redemption Window Ends: ${redemptionDeadlineStr}
+                      </div>
+                    ` : ''}
+                  </div>
+                  <div class="action-area" style="text-align:right;">
+                    ${isApproved ? `
+                      <div style="font-family:'JetBrains Mono', monospace; font-size:1.1rem; font-weight:700; background:var(--surface-soft); padding:8px 12px; border-radius:8px; border:1px solid var(--border); display:inline-block; margin-bottom:8px;">
+                        ${codeDisplay}
+                      </div>
+                      <div>
+                        <a href="escrow.html?orderId=${p.id}" class="view-code-btn" style="display:inline-block; text-decoration:none;">View Escrow Protection</a>
+                      </div>
+                    ` : `
+                      <div style="font-size:0.85rem; color:var(--text-muted); font-style:italic; max-width:240px;">
+                        ${codeDisplay}
+                      </div>
+                    `}
+                  </div>
+                </div>
+              `;
+            }).join("");
+          } else {
+            grid.innerHTML = `
+              <div style="text-align:center; padding:48px 16px; background:var(--surface); border:1px solid var(--border); border-radius:18px;">
+                <span class="material-symbols-outlined" style="font-size:48px; color:var(--primary); display:block; margin-bottom:12px;">shopping_bag</span>
+                <h3 style="margin:0 0 8px; font-size:1.2rem;">No purchases found</h3>
+                <p style="color:var(--text-soft); margin:0 0 16px;">Browse active coupon listings and complete your first secure purchase.</p>
+                <a href="search.html" class="view-code-btn" style="display:inline-block; text-decoration:none;">Explore Marketplace</a>
+              </div>
+            `;
+          }
+        } catch (err) {
+          console.error("Error loading purchases:", err);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadPurchases);
     </script>
   </body>
 </html>

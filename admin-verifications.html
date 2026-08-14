@@ -1134,19 +1134,28 @@
       <div class="admin-dash-header">
         <div>
           <span class="admin-dash-label">Coupon Verification Suite</span>
-          <h1 class="admin-dash-title">Verification Queue</h1>
+          <h1 class="admin-dash-title">Verification & Disputes Management</h1>
           <p class="admin-dash-desc">
-            Review seller-submitted coupon proofs, verify merchant and value, then approve or reject.
+            Review coupon listings, verify order purchases, and resolve buyer/seller disputes.
           </p>
-        </div>
-        <div class="admin-dash-actions">
-          <button class="admin-btn admin-btn-secondary" type="button" onclick="showToast('Export queue report queued.')">Export Queue</button>
-          <button class="admin-btn admin-btn-primary" type="button" onclick="showToast('Bulk action not required right now.')">Bulk Actions</button>
         </div>
       </div>
 
-      <!-- Workspace: Queue + Detail -->
-      <div class="workspace">
+      <!-- Tab Navigation Bar -->
+      <div style="display:flex; gap:12px; margin-bottom:20px; border-bottom:1px solid rgba(128,128,128,0.2); padding-bottom:12px;">
+        <button id="tab-btn-listings" class="admin-btn admin-btn-primary" onclick="switchVerifTab('listings')">
+          <span class="material-symbols-outlined" style="font-size:16px;">view_list</span> Listing Verifications
+        </button>
+        <button id="tab-btn-orders" class="admin-btn admin-btn-secondary" onclick="switchVerifTab('orders')">
+          <span class="material-symbols-outlined" style="font-size:16px;">shopping_cart_checkout</span> Order Purchase Verifications
+        </button>
+        <button id="tab-btn-disputes" class="admin-btn admin-btn-secondary" onclick="switchVerifTab('disputes')">
+          <span class="material-symbols-outlined" style="font-size:16px;">gavel</span> Disputes Resolution
+        </button>
+      </div>
+
+      <!-- Workspace: Queue + Detail or Table Views -->
+      <div class="workspace" id="verif-workspace">
         <!-- Left Pane: Verification Queue -->
         <aside class="queue-panel">
           <div class="queue-header">
@@ -1516,24 +1525,219 @@
         }
       }
 
+      let currentTab = "listings";
+
+      function switchVerifTab(tab) {
+        currentTab = tab;
+        document.getElementById("tab-btn-listings").className = tab === 'listings' ? "admin-btn admin-btn-primary" : "admin-btn admin-btn-secondary";
+        document.getElementById("tab-btn-orders").className = tab === 'orders' ? "admin-btn admin-btn-primary" : "admin-btn admin-btn-secondary";
+        document.getElementById("tab-btn-disputes").className = tab === 'disputes' ? "admin-btn admin-btn-primary" : "admin-btn admin-btn-secondary";
+
+        const workspace = document.getElementById("verif-workspace");
+
+        if (tab === 'listings') {
+          workspace.style.display = ""; // Default grid layout
+          workspace.innerHTML = `
+            <aside class="queue-panel">
+              <div class="queue-header">
+                <h2 class="queue-title">Verification Queue</h2>
+                <span class="queue-pending-badge" id="queue-badge">0 PENDING</span>
+              </div>
+              <div class="queue-list" id="queue-list"></div>
+            </aside>
+            <section class="detail-panel" id="detail-panel"></section>
+          `;
+          loadVerifications();
+        } else if (tab === 'orders') {
+          workspace.style.display = "block"; // Full width table mode
+          workspace.innerHTML = `
+            <div class="detail-panel" style="width:100%; box-sizing:border-box;">
+              <h2 style="font-size:1.25rem; font-weight:700; margin:0 0 16px; color:var(--text);">Order Purchase Verifications</h2>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem; color:var(--text);">
+                  <thead>
+                    <tr style="border-bottom:1px solid var(--surface-border); opacity:0.85;">
+                      <th style="padding:12px 10px;">Order Number</th>
+                      <th style="padding:12px 10px;">Buyer</th>
+                      <th style="padding:12px 10px;">Seller</th>
+                      <th style="padding:12px 10px;">Coupon</th>
+                      <th style="padding:12px 10px;">Purchase Price</th>
+                      <th style="padding:12px 10px;">Reserved Credits</th>
+                      <th style="padding:12px 10px;">Gross Amount</th>
+                      <th style="padding:12px 10px;">Platform Fee</th>
+                      <th style="padding:12px 10px;">Seller Net Amount</th>
+                      <th style="padding:12px 10px;">Order Date</th>
+                      <th style="padding:12px 10px;">Verification Status</th>
+                      <th style="padding:12px 10px; text-align:right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-verif-tbody">
+                    <tr><td colspan="12" style="padding:32px 10px; text-align:center; color:var(--text-variant);">Loading order verifications...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+          loadOrderVerifications();
+        } else if (tab === 'disputes') {
+          workspace.style.display = "block"; // Full width table mode
+          workspace.innerHTML = `
+            <div class="detail-panel" style="width:100%; box-sizing:border-box;">
+              <h2 style="font-size:1.25rem; font-weight:700; margin:0 0 16px; color:var(--text);">Disputes Resolution Workspace</h2>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem; color:var(--text);">
+                  <thead>
+                    <tr style="border-bottom:1px solid var(--surface-border); opacity:0.85;">
+                      <th style="padding:12px 10px;">Dispute ID</th>
+                      <th style="padding:12px 10px;">Order Number</th>
+                      <th style="padding:12px 10px;">Buyer</th>
+                      <th style="padding:12px 10px;">Seller</th>
+                      <th style="padding:12px 10px;">Coupon</th>
+                      <th style="padding:12px 10px;">Reason</th>
+                      <th style="padding:12px 10px;">Description</th>
+                      <th style="padding:12px 10px;">Status</th>
+                      <th style="padding:12px 10px; text-align:right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="disputes-tbody">
+                    <tr><td colspan="9" style="padding:32px 10px; text-align:center; color:var(--text-variant);">Loading active disputes...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+          loadDisputesQueue();
+        }
+      }
+
+      async function loadOrderVerifications() {
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/order-verifications`);
+          const data = await res.json();
+          const tbody = document.getElementById("orders-verif-tbody");
+          if (!tbody) return;
+
+          if (data.success && Array.isArray(data.queue) && data.queue.length > 0) {
+            tbody.innerHTML = data.queue.map(o => `
+              <tr style="border-bottom:1px solid rgba(128,128,128,0.1);">
+                <td style="padding:10px; font-family:'JetBrains Mono', monospace; font-weight:700;">#${o.orderNumber || o.orderId}</td>
+                <td style="padding:10px;">@${o.buyerUsername || 'buyer'} (${o.buyerName || ''})</td>
+                <td style="padding:10px;">@${o.sellerUsername || 'seller'} (${o.sellerName || ''})</td>
+                <td style="padding:10px;"><strong>${o.brand || 'Coupon'}</strong></td>
+                <td style="padding:10px;">${o.askingPrice || o.grossAmount} C</td>
+                <td style="padding:10px;">${o.grossAmount} C</td>
+                <td style="padding:10px;">${o.grossAmount} C</td>
+                <td style="padding:10px; opacity:0.8;">${o.platformFee} C (5%)</td>
+                <td style="padding:10px; font-weight:700; color:#10b981;">${o.sellerNetAmount} C</td>
+                <td style="padding:10px;">${new Date(o.createdAt).toLocaleDateString()}</td>
+                <td style="padding:10px;"><span class="queue-category">${o.verificationStatus}</span></td>
+                <td style="padding:10px;">
+                  <button class="admin-btn admin-btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="processOrderVerification(${o.orderId}, 'approve')">Approve</button>
+                  <button class="admin-btn admin-btn-secondary" style="padding:4px 8px; font-size:0.75rem; background:#ba1a1a; color:#fff;" onclick="processOrderVerification(${o.orderId}, 'reject')">Reject</button>
+                </td>
+              </tr>
+            `).join("");
+          } else {
+            tbody.innerHTML = `<tr><td colspan="12" style="padding:20px; text-align:center; opacity:0.7;">No pending order verifications queued.</td></tr>`;
+          }
+        } catch (err) {
+          console.error("Error loading order verifications:", err);
+        }
+      }
+
+      async function processOrderVerification(orderId, action) {
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/verify-order`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId, action, reason: action === 'reject' ? 'Admin verification rejected' : '' })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(`Order verification ${action}d successfully!`);
+            loadOrderVerifications();
+          } else {
+            alert(data.error || "Action failed.");
+          }
+        } catch (err) {
+          alert("Order verification action error.");
+        }
+      }
+
+      async function loadDisputesQueue() {
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/disputes`);
+          const data = await res.json();
+          const tbody = document.getElementById("disputes-tbody");
+          if (!tbody) return;
+
+          if (data.success && Array.isArray(data.disputes) && data.disputes.length > 0) {
+            tbody.innerHTML = data.disputes.map(d => {
+              const isResolved = d.status === 'resolved_seller_wins' || d.status === 'resolved_buyer_wins';
+              let statusLabel = d.status;
+              if (d.status === 'new' || d.status === 'open') statusLabel = "DISPUTED — OPEN";
+              else if (d.status === 'resolved_seller_wins') statusLabel = "RESOLVED (SELLER WINS)";
+              else if (d.status === 'resolved_buyer_wins') statusLabel = "RESOLVED (BUYER WINS)";
+
+              return `
+                <tr style="border-bottom:1px solid rgba(128,128,128,0.1);">
+                  <td style="padding:10px; font-family:'JetBrains Mono', monospace; font-weight:700;">#DSP-${d.disputeId}</td>
+                  <td style="padding:10px; font-family:'JetBrains Mono', monospace;">#${d.orderNumber || d.orderId}</td>
+                  <td style="padding:10px;">@${d.buyerUsername || 'buyer'}</td>
+                  <td style="padding:10px;">@${d.sellerUsername || 'seller'}</td>
+                  <td style="padding:10px;"><strong>${d.brand || 'Coupon'}</strong></td>
+                  <td style="padding:10px; color:#ef4444; font-weight:700;">${d.reason}</td>
+                  <td style="padding:10px; max-width:200px; opacity:0.85;">${d.description || 'N/A'}</td>
+                  <td style="padding:10px;"><span class="queue-category ${isResolved ? '' : 'flagged-cat'}">${statusLabel}</span></td>
+                  <td style="padding:10px;">
+                    ${!isResolved ? `
+                      <button class="admin-btn admin-btn-primary" style="padding:4px 8px; font-size:0.75rem; margin-right:4px;" onclick="resolveDisputeAction(${d.orderId}, 'seller')">Seller Wins</button>
+                      <button class="admin-btn admin-btn-secondary" style="padding:4px 8px; font-size:0.75rem; background:#ba1a1a; color:#fff;" onclick="resolveDisputeAction(${d.orderId}, 'buyer')">Buyer Wins</button>
+                    ` : `<span style="font-size:0.75rem; opacity:0.6;">Resolved by ${d.resolvedBy || 'admin'}</span>`}
+                  </td>
+                </tr>
+              `;
+            }).join("");
+          } else {
+            tbody.innerHTML = `<tr><td colspan="9" style="padding:20px; text-align:center; opacity:0.7;">No active disputes recorded.</td></tr>`;
+          }
+        } catch (err) {
+          console.error("Error loading disputes queue:", err);
+        }
+      }
+
+      async function resolveDisputeAction(orderId, winner) {
+        if (!confirm(`Resolve dispute in favor of ${winner.toUpperCase()}?`)) return;
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/resolve-dispute`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId, winner, notes: `Resolved by admin in favor of ${winner}` })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(data.message);
+            loadDisputesQueue();
+          } else {
+            alert(data.error || "Dispute resolution failed.");
+          }
+        } catch (err) {
+          alert("Dispute resolution error.");
+        }
+      }
+
       function updateLocalCouponStatus(couponId, status) {
         const localCoupons = JSON.parse(localStorage.getItem("couponex_coupons") || "[]");
         const idx = localCoupons.findIndex(c => c.id === couponId);
         if (idx !== -1) {
           localCoupons[idx].status = status;
           localStorage.setItem("couponex_coupons", JSON.stringify(localCoupons));
-
-          if (status === 'active') {
-            const uId = localCoupons[idx].userId;
-            const currentUsrStr = localStorage.getItem("couponex_user");
-            if (currentUsrStr) {
-              const currentUsr = JSON.parse(currentUsrStr);
-              if (currentUsr.id === uId) {
-                currentUsr.balance = (currentUsr.balance || 0) + localCoupons[idx].askingPrice;
-                localStorage.setItem("couponex_user", JSON.stringify(currentUsr));
-              }
-            }
-          }
+          // NOTE: Approving a coupon listing changes status pending -> active ONLY.
+          // It MUST NOT credit the seller's wallet balance!
         }
       }
 

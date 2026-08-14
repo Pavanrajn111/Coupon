@@ -768,6 +768,17 @@ router.post("/admin/process-payout", (req, res) => {
   }
 });
 
+// GET /api/admin/disputes - Get all disputes list
+router.get("/admin/disputes", (req, res) => {
+  try {
+    const disputes = detailsDb.getAllDisputes();
+    return res.json({ success: true, disputes });
+  } catch (error) {
+    console.error("Admin disputes error:", error);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+});
+
 // POST /api/admin/resolve-dispute - Admin resolves dispute in seller or buyer favor
 router.post("/admin/resolve-dispute", (req, res) => {
   try {
@@ -781,6 +792,32 @@ router.post("/admin/resolve-dispute", (req, res) => {
   } catch (error) {
     console.error("Resolve dispute error:", error);
     return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// GET /api/coupons - Get active coupons list
+router.get("/coupons", (req, res) => {
+  try {
+    const coupons = detailsDb.getAllActiveCoupons();
+    return res.json({ success: true, coupons });
+  } catch (error) {
+    console.error("Get coupons error:", error);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+});
+
+// GET /api/coupon/:id - Get single coupon by ID
+router.get("/coupon/:id", (req, res) => {
+  try {
+    const couponId = parseInt(req.params.id, 10);
+    const coupon = detailsDb.getCouponById(couponId);
+    if (!coupon) {
+      return res.status(404).json({ success: false, error: "Coupon not found" });
+    }
+    return res.json({ success: true, coupon });
+  } catch (error) {
+    console.error("Get single coupon error:", error);
+    return res.status(500).json({ success: false, error: "Server error" });
   }
 });
 

@@ -197,7 +197,41 @@
       </div>
 
       <!-- Metric Grid -->
-      <div class="metric-grid">
+      <!-- Top Tab Switcher -->
+      <div style="display:flex; gap:12px; margin-bottom:20px; border-bottom:1px solid rgba(128,128,128,0.2); padding-bottom:12px;">
+        <button id="payout-tab-btn-requests" class="filter-tab" onclick="switchPayoutMainTab('requests')" style="padding:8px 16px; border-radius:10px; border:none; font-size:0.875rem; font-weight:700; cursor:pointer; background:var(--primary); color:#fff;">
+          <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">payments</span> Payout Requests Queue
+        </button>
+        <button id="payout-tab-btn-accounts" class="filter-tab" onclick="switchPayoutMainTab('accounts')" style="padding:8px 16px; border-radius:10px; border:none; font-size:0.875rem; font-weight:700; cursor:pointer; background:none; color:var(--text-soft);">
+          <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">account_balance</span> Payout Accounts Verification
+        </button>
+      </div>
+
+      <!-- Section 1: Payout Requests Queue -->
+      <div id="payout-requests-section" class="table-card" style="margin-bottom:24px;">
+        <h2 style="margin:0 0 16px; font-size:1.2rem; font-weight:700;">Seller Monetary Payout Requests</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Payout Number</th>
+                <th>Seller</th>
+                <th>Amount (₹)</th>
+                <th>Method</th>
+                <th>Bank / Account</th>
+                <th>Status</th>
+                <th>Requested Date</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="payout-requests-tbody">
+              <tr><td colspan="8" style="text-align:center; padding:20px;">Loading payout requests...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="metric-grid" id="payout-accounts-metrics" style="display:none;">
         <div class="metric-card">
           <div class="metric-header">
             <span class="metric-label">Pending Payout Accounts</span>
@@ -227,7 +261,7 @@
       </div>
 
       <!-- Verification Queue Table & Filter Tabs -->
-      <div class="table-card">
+      <div class="table-card" id="payout-accounts-section" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
           <h2 style="margin:0; font-size:1.2rem; font-weight:700;">Payout Account Queue</h2>
           
@@ -505,6 +539,100 @@
         window.location.href = "login.html";
       }
 
+      function switchPayoutMainTab(tab) {
+        const reqSec = document.getElementById("payout-requests-section");
+        const accSec = document.getElementById("payout-accounts-section");
+        const metricsSec = document.getElementById("payout-accounts-metrics");
+        const btnReq = document.getElementById("payout-tab-btn-requests");
+        const btnAcc = document.getElementById("payout-tab-btn-accounts");
+
+        if (tab === 'requests') {
+          if (reqSec) reqSec.style.display = "block";
+          if (accSec) accSec.style.display = "none";
+          if (metricsSec) metricsSec.style.display = "none";
+          btnReq.style.background = "var(--primary)"; btnReq.style.color = "#fff";
+          btnAcc.style.background = "none"; btnAcc.style.color = "var(--text-soft)";
+          loadPayoutRequests();
+        } else {
+          if (reqSec) reqSec.style.display = "none";
+          if (accSec) accSec.style.display = "block";
+          if (metricsSec) metricsSec.style.display = "grid";
+          btnAcc.style.background = "var(--primary)"; btnAcc.style.color = "#fff";
+          btnReq.style.background = "none"; btnReq.style.color = "var(--text-soft)";
+          loadQueue();
+        }
+      }
+
+      async function loadPayoutRequests() {
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/payout-verifications`);
+          const data = await res.json();
+          const tbody = document.getElementById("payout-requests-tbody");
+          if (!tbody) return;
+
+          if (data.success && Array.isArray(data.queue) && data.queue.length > 0) {
+            tbody.innerHTML = data.queue.map(p => {
+              let actions = ``;
+              if (p.status === 'REQUESTED') {
+                actions = `<button class="action-btn btn-approve" onclick="processPayoutAction(${p.id}, 'process')">Mark Processing</button>`;
+              } else if (p.status === 'PROCESSING') {
+                actions = `
+                  <button class="action-btn btn-approve" onclick="processPayoutAction(${p.id}, 'complete')">Complete Payout</button>
+                  <button class="action-btn btn-reject" onclick="processPayoutAction(${p.id}, 'fail')">Fail / Reject</button>
+                `;
+              }
+
+              return `
+                <tr>
+                  <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${p.payoutNumber || p.id}</td>
+                  <td><strong>@${p.username || p.fullName || 'seller'}</strong></td>
+                  <td style="font-weight:700; color:var(--success);">₹${p.amount}</td>
+                  <td>${p.payoutMethod || 'BANK_TRANSFER'}</td>
+                  <td style="font-size:0.8rem;">
+                    <strong>${p.accountHolderName || ''}</strong> (${p.bankName || ''})<br>
+                    <span style="font-family:'JetBrains Mono', monospace;">${p.accountNumber || ''} / ${p.ifscCode || ''}</span>
+                  </td>
+                  <td>
+                    <span class="status-pill ${p.status === 'COMPLETED' ? 'pill-verified' : 'pill-pending'}">
+                      ${p.status}
+                    </span>
+                  </td>
+                  <td style="font-size:0.8rem;">${new Date(p.requestedAt).toLocaleDateString()}</td>
+                  <td style="text-align:right;">${actions}</td>
+                </tr>
+              `;
+            }).join("");
+          } else {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-soft);">No pending monetary payout requests queued.</td></tr>`;
+          }
+        } catch (err) {
+          console.error("Error loading payout requests:", err);
+        }
+      }
+
+      async function processPayoutAction(payoutRequestId, action) {
+        if (!confirm(`Perform action '${action.toUpperCase()}' for payout request #${payoutRequestId}?`)) return;
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/admin/process-payout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payoutRequestId, action, reason: action === 'fail' ? 'Bank transfer failed' : '' })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(`Payout request ${action}ed successfully!`);
+            loadPayoutRequests();
+          } else {
+            alert(data.error || "Action failed.");
+          }
+        } catch (err) {
+          alert("Payout processing error.");
+        }
+      }
+
+      loadPayoutRequests();
       loadQueue();
     </script>
   </body>

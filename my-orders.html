@@ -313,25 +313,228 @@
       </div>
     </main>
 
+    <!-- Dispute Modal -->
+    <div id="dispute-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:100; align-items:center; justify-content:center; padding:16px;">
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:18px; max-width:480px; width:100%; padding:24px; box-shadow:var(--shadow-card);">
+        <h3 style="margin:0 0 12px; font-size:1.2rem; font-weight:800; color:var(--text-strong);">Report Problem / Raise Dispute</h3>
+        <p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:16px;">If your coupon code is invalid or already redeemed, submit a dispute for admin review.</p>
+        
+        <form onsubmit="submitDispute(event)">
+          <input type="hidden" id="dispute-order-id" />
+          <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:6px; text-transform:uppercase;">Reason</label>
+            <select id="dispute-reason" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-soft); color:var(--text);" required>
+              <option value="Coupon Code Invalid">Coupon Code Invalid</option>
+              <option value="Code Already Redeemed">Code Already Redeemed</option>
+              <option value="Wrong Value / Details Mismatch">Wrong Value / Details Mismatch</option>
+              <option value="Merchant Terms Not Met">Merchant Terms Not Met</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <label style="display:block; font-size:0.75rem; font-weight:700; margin-bottom:6px; text-transform:uppercase;">Description</label>
+            <textarea id="dispute-description" rows="3" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-soft); color:var(--text);" placeholder="Provide additional details about the issue..."></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:12px;">
+            <button type="button" class="order-action-link" onclick="closeDisputeModal()" style="color:var(--text-soft);">Cancel</button>
+            <button type="submit" id="dispute-submit-btn" class="order-action-link" style="background:#ba1a1a; color:#fff; padding:8px 16px; border-radius:6px; border:none;">Submit Dispute</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        
-        }
+      const userData = localStorage.getItem("couponex_user");
+      let currentUser = userData ? JSON.parse(userData) : null;
 
-        
-          document.addEventListener("click", () => {
-            profileDropdown.classList.remove("show");
-          });
-          profileDropdown.addEventListener("click", (e) => {
-            e.stopPropagation();
-          });
-        }
-      });
-
-      function logoutUser() {
-        localStorage.removeItem("couponex_user");
+      if (!currentUser) {
+        alert("Please log in to view your orders.");
         window.location.href = "login.html";
       }
+
+      async function loadOrders() {
+        if (!currentUser) return;
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        const rightContainer = document.querySelector(".orders-container > div:last-child");
+
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/purchases/${currentUser.id}`);
+          const data = await res.json();
+
+          if (data.success && Array.isArray(data.purchases) && data.purchases.length > 0) {
+            // Update left stats card
+            const activeCount = data.purchases.filter(p => p.verificationStatus === 'APPROVED' && p.redemptionStatus === 'PENDING').length;
+            const completedCount = data.purchases.filter(p => p.redemptionStatus === 'CONFIRMED' || p.redemptionStatus === 'EXPIRED').length;
+            const disputedCount = data.purchases.filter(p => p.disputeStatus === 'DISPUTED').length;
+
+            const statRows = document.querySelectorAll(".stats-card .stat-row strong");
+            if (statRows.length >= 3) {
+              statRows[0].textContent = activeCount;
+              statRows[1].textContent = completedCount;
+              statRows[2].textContent = disputedCount;
+            }
+
+            rightContainer.innerHTML = data.purchases.map(p => {
+              const isApproved = p.verificationStatus === 'APPROVED' && p.couponReleased === 1;
+              const isPendingVerif = p.verificationStatus === 'PENDING';
+              const isRejected = p.verificationStatus === 'REJECTED' || p.orderStatus === 'REJECTED';
+              const isDisputed = p.disputeStatus === 'DISPUTED';
+              const isRefunded = p.orderStatus === 'REFUNDED' || p.redemptionStatus === 'REFUNDED';
+              const isConfirmed = p.redemptionStatus === 'CONFIRMED';
+              const isExpired = p.redemptionStatus === 'EXPIRED';
+
+              let badgeClass = "active";
+              let badgeText = "PENDING VERIFICATION";
+              let icon = "pending_actions";
+
+              if (isApproved) {
+                if (isConfirmed) {
+                  badgeClass = "completed"; badgeText = "REDEMPTION CONFIRMED"; icon = "check_circle";
+                } else if (isDisputed) {
+                  badgeClass = "disputed"; badgeText = "DISPUTE UNDER REVIEW"; icon = "report_problem";
+                } else if (isRefunded) {
+                  badgeClass = "disputed"; badgeText = "REFUNDED"; icon = "undo";
+                } else if (isExpired) {
+                  badgeClass = "completed"; badgeText = "REDEMPTION WINDOW EXPIRED"; icon = "timer_off";
+                } else {
+                  badgeClass = "active"; badgeText = "REDEMPTION WINDOW ACTIVE"; icon = "pending_actions";
+                }
+              } else if (isRejected) {
+                badgeClass = "disputed"; badgeText = "REJECTED"; icon = "cancel";
+              }
+
+              const codeDisplay = isApproved ? p.code : "Code revealed after verification";
+
+              return `
+                <div class="order-card" style="margin-bottom:16px;">
+                  <div class="order-indicator ${badgeClass}"></div>
+                  <div class="order-body">
+                    <div class="order-header-row">
+                      <div>
+                        <span class="order-badge ${badgeClass}">
+                          <span class="material-symbols-outlined" style="font-size: 14px;">${icon}</span> ${badgeText}
+                        </span>
+                        <span class="order-date-id">${new Date(p.createdAt).toLocaleDateString()} • ID: #${p.orderNumber || p.id}</span>
+                      </div>
+                      <div class="order-price-column">${p.grossAmount} C</div>
+                    </div>
+                    <h3 class="order-title">${p.brand || 'Coupon'} Voucher</h3>
+                    <div class="order-merchant">Seller: @${p.sellerUsername || 'Seller'} • Payment: CouponEx Credits</div>
+                    
+                    <div class="order-actions">
+                      <a href="escrow.html?orderId=${p.id}" class="order-action-link">View Escrow Details</a>
+                      ${isApproved && !isConfirmed && !isDisputed && !isExpired && !isRefunded ? `
+                        <button type="button" class="order-action-link" onclick="confirmRedemption(${p.id}, this)" style="border:none; background:none; padding:0;">
+                          <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span> Confirm Redemption
+                        </button>
+                        <button type="button" class="order-action-link" onclick="openDisputeModal(${p.id})" style="border:none; background:none; padding:0; color:#ba1a1a;">
+                          <span class="material-symbols-outlined" style="font-size:14px;">report_problem</span> Report Problem / Dispute
+                        </button>
+                      ` : ''}
+                      ${isApproved ? `
+                        <a class="order-action-link" onclick="navigator.clipboard.writeText('${p.code}'); alert('Code Copied: ${p.code}')">
+                          <span class="material-symbols-outlined" style="font-size: 14px;">content_copy</span> Copy Code
+                        </a>
+                      ` : ''}
+                    </div>
+                  </div>
+                  ${isApproved ? `
+                    <div class="coupon-notch-card">
+                      <span class="material-symbols-outlined" style="font-size: 32px; color: var(--primary);">qr_code_2</span>
+                      <strong style="font-size: 0.75rem; margin-top: 4px; color: var(--text-soft); font-family:'JetBrains Mono', monospace;">${p.code}</strong>
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join("");
+          } else {
+            rightContainer.innerHTML = `
+              <div style="text-align:center; padding:48px 16px; background:var(--surface); border:1px solid var(--border); border-radius:18px;">
+                <span class="material-symbols-outlined" style="font-size:48px; color:var(--primary); display:block; margin-bottom:12px;">receipt_long</span>
+                <h3 style="margin:0 0 8px; font-size:1.2rem;">No orders active</h3>
+                <p style="color:var(--text-soft); margin:0;">Your purchase orders will appear here once initiated.</p>
+              </div>
+            `;
+          }
+        } catch (err) {
+          console.error("Error loading orders:", err);
+        }
+      }
+
+      async function confirmRedemption(orderId, btnEl) {
+        if (!confirm("Are you sure you want to confirm coupon redemption? This will release funds to the seller.")) return;
+        btnEl.disabled = true;
+        btnEl.textContent = "Processing...";
+
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/confirm-redemption`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId, buyerId: currentUser.id })
+          });
+          const data = await res.json();
+          if (data.success) {
+            alert(data.message);
+            loadOrders();
+          } else {
+            alert(data.error || "Confirmation failed.");
+            btnEl.disabled = false;
+            btnEl.textContent = "Confirm Redemption";
+          }
+        } catch (err) {
+          alert("Failed to confirm redemption.");
+          btnEl.disabled = false;
+          btnEl.textContent = "Confirm Redemption";
+        }
+      }
+
+      function openDisputeModal(orderId) {
+        document.getElementById("dispute-order-id").value = orderId;
+        document.getElementById("dispute-modal").style.display = "flex";
+      }
+
+      function closeDisputeModal() {
+        document.getElementById("dispute-modal").style.display = "none";
+      }
+
+      async function submitDispute(e) {
+        e.preventDefault();
+        const orderId = document.getElementById("dispute-order-id").value;
+        const reason = document.getElementById("dispute-reason").value;
+        const description = document.getElementById("dispute-description").value;
+        const submitBtn = document.getElementById("dispute-submit-btn");
+
+        if (!orderId || !reason) return;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/dispute-order`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId, buyerId: currentUser.id, reason, description })
+          });
+          const data = await res.json();
+          if (data.success) {
+            alert("Dispute Submitted successfully! Status: Dispute Under Review");
+            closeDisputeModal();
+            loadOrders();
+          } else {
+            alert(data.error || "Failed to submit dispute.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Dispute";
+          }
+        } catch (err) {
+          alert("Dispute submission error.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Dispute";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadOrders);
     </script>
   </body>
 </html>

@@ -170,6 +170,7 @@
     <script>
       const storedUser = JSON.parse(localStorage.getItem("couponex_user") || "null") || { id: 1 };
       let currentAvailable = 0;
+      let sellerEarningsList = [];
 
       async function loadData() {
         const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
@@ -179,27 +180,83 @@
           if (data.success) {
             const s = data.summary;
             currentAvailable = s.available || 0;
+            sellerEarningsList = data.earnings || [];
+
             document.getElementById("val-available").textContent = "₹" + (s.available || 0).toLocaleString("en-IN");
             document.getElementById("val-pending").textContent = "₹" + (s.pending || 0).toLocaleString("en-IN");
             document.getElementById("val-total-earned").textContent = "₹" + (s.totalEarned || 0).toLocaleString("en-IN");
             document.getElementById("val-total-withdrawn").textContent = "₹" + (s.totalWithdrawn || 0).toLocaleString("en-IN");
 
             const tbody = document.getElementById("earnings-tbody");
-            if (Array.isArray(data.earnings) && data.earnings.length > 0) {
-              tbody.innerHTML = data.earnings.map(e => `
-                <tr>
-                  <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${e.orderNumber || e.orderId}</td>
-                  <td><strong>${e.brand || 'Coupon'}</strong> <span style="font-size:0.75rem; color:var(--text-soft);">(${e.code || ''})</span></td>
-                  <td>₹${e.grossAmount}</td>
-                  <td style="color:var(--text-soft);">₹${e.platformFee}</td>
-                  <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--success);">₹${e.sellerNetAmount}</td>
-                  <td>
-                    <span class="badge ${e.status === 'AVAILABLE' ? 'badge-available' : (e.status === 'PENDING' ? 'badge-pending' : 'badge-paid')}">
-                      ${e.status}
-                    </span>
-                  </td>
-                </tr>
-              `).join("");
+            if (Array.isArray(sellerEarningsList) && sellerEarningsList.length > 0) {
+              tbody.innerHTML = sellerEarningsList.map(e => {
+                let badgeClass = "badge-pending";
+                let statusLabel = e.status;
+
+                switch (e.status) {
+                  case 'PENDING':
+                    badgeClass = "badge-pending";
+                    statusLabel = "Waiting for buyer redemption confirmation";
+                    break;
+                  case 'AVAILABLE':
+                    badgeClass = "badge-available";
+                    statusLabel = "Available for settlement";
+                    break;
+                  case 'ON_HOLD':
+                    badgeClass = "badge-pending";
+                    statusLabel = "On Hold — Dispute Under Review";
+                    break;
+                  case 'PAYOUT_REQUESTED':
+                    badgeClass = "badge-pending";
+                    statusLabel = "Payout Requested";
+                    break;
+                  case 'PROCESSING':
+                    badgeClass = "badge-pending";
+                    statusLabel = "Payout Processing";
+                    break;
+                  case 'PAID':
+                    badgeClass = "badge-paid";
+                    statusLabel = "Payout Completed";
+                    break;
+                  case 'CONVERTED_TO_CREDITS':
+                    badgeClass = "badge-paid";
+                    statusLabel = "Converted to CouponEx Credits";
+                    break;
+                  case 'CANCELLED':
+                    badgeClass = "badge-pending";
+                    statusLabel = "Cancelled";
+                    break;
+                }
+
+                const redemptionDeadlineStr = e.status === 'PENDING' && e.redemptionWindowEndsAt ? 
+                  `<div style="font-size:0.75rem; color:var(--primary); font-weight:700; margin-top:4px;">
+                     Deadline: ${new Date(e.redemptionWindowEndsAt).toLocaleString()}
+                   </div>` : '';
+
+                const actionBtns = e.status === 'AVAILABLE' ? `
+                  <div style="display:flex; gap:6px; margin-top:4px;">
+                    <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="convertEarningToCredits(${e.id})">Receive as Credits</button>
+                    <button class="btn btn-primary" style="padding:4px 8px; font-size:0.75rem;" onclick="requestSingleMoneyPayout(${e.id})">Receive as Money</button>
+                  </div>
+                ` : '';
+
+                return `
+                  <tr>
+                    <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">#${e.orderNumber || e.orderId}</td>
+                    <td><strong>${e.brand || 'Coupon'}</strong></td>
+                    <td>₹${e.grossAmount}</td>
+                    <td style="color:var(--text-soft);">₹${e.platformFee} (${e.feeRate || 5}%)</td>
+                    <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--success);">₹${e.sellerNetAmount}</td>
+                    <td>
+                      <span class="badge ${badgeClass}">
+                        ${statusLabel}
+                      </span>
+                      ${redemptionDeadlineStr}
+                      ${actionBtns}
+                    </td>
+                  </tr>
+                `;
+              }).join("");
             } else {
               tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-soft);">No seller earnings recorded yet. Sell coupons to start earning!</td></tr>`;
             }
@@ -209,57 +266,71 @@
         }
       }
 
-      function openConvertModal() {
-        document.getElementById("convert-modal").classList.add("active");
-      }
-      function closeConvertModal() {
-        document.getElementById("convert-modal").classList.remove("active");
-      }
-
-      async function submitConvert() {
-        const amt = parseFloat(document.getElementById("convert-amount-input").value);
-        if (!amt || amt <= 0) return alert("Please enter a valid amount.");
-        if (amt > currentAvailable) return alert("Amount exceeds available earnings balance.");
-
+      async function convertEarningToCredits(earningId) {
         const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
         try {
-          const res = await fetch(`${baseUrl}/api/profile/convert-earnings-to-credits`, {
+          const res = await fetch(`${baseUrl}/api/profile/convert-earning-to-credits`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: storedUser.id, amount: amt })
+            body: JSON.stringify({ userId: storedUser.id, earningId })
           });
           const data = await res.json();
           if (data.success) {
             alert(data.message);
-            closeConvertModal();
+            // Refresh wallet in localStorage
+            const resProfile = await fetch(`${baseUrl}/api/profile/${storedUser.id}`);
+            const dataProfile = await resProfile.json();
+            if (dataProfile.success && dataProfile.user) {
+              storedUser.balance = dataProfile.user.balance;
+              localStorage.setItem("couponex_user", JSON.stringify(storedUser));
+              if (window.updateHeaderProfile) window.updateHeaderProfile(storedUser);
+            }
             loadData();
           } else {
             alert(data.error || "Conversion failed");
           }
         } catch (err) {
-          alert("Unable to process conversion.");
+          alert("Conversion failed.");
         }
       }
 
-      async function requestPayout() {
-        if (currentAvailable <= 0) return alert("You have no available earnings to withdraw.");
-
+      async function requestSingleMoneyPayout(earningId) {
         const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
         try {
+          // Check payout account status first
+          const resAcc = await fetch(`${baseUrl}/api/profile/payout-account/${storedUser.id}`);
+          const dataAcc = await resAcc.json();
+
+          if (!dataAcc.success || !dataAcc.account || dataAcc.account.status !== 'VERIFIED') {
+            alert("Your payout account must be verified before requesting a money payout.");
+            window.location.href = "payout-details.html";
+            return;
+          }
+
           const res = await fetch(`${baseUrl}/api/profile/request-payout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: storedUser.id, amount: currentAvailable })
+            body: JSON.stringify({ userId: storedUser.id, earningIds: [earningId] })
           });
           const data = await res.json();
           if (data.success) {
-            alert(data.message);
+            alert("Payout Requested successfully! Admin will process your withdrawal.");
             loadData();
           } else {
             alert(data.error || "Payout request failed.");
           }
         } catch (err) {
           alert("Payout request failed.");
+        }
+      }
+
+      async function requestPayout() {
+        if (currentAvailable <= 0) return alert("You have no available earnings to withdraw.");
+        const availableEarning = sellerEarningsList.find(e => e.status === 'AVAILABLE');
+        if (availableEarning) {
+          requestSingleMoneyPayout(availableEarning.id);
+        } else {
+          alert("No available earnings ready for payout.");
         }
       }
 

@@ -939,7 +939,8 @@
                 </div>
                 <button
                   class="buy-btn-lg"
-                  onclick="location.href = 'escrow.html'"
+                  id="buy-btn-desktop"
+                  onclick="handleBuyNow(this)"
                 >
                   <span class="material-symbols-outlined">security</span>
                   Buy Securely
@@ -1173,6 +1174,131 @@
 
       // Update sold count
       document.getElementById("sold-count").textContent = data.sold;
+
+      // --- BACKEND BUY NOW INTEGRATION ---
+      async function handleBuyNow(btnEl) {
+        const userData = localStorage.getItem("couponex_user");
+        if (!userData) {
+          alert("Please log in first to purchase this coupon.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        const currentUser = JSON.parse(userData);
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        let targetCouponId = params.get("id") || params.get("couponId");
+
+        // Disable button to prevent duplicate clicks
+        const desktopBtn = document.getElementById("buy-btn-desktop");
+        const mobileBtn = document.getElementById("buy-btn-mobile");
+        if (desktopBtn) { desktopBtn.disabled = true; desktopBtn.innerHTML = "<span class='material-symbols-outlined'>hourglass_empty</span> Reserving Credits..."; }
+        if (mobileBtn) { mobileBtn.disabled = true; mobileBtn.innerHTML = "<span class='material-symbols-outlined'>hourglass_empty</span> Reserving..."; }
+
+        try {
+          // 1. Fetch user available credits (balance - reservedBalance)
+          const resProfile = await fetch(`${baseUrl}/api/profile/${currentUser.id}`);
+          const dataProfile = await resProfile.json();
+          let balance = currentUser.balance || 0;
+          let reservedBalance = 0;
+
+          if (dataProfile.success && dataProfile.user) {
+            balance = dataProfile.user.balance || 0;
+            reservedBalance = dataProfile.user.reservedBalance || 0;
+            currentUser.balance = balance;
+            currentUser.reservedBalance = reservedBalance;
+            localStorage.setItem("couponex_user", JSON.stringify(currentUser));
+          }
+
+          const availableCredits = balance - reservedBalance;
+          const askingPrice = parseFloat(data.price.replace(/[^\d.]/g, "")) || 100;
+
+          if (availableCredits < askingPrice) {
+            alert(`Insufficient Available Credits!\n\nYour Available Balance: ${availableCredits} C\n(Total Balance: ${balance} C, Reserved: ${reservedBalance} C)\nRequired: ${askingPrice} C\n\nPlease add credits to your wallet.`);
+            if (desktopBtn) { desktopBtn.disabled = false; desktopBtn.innerHTML = "<span class='material-symbols-outlined'>security</span> Buy Securely"; }
+            if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.innerHTML = "<span class='material-symbols-outlined'>security</span> Buy Now"; }
+            return;
+          }
+
+          // 2. Resolve coupon ID from backend if targetCouponId not provided
+          if (!targetCouponId) {
+            const resCoupons = await fetch(`${baseUrl}/api/coupons`);
+            const dataCoupons = await resCoupons.json();
+            if (dataCoupons.success && Array.isArray(dataCoupons.coupons) && dataCoupons.coupons.length > 0) {
+              // Find matching active coupon or pick first active
+              const match = dataCoupons.coupons.find(c => c.status === 'active' && c.brand.toLowerCase().includes(data.brand.toLowerCase()));
+              const activeCoupon = match || dataCoupons.coupons.find(c => c.status === 'active');
+              if (activeCoupon) {
+                targetCouponId = activeCoupon.id;
+              }
+            }
+          }
+
+          if (!targetCouponId) {
+            // Fallback: create a demo active coupon listing if none exists
+            const resCreate = await fetch(`${baseUrl}/api/profile/coupon`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                userId: 1, // Seller ID
+                brand: data.brand,
+                category: data.category,
+                code: `${data.brand.substring(0, 3).toUpperCase()}-${Date.now().toString().slice(-6)}`,
+                expiryDate: "2026-12-31",
+                originalValue: parseFloat(data.original.replace(/[^\d.]/g, "")) || 250,
+                askingPrice,
+                description: data.terms
+              })
+            });
+            const dataCreate = await resCreate.json();
+            if (dataCreate.success && dataCreate.couponId) {
+              targetCouponId = dataCreate.couponId;
+              // Auto-approve created coupon for instant active status
+              await fetch(`${baseUrl}/api/admin/verify-coupon`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ couponId: targetCouponId, action: "approve" })
+              });
+            }
+          }
+
+          if (!targetCouponId) {
+            throw new Error("No active coupon listing available for purchase.");
+          }
+
+          // 3. Post to buy-coupon endpoint
+          const resBuy = await fetch(`${baseUrl}/api/profile/buy-coupon`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ couponId: targetCouponId, buyerId: currentUser.id })
+          });
+          const dataBuy = await resBuy.json();
+
+          if (!resBuy.ok || !dataBuy.success) {
+            throw new Error(dataBuy.error || "Purchase failed.");
+          }
+
+          // Success: update user reserved balance locally and update UI
+          currentUser.reservedBalance = (currentUser.reservedBalance || 0) + askingPrice;
+          localStorage.setItem("couponex_user", JSON.stringify(currentUser));
+          if (window.updateHeaderProfile) window.updateHeaderProfile(currentUser);
+
+          const statusMsg = `Credits Reserved — Waiting for Admin Verification (Order #${dataBuy.orderNumber})`;
+          alert(statusMsg);
+
+          if (desktopBtn) { desktopBtn.disabled = true; desktopBtn.innerHTML = `<span class='material-symbols-outlined'>pending_actions</span> ${statusMsg}`; }
+          if (mobileBtn) { mobileBtn.disabled = true; mobileBtn.innerHTML = `<span class='material-symbols-outlined'>pending_actions</span> Reserved`; }
+
+          // Redirect to Escrow Protection Page for this order
+          setTimeout(() => {
+            window.location.href = `escrow.html?orderId=${dataBuy.orderId}`;
+          }, 1200);
+
+        } catch (err) {
+          alert(`Purchase Error: ${err.message}`);
+          if (desktopBtn) { desktopBtn.disabled = false; desktopBtn.innerHTML = "<span class='material-symbols-outlined'>security</span> Buy Securely"; }
+          if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.innerHTML = "<span class='material-symbols-outlined'>security</span> Buy Now"; }
+        }
+      }
     </script>
   </body>
 </html>

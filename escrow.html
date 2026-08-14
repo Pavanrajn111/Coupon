@@ -4,15 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Escrow Protection | CouponEx</title>
+    <meta name="description" content="Track your CouponEx escrow-protected transaction in real time. Verify coupon codes and confirm redemption securely." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script src="header.js" defer></script>
-    <script src="app.js" defer></script>
     <script>
       (() => {
         const savedTheme = localStorage.getItem("couponex-theme");
@@ -31,249 +30,992 @@
         });
       })();
     </script>
+    <script src="header.js" defer></script>
+    <script src="app.js" defer></script>
     <style>
-      :root {
-        --bg: #fcf9f2;
-        --surface: #ffffff;
-        --surface-muted: #f4efe8;
-        --surface-border: #e7e2d8;
-        --text: #1d1d1d;
-        --text-soft: #5e5b56;
-        --primary: #ff6b35;
-        --primary-container: #ff6b35;
-        --on-primary: #ffffff;
-        --secondary: #4f5e80;
-        --tertiary-container: #cea62b;
-        --on-tertiary-container: #4f3d00;
-        --shadow: 0 18px 40px rgba(13, 20, 38, 0.08);
-      }
-      html.theme-dark {
-        --bg: #0b1326;
-        --surface: #161f35;
-        --surface-muted: #1e2742;
-        --surface-border: rgba(192, 193, 255, 0.2);
-        --text: #f2f5ff;
-        --text-soft: #c0c7dc;
-        --primary: #ff6b35;
-        --primary-container: #ff6b35;
-        --on-primary: #ffffff;
-        --secondary: #4ae176;
-        --tertiary-container: #ffe08e;
-        --on-tertiary-container: #241a00;
-        --shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Geist, Inter, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        min-height: 100vh;
-      }
-      .page-shell { width: min(1120px, calc(100% - 32px)); margin: 32px auto 80px; }
-      
-      .escrow-grid { display: grid; grid-template-columns: 4fr 7fr; gap: 28px; }
-      @media (max-width: 860px) { .escrow-grid { grid-template-columns: 1fr; } }
+      /* ===== Escrow Page — Themed ===== */
+      .escrow-page { padding: 24px 0 120px; }
 
-      .card-panel {
-        background: var(--surface);
-        border: 1px solid var(--surface-border);
-        border-radius: 18px;
-        padding: 24px;
+      .escrow-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 28px 32px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl, 32px);
+        background: linear-gradient(135deg, #3d41a8 0%, #7b81ff 100%);
+        color: #fff;
         box-shadow: var(--shadow);
       }
-
-      .badge-shield {
-        display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--tertiary-container); color: var(--tertiary-container); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      body.theme-light .escrow-hero {
+        background: linear-gradient(135deg, #ff7b48 0%, #ffb48f 100%);
       }
-      
-      .timer-box {
-        background: var(--surface-muted);
-        border: 1px solid var(--surface-border);
-        border-radius: 14px;
-        padding: 20px;
-        text-align: center;
-        margin-top: 20px;
+      .escrow-hero::before,
+      .escrow-hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        pointer-events: none;
       }
-      .timer-val {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 2.2rem;
+      .escrow-hero::before {
+        right: -90px; bottom: -90px;
+        width: 260px; height: 260px;
+        background: rgba(255,255,255,0.10);
+        filter: blur(10px);
+      }
+      .escrow-hero::after {
+        left: -50px; top: -50px;
+        width: 160px; height: 160px;
+        background: rgba(255,255,255,0.07);
+      }
+      .hero-row {
+        position: relative; z-index: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .hero-order-label {
+        margin: 0 0 4px;
+        font-size: 0.82rem;
         font-weight: 700;
-        color: var(--primary-container);
-        margin: 8px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255,255,255,0.78);
+      }
+      .hero-order-id {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #fff;
+      }
+      .hero-coupon-name {
+        margin: 6px 0 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: rgba(255,255,255,0.88);
+      }
+      .escrow-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.32);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(8px);
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .escrow-badge .material-symbols-outlined { font-size: 15px; }
+
+      .hero-amount-row {
+        position: relative; z-index: 1;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.18);
+        flex-wrap: wrap;
+      }
+      .amount-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: rgba(255,255,255,0.72);
+        margin: 0 0 4px;
+      }
+      .amount-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+      }
+      .amount-value span {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.88);
+        margin-left: 6px;
       }
 
-      .timeline-wrap { position: relative; padding-left: 20px; border-left: 2px solid var(--surface-border); display: flex; flex-direction: column; gap: 32px; margin-top: 20px; }
-      .timeline-item { position: relative; }
-      .timeline-node {
-        position: absolute; left: -31px; top: 2px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+      /* ===== Grid Layout ===== */
+      .escrow-grid {
+        display: grid;
+        grid-template-columns: 5fr 7fr;
+        gap: 24px;
+        margin-top: 24px;
       }
-      .timeline-node.done { background: var(--text); color: var(--surface); }
-      .timeline-node.active { background: var(--primary-container); color: var(--on-primary); box-shadow: 0 0 0 4px rgba(255,107,53,0.2); }
-      .timeline-node.pending { background: var(--surface-muted); border: 2px solid var(--surface-border); }
+      @media (max-width: 860px) {
+        .escrow-grid { grid-template-columns: 1fr; }
+      }
 
-      .code-display-box {
-        background: var(--surface-muted);
-        border: 1px solid var(--surface-border);
-        border-radius: 12px;
+      /* ===== Glass Panel (reusable) ===== */
+      .glass-panel {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg, 24px);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+        padding: 24px;
+      }
+
+      /* ===== Timer Card ===== */
+      .timer-card {
+        text-align: center;
+        padding: 28px 24px;
+      }
+      .timer-label {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        margin: 0;
+      }
+      .timer-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: clamp(2rem, 5vw, 2.6rem);
+        font-weight: 700;
+        color: var(--primary);
+        margin: 12px 0;
+        line-height: 1;
+      }
+      .timer-desc {
+        font-size: 0.82rem;
+        color: var(--text-soft);
+        margin: 0;
+        line-height: 1.55;
+        max-width: 320px;
+        margin-inline: auto;
+      }
+
+      /* Timer ring animation */
+      .timer-ring-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 148px;
+        height: 148px;
+        margin-bottom: 16px;
+      }
+      .timer-ring-wrap svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .timer-ring-bg {
+        fill: none;
+        stroke: var(--border);
+        stroke-width: 5;
+      }
+      .timer-ring-fg {
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 5;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s linear;
+      }
+
+      /* ===== Quick Stats ===== */
+      .quick-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .quick-stat {
+        padding: 14px;
+        border-radius: var(--radius-md, 16px);
+        border: 1px solid var(--border);
+        background: var(--surface-soft, rgba(13,24,45,0.7));
+      }
+      .quick-stat-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin: 0 0 4px;
+      }
+      .quick-stat-val {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-strong);
+      }
+
+      /* ===== Timeline ===== */
+      .timeline-section h2 {
+        margin: 0 0 24px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--text-strong);
+      }
+      .escrow-timeline {
+        position: relative;
+        padding-left: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .escrow-timeline::before {
+        content: "";
+        position: absolute;
+        left: 13px;
+        top: 14px;
+        bottom: 14px;
+        width: 2px;
+        background: var(--border);
+        border-radius: 2px;
+      }
+      .tl-step {
+        position: relative;
+        padding: 16px 0;
+      }
+      .tl-step + .tl-step {
+        border-top: 1px solid var(--border);
+      }
+      .tl-node {
+        position: absolute;
+        left: -28px;
+        top: 18px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        transition: all 320ms ease;
+      }
+      .tl-node .material-symbols-outlined {
+        font-size: 14px;
+        font-variation-settings: "FILL" 1, "wght" 700;
+      }
+      .tl-node.done {
+        background: var(--secondary, #4ae176);
+        color: #0d1328;
+        box-shadow: 0 0 0 4px rgba(74, 225, 118, 0.15);
+      }
+      body.theme-light .tl-node.done {
+        background: #2e7d32;
+        color: #fff;
+        box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.12);
+      }
+      .tl-node.active {
+        background: var(--primary);
+        color: var(--button-primary-text, #0d0096);
+        box-shadow: 0 0 0 4px rgba(128, 131, 255, 0.2);
+        animation: node-pulse 2.4s ease-in-out infinite;
+      }
+      body.theme-light .tl-node.active {
+        background: var(--primary-strong, #ff6b35);
+        color: #fff;
+        box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.18);
+      }
+      .tl-node.pending {
+        background: var(--surface-soft, rgba(13,24,45,0.7));
+        border: 2px solid var(--border);
+        color: var(--text-muted);
+      }
+      .tl-node.error {
+        background: #dc2626;
+        color: #fff;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+      }
+
+      @keyframes node-pulse {
+        0%, 100% { box-shadow: 0 0 0 4px rgba(128, 131, 255, 0.2); }
+        50% { box-shadow: 0 0 0 10px rgba(128, 131, 255, 0.05); }
+      }
+      body.theme-light .tl-node.active {
+        animation-name: node-pulse-light;
+      }
+      @keyframes node-pulse-light {
+        0%, 100% { box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.18); }
+        50% { box-shadow: 0 0 0 10px rgba(255, 107, 53, 0.05); }
+      }
+
+      .tl-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .tl-title {
+        margin: 0;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--text-strong);
+      }
+      .tl-title.highlight {
+        color: var(--primary);
+      }
+      .tl-status-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .tl-status-tag.verified {
+        color: var(--secondary, #4ae176);
+        border: 1px solid rgba(74, 225, 118, 0.28);
+        background: rgba(74, 225, 118, 0.1);
+      }
+      body.theme-light .tl-status-tag.verified {
+        color: #2e7d32;
+        border-color: rgba(46, 125, 50, 0.22);
+        background: rgba(46, 125, 50, 0.08);
+      }
+      .tl-status-tag.in-review {
+        color: var(--tertiary, #ffb95f);
+        border: 1px solid rgba(255, 185, 95, 0.32);
+        background: rgba(255, 185, 95, 0.1);
+      }
+      .tl-status-tag.rejected {
+        color: #f87171;
+        border: 1px solid rgba(248, 113, 113, 0.28);
+        background: rgba(248, 113, 113, 0.1);
+      }
+      .tl-status-tag.active {
+        color: var(--primary);
+        border: 1px solid rgba(192, 193, 255, 0.28);
+        background: rgba(192, 193, 255, 0.1);
+      }
+      body.theme-light .tl-status-tag.active {
+        color: var(--primary-strong, #ff6b35);
+        border-color: rgba(255, 107, 53, 0.22);
+        background: rgba(255, 107, 53, 0.08);
+      }
+      .tl-desc {
+        margin: 5px 0 0;
+        font-size: 0.84rem;
+        color: var(--text-soft);
+        line-height: 1.5;
+      }
+      .tl-step.is-dimmed { opacity: 0.48; }
+
+      /* ===== Code Reveal Box ===== */
+      .code-reveal {
+        margin-top: 14px;
         padding: 16px;
-        margin-top: 12px;
+        border-radius: var(--radius-md, 16px);
+        border: 1px solid var(--border);
+        background: var(--surface-soft, rgba(13,24,45,0.7));
       }
-      .code-inner {
-        display: flex; justify-content: space-between; align-items: center; background: var(--surface); border: 1px solid var(--surface-border); border-radius: 8px; padding: 12px 16px; margin-top: 8px;
+      .code-reveal-label {
+        font-size: 0.68rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin: 0 0 8px;
       }
-      .code-text { font-family: "JetBrains Mono", monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text); }
-      
+      .code-reveal-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .code-text {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--text-strong);
+        word-break: break-all;
+      }
       .btn-copy {
-        background: none; border: 0; color: var(--primary-container); cursor: pointer; display: flex; align-items: center; justify-content: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface-soft, rgba(13,24,45,0.7));
+        color: var(--primary);
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: transform 160ms ease, background 160ms ease;
       }
-      
-      .bottom-action-bar {
-        display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 24px; flex-wrap: wrap;
+      .btn-copy:hover {
+        transform: scale(1.06);
+        background: var(--surface);
+      }
+      .btn-copy .material-symbols-outlined { font-size: 18px; }
+
+      /* Copy success feedback */
+      .btn-copy.copied {
+        background: rgba(74, 225, 118, 0.15);
+        color: var(--secondary, #4ae176);
+        border-color: rgba(74, 225, 118, 0.3);
+      }
+
+      /* ===== Action Bar ===== */
+      .escrow-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        flex-wrap: wrap;
       }
       .btn-report {
-        background: none; border: 0; color: #dc2626; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; cursor: pointer; opacity: 0.85;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 16px;
+        border: 1px solid rgba(220, 38, 38, 0.22);
+        border-radius: 12px;
+        background: rgba(220, 38, 38, 0.06);
+        color: #f87171;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 180ms ease;
       }
-      .btn-report:hover { opacity: 1; text-decoration: underline; }
+      .btn-report:hover {
+        background: rgba(220, 38, 38, 0.12);
+        border-color: rgba(220, 38, 38, 0.36);
+      }
+      .btn-report:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .btn-report .material-symbols-outlined { font-size: 16px; }
+
       .btn-confirm {
-        background: var(--primary-container); color: var(--on-primary); border: 0; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; transition: all 160ms ease; cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 0 24px;
+        border: 0;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-strong, #8083ff));
+        color: var(--button-primary-text, #0d0096);
+        font-size: 0.88rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        box-shadow: 0 12px 36px rgba(128, 131, 255, 0.18);
+        transition: all 200ms ease;
       }
-      .btn-confirm:hover { opacity: 0.92; transform: translateY(-1px); }
+      body.theme-light .btn-confirm {
+        background: linear-gradient(135deg, #ff6b35, #ff8f60);
+        color: #fff;
+        box-shadow: 0 12px 36px rgba(255, 107, 53, 0.18);
+      }
+      .btn-confirm:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 44px rgba(128, 131, 255, 0.24);
+      }
+      body.theme-light .btn-confirm:hover:not(:disabled) {
+        box-shadow: 0 16px 44px rgba(255, 107, 53, 0.24);
+      }
+      .btn-confirm:active:not(:disabled) {
+        transform: translateY(0) scale(0.98);
+      }
+      .btn-confirm:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-confirm.completed {
+        background: linear-gradient(135deg, #2e7d32, #4caf50);
+        color: #fff;
+        box-shadow: 0 12px 36px rgba(46, 125, 50, 0.18);
+      }
+      .btn-confirm .material-symbols-outlined { font-size: 18px; }
+
+      /* ===== Responsive ===== */
+      @media (max-width: 560px) {
+        .escrow-hero { padding: 22px; }
+        .glass-panel { padding: 20px; }
+        .hero-row { flex-direction: column; }
+        .escrow-actions { flex-direction: column; }
+        .btn-confirm { width: 100%; justify-content: center; }
+        .btn-report { width: 100%; justify-content: center; }
+      }
+
+      /* ===== Toast ===== */
+      .escrow-toast {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        padding: 14px 24px;
+        border-radius: 14px;
+        background: var(--surface-strong, rgba(34,42,61,0.88));
+        border: 1px solid var(--border);
+        color: var(--text-strong);
+        font-weight: 700;
+        font-size: 0.88rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        backdrop-filter: blur(18px);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        transition: all 360ms cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+      }
+      .escrow-toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .escrow-toast .material-symbols-outlined {
+        font-size: 20px;
+        color: var(--secondary, #4ae176);
+      }
     </style>
   </head>
   <body>
     <div id="app-header"></div>
 
-    <main class="page-shell">
-      <div class="escrow-grid">
-        <!-- Left Side Summary & Countdown Timer -->
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-          <section class="card-panel">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-              <div>
-                <h1 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 4px;" id="orderIdText">Transaction #CX-8924</h1>
-                <p style="font-size: 0.9rem; color: var(--text-soft); margin: 0;" id="couponTitleText">Swiggy Instamart ₹250 Voucher</p>
-              </div>
-              <div class="badge-shield">
-                <span class="material-symbols-outlined" style="font-size: 14px;">shield</span> Escrow Secured
-              </div>
+    <main class="escrow-page">
+      <div class="shell">
+
+        <!-- ===== Hero Banner ===== -->
+        <section class="escrow-hero" id="escrowHero">
+          <div class="hero-row">
+            <div>
+              <p class="hero-order-label">Escrow Transaction</p>
+              <h1 class="hero-order-id" id="orderIdText">Order #CX-8924</h1>
+              <p class="hero-coupon-name" id="couponTitleText">Swiggy Instamart ₹250 Voucher</p>
             </div>
-
-            <div style="border-top: 1px solid var(--surface-border); pt-3; margin-top: 16px; padding-top: 16px;">
-              <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft);">Amount Locked in Escrow</span>
-              <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; font-weight: 700; color: var(--text); margin-top: 4px;" id="amountText">₹100.00</div>
-            </div>
-          </section>
-
-          <!-- Auto Confirm Countdown -->
-          <section class="timer-box">
-            <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft);">Auto-Confirmation In</span>
-            <div class="timer-val" id="timerClock">23:59:45</div>
-            <p style="font-size: 0.8rem; color: var(--text-soft); margin: 0; line-height: 1.4;">Funds are safely held in escrow and will automatically release to seller once confirmed.</p>
-          </section>
-        </div>
-
-        <!-- Right Side Escrow Progress Timeline -->
-        <section class="card-panel">
-          <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 20px;">Escrow Protection Status</h2>
-
-          <div class="timeline-wrap">
-            <!-- Step 1 -->
-            <div class="timeline-item">
-              <div class="timeline-node done">✓</div>
-              <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Payment Locked in Escrow</h3>
-                <span style="font-size: 0.8rem; color: var(--text-soft);">Today, 10:42 AM</span>
-              </div>
-              <p style="font-size: 0.85rem; color: var(--text-soft); margin: 4px 0 0;">Your payment is safely held by CouponEx Escrow.</p>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="timeline-item">
-              <div class="timeline-node done">✓</div>
-              <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Seller Notified</h3>
-                <span style="font-size: 0.8rem; color: var(--text-soft);">Today, 10:45 AM</span>
-              </div>
-              <p style="font-size: 0.85rem; color: var(--text-soft); margin: 4px 0 0;">Seller delivered digital code to your order.</p>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="timeline-item">
-              <div class="timeline-node active">●</div>
-              <h3 style="font-size: 1rem; font-weight: 700; margin: 0; color: var(--primary-container);" id="step3Title">Code Released to You</h3>
-              
-              <div class="code-display-box">
-                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft);">Your Digital Coupon Code</span>
-                <div class="code-inner">
-                  <span class="code-text" id="couponCodeText">SWIGGY-INSTA-50OFF</span>
-                  <button class="btn-copy" type="button" onclick="copyCouponCode()" title="Copy Code">
-                    <span class="material-symbols-outlined">content_copy</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="timeline-item" style="opacity: 0.65;" id="step4Wrap">
-              <div class="timeline-node pending" id="step4Node"></div>
-              <h3 style="font-size: 1rem; font-weight: 600; margin: 0;" id="step4Title">Confirm & Release Payment</h3>
-              <p style="font-size: 0.85rem; color: var(--text-soft); margin: 4px 0 0;" id="step4Desc">Verify code on app/website and confirm release.</p>
+            <div class="escrow-badge">
+              <span class="material-symbols-outlined">verified_user</span>
+              Escrow Secured
             </div>
           </div>
-
-          <!-- Bottom Action Buttons -->
-          <div class="bottom-action-bar">
-            <button class="btn-report" type="button" onclick="reportIssue()">Report an issue</button>
-            <button class="btn-confirm" type="button" id="confirmCodeBtn" onclick="confirmEscrow()">Confirm Code Works</button>
+          <div class="hero-amount-row">
+            <div>
+              <p class="amount-label">Amount Locked in Escrow</p>
+              <div class="amount-value" id="amountText">100.00 <span>C</span></div>
+            </div>
           </div>
         </section>
+
+        <!-- ===== Main Grid ===== -->
+        <div class="escrow-grid">
+
+          <!-- Left Column -->
+          <div style="display:flex; flex-direction:column; gap:24px;">
+
+            <!-- Countdown Timer -->
+            <section class="glass-panel timer-card">
+              <p class="timer-label">Auto-Confirmation In</p>
+              <div class="timer-ring-wrap">
+                <svg viewBox="0 0 148 148">
+                  <circle class="timer-ring-bg" cx="74" cy="74" r="64" />
+                  <circle class="timer-ring-fg" id="timerRing" cx="74" cy="74" r="64"
+                    stroke-dasharray="402.12" stroke-dashoffset="0" />
+                </svg>
+                <span class="timer-value" id="timerClock" style="position:relative;z-index:1;">23:59:45</span>
+              </div>
+              <p class="timer-desc">Funds are safely held in escrow and will auto-release to the seller once confirmed or when the timer expires.</p>
+            </section>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+              <div class="quick-stat">
+                <p class="quick-stat-label">Created</p>
+                <div class="quick-stat-val" id="statCreated">—</div>
+              </div>
+              <div class="quick-stat">
+                <p class="quick-stat-label">Status</p>
+                <div class="quick-stat-val" id="statStatus" style="color: var(--secondary);">Active</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column — Timeline -->
+          <section class="glass-panel timeline-section">
+            <h2>Escrow Protection Status</h2>
+
+            <div class="escrow-timeline">
+
+              <!-- Step 1 — Payment Locked -->
+              <div class="tl-step" id="step1Wrap">
+                <div class="tl-node done" id="step1Node">
+                  <span class="material-symbols-outlined">check</span>
+                </div>
+                <div class="tl-head">
+                  <h3 class="tl-title" id="step1Title">Payment Locked in Escrow</h3>
+                  <span class="tl-status-tag verified" id="step1Tag">
+                    <span class="material-symbols-outlined" style="font-size:12px;">check_circle</span>
+                    Secured
+                  </span>
+                </div>
+                <p class="tl-desc" id="step1Desc">Your credits are safely reserved in CouponEx Escrow. Funds cannot be accessed until verification is complete.</p>
+              </div>
+
+              <!-- Step 2 — Admin Verification -->
+              <div class="tl-step" id="step2Wrap">
+                <div class="tl-node done" id="step2Node">
+                  <span class="material-symbols-outlined">check</span>
+                </div>
+                <div class="tl-head">
+                  <h3 class="tl-title" id="step2Title">Admin Order Verification</h3>
+                  <span class="tl-status-tag verified" id="step2Tag">Verified</span>
+                </div>
+                <p class="tl-desc" id="step2Desc">Admin verifies coupon purchase details before release.</p>
+              </div>
+
+              <!-- Step 3 — Code Released -->
+              <div class="tl-step" id="step3Wrap">
+                <div class="tl-node active" id="step3Node">
+                  <span class="material-symbols-outlined">key</span>
+                </div>
+                <div class="tl-head">
+                  <h3 class="tl-title highlight" id="step3Title">Code Released to You</h3>
+                  <span class="tl-status-tag active" id="step3Tag">Unlocked</span>
+                </div>
+                <p class="tl-desc" id="step3Desc">Your coupon code is ready. Copy it and verify on the brand's platform.</p>
+
+                <div class="code-reveal" id="codeDisplayBox">
+                  <p class="code-reveal-label">Your Digital Coupon Code</p>
+                  <div class="code-reveal-inner">
+                    <span class="code-text" id="couponCodeText">SWIGGY-INSTA-50OFF</span>
+                    <button class="btn-copy" type="button" id="btnCopy" onclick="copyCouponCode()" title="Copy Code">
+                      <span class="material-symbols-outlined">content_copy</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 4 — Confirm & Release -->
+              <div class="tl-step is-dimmed" id="step4Wrap">
+                <div class="tl-node pending" id="step4Node">
+                  <span class="material-symbols-outlined" style="font-size:12px;">payments</span>
+                </div>
+                <div class="tl-head">
+                  <h3 class="tl-title" id="step4Title">Confirm & Release Payment</h3>
+                </div>
+                <p class="tl-desc" id="step4Desc">Verify code on app/website and confirm release to complete the transaction.</p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="escrow-actions">
+              <button class="btn-report" type="button" id="reportIssueBtn" onclick="reportIssue()">
+                <span class="material-symbols-outlined">flag</span>
+                Report Issue
+              </button>
+              <button class="btn-confirm" type="button" id="confirmCodeBtn" onclick="confirmEscrow()">
+                <span class="material-symbols-outlined">verified</span>
+                Confirm Code Works
+              </button>
+            </div>
+          </section>
+        </div>
       </div>
     </main>
 
-    <script>
-      // Countdown Timer Logic
-      let secondsLeft = 23 * 3600 + 59 * 60 + 45;
-      const timerClock = document.getElementById("timerClock");
+    <!-- Toast -->
+    <div class="escrow-toast" id="escrowToast">
+      <span class="material-symbols-outlined">check_circle</span>
+      <span id="toastMsg">Copied!</span>
+    </div>
 
-      function updateClock() {
-        if (secondsLeft <= 0) return;
-        secondsLeft--;
-        const h = String(Math.floor(secondsLeft / 3600)).padStart(2, '0');
-        const m = String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, '0');
-        const s = String(secondsLeft % 60).padStart(2, '0');
-        timerClock.textContent = `${h}:${m}:${s}`;
+    <script>
+      const userData = localStorage.getItem("couponex_user");
+      let currentUser = userData ? JSON.parse(userData) : null;
+      const params = new URLSearchParams(window.location.search);
+      const targetOrderId = params.get("orderId");
+      let currentOrder = null;
+      const TOTAL_SECONDS = 24 * 3600; // 24h window
+
+      function showToast(msg, duration = 2800) {
+        const toast = document.getElementById("escrowToast");
+        const toastMsg = document.getElementById("toastMsg");
+        if (toastMsg) toastMsg.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), duration);
       }
-      setInterval(updateClock, 1000);
+
+      async function initEscrowPage() {
+        if (!currentUser) {
+          alert("Please log in to view escrow protection details.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/purchases/${currentUser.id}`);
+          const data = await res.json();
+          if (data.success && Array.isArray(data.purchases) && data.purchases.length > 0) {
+            if (targetOrderId) {
+              currentOrder = data.purchases.find(p => String(p.id) === String(targetOrderId) || String(p.orderId) === String(targetOrderId));
+            }
+            if (!currentOrder) {
+              currentOrder = data.purchases[0];
+            }
+          }
+
+          if (currentOrder) {
+            renderOrderEscrow(currentOrder);
+          }
+        } catch (err) {
+          console.error("Error loading escrow order:", err);
+        }
+      }
+
+      function renderOrderEscrow(o) {
+        const isApproved = o.verificationStatus === 'APPROVED' && o.couponReleased === 1;
+        const isPendingVerif = o.verificationStatus === 'PENDING';
+        const isRejectedVerif = o.verificationStatus === 'REJECTED' || o.orderStatus === 'REJECTED';
+        const isConfirmed = o.redemptionStatus === 'CONFIRMED';
+        const isDisputed = o.disputeStatus === 'DISPUTED';
+        const isRefunded = o.orderStatus === 'REFUNDED' || o.redemptionStatus === 'REFUNDED';
+
+        // 1. Hero Data
+        const orderIdText = document.getElementById("orderIdText");
+        if (orderIdText) orderIdText.textContent = `Order #${o.orderNumber || o.id}`;
+
+        const couponTitleText = document.getElementById("couponTitleText");
+        if (couponTitleText) couponTitleText.textContent = `${o.brand || 'Digital Coupon'} Voucher`;
+
+        const amountText = document.getElementById("amountText");
+        if (amountText) amountText.innerHTML = `${o.grossAmount} <span>C</span>`;
+
+        // Quick Stats
+        const statCreated = document.getElementById("statCreated");
+        if (statCreated && o.createdAt) statCreated.textContent = new Date(o.createdAt).toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' });
+
+        const statStatus = document.getElementById("statStatus");
+        if (statStatus) {
+          if (isConfirmed) { statStatus.textContent = "Completed"; statStatus.style.color = "var(--secondary)"; }
+          else if (isDisputed) { statStatus.textContent = "Disputed"; statStatus.style.color = "#f87171"; }
+          else if (isRefunded) { statStatus.textContent = "Refunded"; statStatus.style.color = "var(--tertiary)"; }
+          else if (isPendingVerif) { statStatus.textContent = "In Review"; statStatus.style.color = "var(--tertiary)"; }
+          else if (isApproved) { statStatus.textContent = "Active"; statStatus.style.color = "var(--secondary)"; }
+          else { statStatus.textContent = "Processing"; statStatus.style.color = "var(--text-muted)"; }
+        }
+
+        // 2. Code Display
+        const codeText = document.getElementById("couponCodeText");
+        if (codeText) {
+          codeText.textContent = isApproved ? o.code : "••••••••••••••••";
+          if (!isApproved) codeText.style.opacity = "0.4";
+        }
+
+        // 3. Countdown Timer
+        let secondsLeft = 23 * 3600 + 59 * 60 + 45;
+        if (o.redemptionWindowEndsAt) {
+          const expiresAt = new Date(o.redemptionWindowEndsAt).getTime();
+          const now = new Date().getTime();
+          secondsLeft = Math.max(0, Math.floor((expiresAt - now) / 1000));
+        }
+
+        const timerClock = document.getElementById("timerClock");
+        const timerRing = document.getElementById("timerRing");
+        const circumference = 2 * Math.PI * 64; // r=64
+
+        function updateClock() {
+          if (!isApproved) {
+            if (timerClock) timerClock.textContent = "Pending";
+            if (timerRing) timerRing.style.strokeDashoffset = circumference;
+            return;
+          }
+          if (secondsLeft <= 0) {
+            if (timerClock) timerClock.textContent = "00:00:00";
+            if (timerRing) timerRing.style.strokeDashoffset = circumference;
+            return;
+          }
+          secondsLeft--;
+          const h = String(Math.floor(secondsLeft / 3600)).padStart(2, '0');
+          const m = String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, '0');
+          const s = String(secondsLeft % 60).padStart(2, '0');
+          if (timerClock) timerClock.textContent = `${h}:${m}:${s}`;
+
+          // Update ring
+          if (timerRing) {
+            const fraction = secondsLeft / TOTAL_SECONDS;
+            timerRing.style.strokeDashoffset = circumference * (1 - fraction);
+          }
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // 4. Step 2 — Admin Verification
+        const step2Node = document.getElementById("step2Node");
+        const step2Title = document.getElementById("step2Title");
+        const step2Desc = document.getElementById("step2Desc");
+        const step2Tag = document.getElementById("step2Tag");
+
+        if (isApproved) {
+          if (step2Node) { step2Node.className = "tl-node done"; step2Node.innerHTML = '<span class="material-symbols-outlined">check</span>'; }
+          if (step2Title) step2Title.textContent = "Admin Order Verified";
+          if (step2Desc) step2Desc.textContent = "Admin verified purchase order. Coupon code unlocked.";
+          if (step2Tag) { step2Tag.className = "tl-status-tag verified"; step2Tag.textContent = "Verified"; }
+        } else if (isRejectedVerif) {
+          if (step2Node) { step2Node.className = "tl-node error"; step2Node.innerHTML = '<span class="material-symbols-outlined">close</span>'; }
+          if (step2Title) step2Title.textContent = "Admin Order Rejected";
+          if (step2Desc) step2Desc.textContent = "Order rejected by admin. Reserved credits have been refunded.";
+          if (step2Tag) { step2Tag.className = "tl-status-tag rejected"; step2Tag.textContent = "Rejected"; }
+        } else {
+          if (step2Node) { step2Node.className = "tl-node active"; step2Node.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span>'; }
+          if (step2Title) step2Title.textContent = "Pending Admin Verification";
+          if (step2Desc) step2Desc.textContent = "Admin is reviewing this order. Code will unlock once verified.";
+          if (step2Tag) { step2Tag.className = "tl-status-tag in-review"; step2Tag.textContent = "In Review"; }
+        }
+
+        // 5. Step 3 — Code Released
+        const step3Node = document.getElementById("step3Node");
+        const step3Title = document.getElementById("step3Title");
+        const step3Tag = document.getElementById("step3Tag");
+        const step3Wrap = document.getElementById("step3Wrap");
+
+        if (isApproved) {
+          if (step3Node) { step3Node.className = "tl-node active"; step3Node.innerHTML = '<span class="material-symbols-outlined">key</span>'; }
+          if (step3Title) { step3Title.textContent = "Code Released to You"; step3Title.classList.add("highlight"); }
+          if (step3Tag) { step3Tag.className = "tl-status-tag active"; step3Tag.textContent = "Unlocked"; }
+          if (step3Wrap) step3Wrap.classList.remove("is-dimmed");
+        } else {
+          if (step3Node) { step3Node.className = "tl-node pending"; step3Node.innerHTML = '<span class="material-symbols-outlined" style="font-size:12px;">lock</span>'; }
+          if (step3Title) { step3Title.textContent = "Code Locked"; step3Title.classList.remove("highlight"); }
+          if (step3Tag) { step3Tag.className = "tl-status-tag in-review"; step3Tag.textContent = "Awaiting"; }
+          if (step3Wrap) step3Wrap.classList.add("is-dimmed");
+        }
+
+        // 6. Step 4 & Buttons
+        const step4Wrap = document.getElementById("step4Wrap");
+        const step4Node = document.getElementById("step4Node");
+        const step4Title = document.getElementById("step4Title");
+        const step4Desc = document.getElementById("step4Desc");
+        const confirmBtn = document.getElementById("confirmCodeBtn");
+        const reportBtn = document.getElementById("reportIssueBtn");
+
+        if (isConfirmed) {
+          if (step4Wrap) step4Wrap.classList.remove("is-dimmed");
+          if (step4Node) { step4Node.className = "tl-node done"; step4Node.innerHTML = '<span class="material-symbols-outlined">check</span>'; }
+          if (step4Title) step4Title.textContent = "Funds Released to Seller";
+          if (step4Desc) step4Desc.textContent = "Redemption confirmed. Transaction completed successfully!";
+          if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.classList.add("completed"); confirmBtn.innerHTML = '<span class="material-symbols-outlined">task_alt</span> Transaction Complete'; }
+          if (reportBtn) reportBtn.disabled = true;
+        } else if (isDisputed) {
+          if (step4Wrap) step4Wrap.classList.remove("is-dimmed");
+          if (step4Node) { step4Node.className = "tl-node error"; step4Node.innerHTML = '<span class="material-symbols-outlined">warning</span>'; }
+          if (step4Title) step4Title.textContent = "Dispute Under Review";
+          if (step4Desc) step4Desc.textContent = "An active dispute is currently under admin review.";
+          if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.innerHTML = '<span class="material-symbols-outlined">gavel</span> Dispute Under Review'; }
+          if (reportBtn) reportBtn.disabled = true;
+        } else if (isRefunded) {
+          if (step4Wrap) step4Wrap.classList.remove("is-dimmed");
+          if (step4Node) { step4Node.className = "tl-node done"; step4Node.innerHTML = '<span class="material-symbols-outlined">check</span>'; }
+          if (step4Title) step4Title.textContent = "Order Refunded";
+          if (step4Desc) step4Desc.textContent = "Full credit refund issued to your wallet.";
+          if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.classList.add("completed"); confirmBtn.innerHTML = '<span class="material-symbols-outlined">currency_exchange</span> Refunded'; }
+          if (reportBtn) reportBtn.disabled = true;
+        } else if (isPendingVerif) {
+          if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> Waiting for Verification'; }
+          if (reportBtn) reportBtn.disabled = true;
+        } else if (isApproved) {
+          if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Confirm Code Works'; }
+          if (reportBtn) reportBtn.disabled = false;
+        }
+      }
 
       function copyCouponCode() {
         const code = document.getElementById("couponCodeText").textContent;
+        if (code.includes("•")) return;
+        const copyBtn = document.getElementById("btnCopy");
         navigator.clipboard.writeText(code).then(() => {
-          alert("Coupon code copied to clipboard: " + code);
+          copyBtn.classList.add("copied");
+          copyBtn.innerHTML = '<span class="material-symbols-outlined">check</span>';
+          showToast("Coupon code copied to clipboard!");
+          setTimeout(() => {
+            copyBtn.classList.remove("copied");
+            copyBtn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
+          }, 2000);
         });
       }
 
-      function reportIssue() {
-        alert("Support request initiated. Our disputes team will pause escrow release and assist you shortly.");
+      async function reportIssue() {
+        if (!currentOrder) {
+          showToast("No order active to report issue.");
+          return;
+        }
+        const reason = prompt("Enter reason for reporting problem/dispute:", "Coupon Code Invalid or Already Used");
+        if (!reason) return;
+
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/dispute-order`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: currentOrder.id, buyerId: currentUser.id, reason, description: "Reported via Escrow Page" })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast("Dispute reported successfully!");
+            setTimeout(() => window.location.reload(), 1200);
+          } else {
+            showToast(data.error || "Failed to submit dispute.");
+          }
+        } catch (err) {
+          showToast("Dispute report error.");
+        }
       }
 
-      function confirmEscrow() {
+      async function confirmEscrow() {
+        if (!currentOrder) return;
         const confirmBtn = document.getElementById("confirmCodeBtn");
         confirmBtn.disabled = true;
-        confirmBtn.textContent = "Processing...";
+        confirmBtn.innerHTML = '<span class="material-symbols-outlined">sync</span> Processing…';
 
-        setTimeout(() => {
-          confirmBtn.textContent = "Transaction Completed ✓";
-          confirmBtn.style.background = "#2e7d32";
-          
-          document.getElementById("step4Wrap").style.opacity = "1";
-          const step4Node = document.getElementById("step4Node");
-          step4Node.className = "timeline-node done";
-          step4Node.textContent = "✓";
-          document.getElementById("step4Title").textContent = "Funds Released to Seller ✓";
-          document.getElementById("step4Desc").textContent = "Transaction completed successfully. Thank you for using CouponEx Escrow!";
-        }, 800);
+        const baseUrl = window.location.protocol === "file:" ? "http://localhost:8000" : "";
+        try {
+          const res = await fetch(`${baseUrl}/api/profile/confirm-redemption`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: currentOrder.id, buyerId: currentUser.id })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast("Redemption Confirmed! Payment released.");
+            setTimeout(() => window.location.reload(), 1200);
+          } else {
+            showToast(data.error || "Confirmation failed.");
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Confirm Code Works';
+          }
+        } catch (err) {
+          showToast("Failed to confirm code.");
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Confirm Code Works';
+        }
       }
+
+      document.addEventListener("DOMContentLoaded", initEscrowPage);
     </script>
   </body>
 </html>
