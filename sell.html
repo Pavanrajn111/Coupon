@@ -236,7 +236,9 @@
         const user = localStorage.getItem("couponex_user") ? JSON.parse(localStorage.getItem("couponex_user")) : null;
         const userId = user ? user.id : 1;
 
+        const localId = Date.now();
         const couponData = {
+          id: localId,
           userId: userId,
           brand: document.getElementById('brand-name')?.value,
           category: document.getElementById('category')?.value,
@@ -245,10 +247,23 @@
           originalValue: parseFloat(document.getElementById('original-price')?.value || 0),
           askingPrice: parseFloat(document.getElementById('asking-price')?.value || 0),
           description: document.getElementById('description')?.value,
-          image: selectedImageDataUrl || ""
+          image: selectedImageDataUrl || "",
+          status: 'pending',
+          createdAt: new Date().toISOString()
         };
 
-        fetch('/api/profile/coupon', {
+        // Always sync local storage for preview & offline support
+        const localCoupons = JSON.parse(localStorage.getItem('couponex_coupons') || '[]');
+        localCoupons.unshift(couponData);
+        localStorage.setItem('couponex_coupons', JSON.stringify(localCoupons));
+
+        const pending = JSON.parse(localStorage.getItem('pending_coupons') || '[]');
+        pending.unshift(couponData);
+        localStorage.setItem('pending_coupons', JSON.stringify(pending));
+
+        const apiUrl = window.location.protocol === "file:" ? "http://localhost:8000/api/profile/coupon" : "/api/profile/coupon";
+
+        fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(couponData)
@@ -256,18 +271,16 @@
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            alert('Listing submitted successfully! Sent for verification.');
-            location.href = 'dashboard.html';
+            alert('Listing submitted successfully! Sent for admin verification.');
+            location.href = 'admin-verifications.html';
           } else {
             alert('Error: ' + (data.error || 'Failed to submit listing'));
           }
         })
-        .catch(() => {
-          const pending = JSON.parse(localStorage.getItem('pending_coupons') || '[]');
-          pending.push(couponData);
-          localStorage.setItem('pending_coupons', JSON.stringify(pending));
+        .catch((err) => {
+          console.warn("API submit warning (using local sync):", err);
           alert('Listing submitted successfully! Sent for verification.');
-          location.href = 'dashboard.html';
+          location.href = 'admin-verifications.html';
         });
       }
     </script>

@@ -1245,26 +1245,27 @@
       let verificationQueue = [];
 
       async function loadVerifications() {
+        let dbItems = [];
         try {
           const apiVerif = window.location.protocol === "file:" ? "http://localhost:8000/api/admin/verifications" : "/api/admin/verifications";
           const res = await fetch(apiVerif);
           const data = await res.json();
-          if (data.success && data.queue) {
-            verificationQueue = data.queue.map(c => ({
+          if (data.success && Array.isArray(data.queue)) {
+            dbItems = data.queue.map(c => ({
               caseId: "CPN-" + c.id,
               couponId: c.id,
-              couponTitle: c.brand + " Voucher",
-              category: c.category.toUpperCase(),
-              merchant: c.brand,
-              merchantCategory: c.category,
-              claimedValue: "₹" + c.originalValue,
-              listingFee: "₹" + c.askingPrice,
-              discountText: "₹" + (c.originalValue - c.askingPrice) + " OFF",
-              sellerName: c.fullName || "@" + c.username,
+              couponTitle: (c.brand || "Coupon") + " Voucher",
+              category: (c.category || "General").toUpperCase(),
+              merchant: c.brand || "Merchant",
+              merchantCategory: c.category || "General",
+              claimedValue: "₹" + (c.originalValue || 0),
+              listingFee: "₹" + (c.askingPrice || 0),
+              discountText: "₹" + Math.max(0, (c.originalValue || 0) - (c.askingPrice || 0)) + " OFF",
+              sellerName: c.fullName || (c.username ? "@" + c.username : "Seller #" + (c.userId || c.id)),
               trustScore: 94,
               trustNote: "Verified seller.",
-              extractedCode: c.code,
-              expiryDate: c.expiryDate,
+              extractedCode: c.code || "",
+              expiryDate: c.expiryDate || "N/A",
               uploadedAgo: "Recent",
               riskFlag: false,
               riskNote: "",
@@ -1276,31 +1277,47 @@
             }));
           }
         } catch (err) {
-          // Fallback from localStorage
-          const localCoupons = JSON.parse(localStorage.getItem("couponex_coupons") || "[]");
-          const pending = localCoupons.filter(c => c.status === "pending");
-          verificationQueue = pending.map(c => ({
-            caseId: "CPN-" + c.id,
-            couponId: c.id,
-            couponTitle: c.brand + " Voucher",
-            category: c.category.toUpperCase(),
-            merchant: c.brand,
-            merchantCategory: c.category,
-            claimedValue: "₹" + c.originalValue,
-            listingFee: "₹" + c.askingPrice,
-            discountText: "₹" + (c.originalValue - c.askingPrice) + " OFF",
-            sellerName: "@" + c.userId,
-            trustScore: 90,
-            trustNote: "Offline queue.",
-            extractedCode: c.code,
-            expiryDate: c.expiryDate,
-            uploadedAgo: "Recent",
-            riskFlag: false,
-            riskNote: "",
-            proofImage: c.image || "",
-            timeline: ["Offline mode", "Pending Review"]
-          }));
+          console.warn("Could not fetch DB verifications queue, using local storage fallback:", err);
         }
+
+        // Merge local storage pending coupons
+        const local1 = JSON.parse(localStorage.getItem("couponex_coupons") || "[]");
+        const local2 = JSON.parse(localStorage.getItem("pending_coupons") || "[]");
+        const allLocal = [...local1, ...local2];
+        const pendingLocal = allLocal.filter(c => c && (c.status === "pending" || !c.status));
+
+        const existingIds = new Set(dbItems.map(item => String(item.couponId)));
+        
+        const localItems = [];
+        pendingLocal.forEach(c => {
+          const cId = c.id || c.couponId || ("LOCAL-" + Math.floor(Math.random() * 10000));
+          if (!existingIds.has(String(cId))) {
+            existingIds.add(String(cId));
+            localItems.push({
+              caseId: "CPN-" + cId,
+              couponId: cId,
+              couponTitle: (c.brand || "Coupon") + " Voucher",
+              category: (c.category || "General").toUpperCase(),
+              merchant: c.brand || "Merchant",
+              merchantCategory: c.category || "General",
+              claimedValue: "₹" + (c.originalValue || c.originalPrice || 0),
+              listingFee: "₹" + (c.askingPrice || 0),
+              discountText: "₹" + Math.max(0, (c.originalValue || c.originalPrice || 0) - (c.askingPrice || 0)) + " OFF",
+              sellerName: c.sellerName || ("Seller #" + (c.userId || "Local")),
+              trustScore: 90,
+              trustNote: "Pending verification.",
+              extractedCode: c.code || "",
+              expiryDate: c.expiryDate || c.expiry || "N/A",
+              uploadedAgo: "Just now",
+              riskFlag: false,
+              riskNote: "",
+              proofImage: c.image || "",
+              timeline: ["Submitted", "Pending Review"]
+            });
+          }
+        });
+
+        verificationQueue = [...localItems, ...dbItems];
         renderQueue();
       }
 
