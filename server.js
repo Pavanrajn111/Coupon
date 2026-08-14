@@ -71,6 +71,22 @@ const createAdminUser = async () => {
 createDemoUser();
 createAdminUser();
 
+// Start periodic background job for settling expired redemption windows (every 60 seconds)
+setInterval(() => {
+  try {
+    const settled = detailsDb.processRedemptionSettlementCheck();
+    if (settled > 0) {
+      console.log(`[Background Job] Auto-settled ${settled} expired redemption window order(s)`);
+    }
+  } catch (err) {
+    console.error("[Background Job Error] Redemption settlement check:", err.message);
+  }
+}, 60000);
+// Also run on startup
+try {
+  detailsDb.processRedemptionSettlementCheck();
+} catch (e) {}
+
 app.use(
   helmet({
     contentSecurityPolicy: false,

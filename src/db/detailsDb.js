@@ -45,6 +45,7 @@ const initDetailsDb = () => {
   ensureTableColumn(database, "users", "bio", "TEXT DEFAULT ''");
   ensureTableColumn(database, "users", "profilePhoto", "TEXT DEFAULT ''");
   ensureTableColumn(database, "users", "balance", "REAL DEFAULT 0.0");
+  ensureTableColumn(database, "users", "reservedBalance", "REAL DEFAULT 0.0");
 
   database.exec(`
     CREATE TABLE IF NOT EXISTS coupons (
@@ -196,21 +197,49 @@ const initDetailsDb = () => {
     )
   `);
 
+  ensureTableColumn(database, "orders", "verificationStatus", "TEXT DEFAULT 'PENDING'");
+  ensureTableColumn(database, "orders", "couponReleased", "INTEGER DEFAULT 0");
+  ensureTableColumn(database, "orders", "releasedAt", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "orders", "redemptionWindowEndsAt", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "orders", "buyerConfirmedAt", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "orders", "settlementEligibleAt", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "orders", "redemptionStatus", "TEXT DEFAULT 'PENDING'");
+  ensureTableColumn(database, "orders", "disputeStatus", "TEXT DEFAULT 'NONE'");
+  ensureTableColumn(database, "orders", "rejectionReason", "TEXT DEFAULT ''");
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS credit_reservations (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      orderId INTEGER NOT NULL,
+      buyerId INTEGER NOT NULL,
+      reservedAmount REAL NOT NULL,
+      status TEXT DEFAULT 'ACTIVE',
+      reservedAt TEXT DEFAULT (datetime('now')),
+      consumedAt TEXT,
+      refundedAt TEXT,
+      FOREIGN KEY (orderId) REFERENCES orders(id),
+      FOREIGN KEY (buyerId) REFERENCES users(id)
+    )
+  `);
+
   database.exec(`
     CREATE TABLE IF NOT EXISTS seller_earnings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       sellerId INTEGER NOT NULL,
-      orderId INTEGER NOT NULL,
+      orderId INTEGER NOT NULL UNIQUE,
       grossAmount REAL NOT NULL,
       platformFee REAL NOT NULL,
       sellerNetAmount REAL NOT NULL,
-      status TEXT DEFAULT 'AVAILABLE',
+      status TEXT DEFAULT 'PENDING',
       createdAt TEXT DEFAULT (datetime('now')),
       updatedAt TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (sellerId) REFERENCES users(id),
       FOREIGN KEY (orderId) REFERENCES orders(id)
     )
   `);
+
+  ensureTableColumn(database, "seller_earnings", "feeRate", "REAL DEFAULT 5.0");
+  ensureTableColumn(database, "seller_earnings", "availableAt", "TEXT DEFAULT ''");
 
   database.exec(`
     CREATE TABLE IF NOT EXISTS payout_requests (
@@ -230,6 +259,20 @@ const initDetailsDb = () => {
     )
   `);
 
+  ensureTableColumn(database, "payout_requests", "payoutReference", "TEXT DEFAULT ''");
+  ensureTableColumn(database, "payout_requests", "processedBy", "TEXT DEFAULT ''");
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS payout_request_items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      payoutRequestId INTEGER NOT NULL,
+      earningId INTEGER NOT NULL,
+      amount REAL NOT NULL,
+      FOREIGN KEY (payoutRequestId) REFERENCES payout_requests(id),
+      FOREIGN KEY (earningId) REFERENCES seller_earnings(id)
+    )
+  `);
+
   database.exec(`
     CREATE TABLE IF NOT EXISTS transactions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -245,6 +288,21 @@ const initDetailsDb = () => {
       description TEXT DEFAULT '',
       createdAt TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (userId) REFERENCES users(id)
+    )
+  `);
+
+  ensureTableColumn(database, "transactions", "referenceType", "TEXT DEFAULT 'GENERAL'");
+  ensureTableColumn(database, "transactions", "referenceId", "TEXT DEFAULT ''");
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      adminUsername TEXT NOT NULL,
+      action TEXT NOT NULL,
+      targetType TEXT NOT NULL,
+      targetId INTEGER NOT NULL,
+      details TEXT DEFAULT '',
+      createdAt TEXT DEFAULT (datetime('now'))
     )
   `);
 
@@ -590,11 +648,8 @@ const approveCoupon = (couponId) => {
   if (!coupon) throw new Error("Coupon not found");
   if (coupon.status !== 'pending') return { success: false, message: "Coupon is not pending" };
   
-  // Mark coupon as active
+  // Mark coupon as active ONLY. Do NOT credit seller balance.
   database.prepare("UPDATE coupons SET status = 'active' WHERE id = ?").run(couponId);
-  
-  // Credit askingPrice to seller
-  database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(coupon.askingPrice, coupon.userId);
   
   return { success: true };
 };
@@ -997,8 +1052,8 @@ const recordTransaction = (data) => {
   const txnId = data.transactionId || `TXN-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
   database.prepare(`
-    INSERT INTO transactions (transactionId, userId, orderId, type, amount, currency, balanceBefore, balanceAfter, status, description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO transactions (transactionId, userId, orderId, type, amount, currency, balanceBefore, balanceAfter, referenceType, referenceId, status, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     txnId,
     data.userId,
@@ -1008,6 +1063,8 @@ const recordTransaction = (data) => {
     data.currency || 'C',
     data.balanceBefore || 0,
     data.balanceAfter || 0,
+    data.referenceType || 'GENERAL',
+    data.referenceId || '',
     data.status || 'COMPLETED',
     data.description || ''
   );
@@ -1263,7 +1320,7 @@ const getUserSalesDetailed = (sellerId) => {
            o.orderStatus, o.createdAt as saleDate,
            c.brand, c.category, c.code,
            b.username as buyerUsername, b.fullName as buyerName,
-           COALESCE(e.status, 'AVAILABLE') as payoutStatus
+           COALESCE(e.status, 'PENDING') as payoutStatus
     FROM orders o
     JOIN coupons c ON o.couponId = c.id
     JOIN users b ON o.buyerId = b.id
@@ -1277,8 +1334,10 @@ const getUserPurchasesDetailed = (buyerId) => {
   const database = getDb();
   return database.prepare(`
     SELECT o.id as orderId, o.orderNumber, o.grossAmount as amount, o.paymentStatus, o.orderStatus,
+           o.verificationStatus, o.couponReleased, o.redemptionStatus, o.disputeStatus,
+           CASE WHEN o.couponReleased = 1 AND o.verificationStatus = 'APPROVED' THEN c.code ELSE '••••••••' END as code,
            o.createdAt as purchaseDate,
-           c.brand, c.category, c.code, c.originalValue, c.askingPrice,
+           c.brand, c.category, c.originalValue, c.askingPrice,
            s.username as sellerUsername, s.fullName as sellerName
     FROM orders o
     JOIN coupons c ON o.couponId = c.id
@@ -1288,7 +1347,528 @@ const getUserPurchasesDetailed = (buyerId) => {
   `).all(buyerId);
 };
 
+// --- CENTRALIZED ESCROW CONFIGURATION ---
+const REDEMPTION_WINDOW_HOURS = 24;
+const PLATFORM_FEE_PERCENT = 5.0;
+const convertInrToCredits = (inrAmount) => inrAmount * 1.0;
+
+// --- ESCROW & ORDER WORKFLOW FUNCTIONS ---
+
+const reserveCouponAndPurchase = (couponId, buyerId) => {
+  const database = getDb();
+  return database.transaction(() => {
+    const coupon = database.prepare("SELECT * FROM coupons WHERE id = ?").get(couponId);
+    if (!coupon) throw new Error("Coupon not found");
+    if (coupon.status !== 'active') throw new Error("Coupon is no longer available for purchase");
+    if (coupon.userId === buyerId) throw new Error("Sellers cannot purchase their own coupons");
+
+    const buyer = database.prepare("SELECT * FROM users WHERE id = ?").get(buyerId);
+    if (!buyer) throw new Error("Buyer not found");
+
+    const availableBalance = (buyer.balance || 0) - (buyer.reservedBalance || 0);
+    if (availableBalance < coupon.askingPrice) {
+      throw new Error("Insufficient available credits in wallet");
+    }
+
+    database.prepare("UPDATE users SET reservedBalance = COALESCE(reservedBalance, 0) + ? WHERE id = ?").run(coupon.askingPrice, buyerId);
+    database.prepare("UPDATE coupons SET status = 'reserved' WHERE id = ?").run(couponId);
+
+    const orderNumber = `ORD-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+    const grossAmount = coupon.askingPrice;
+    const platformFee = Math.round(grossAmount * (PLATFORM_FEE_PERCENT / 100) * 100) / 100;
+    const sellerNetAmount = Math.round((grossAmount - platformFee) * 100) / 100;
+
+    const orderRes = database.prepare(`
+      INSERT INTO orders (orderNumber, couponId, buyerId, sellerId, grossAmount, platformFee, sellerNetAmount, paymentStatus, orderStatus, verificationStatus, redemptionStatus)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'RESERVED', 'PENDING_VERIFICATION', 'PENDING', 'PENDING')
+    `).run(orderNumber, couponId, buyerId, coupon.userId, grossAmount, platformFee, sellerNetAmount);
+    const orderId = orderRes.lastInsertRowid;
+
+    database.prepare(`
+      INSERT INTO credit_reservations (orderId, buyerId, reservedAmount, status, reservedAt)
+      VALUES (?, ?, ?, 'ACTIVE', datetime('now'))
+    `).run(orderId, buyerId, coupon.askingPrice);
+
+    recordTransaction({
+      userId: buyerId,
+      orderId,
+      type: 'COUPON_PURCHASE_RESERVED',
+      amount: coupon.askingPrice,
+      currency: 'C',
+      balanceBefore: buyer.balance,
+      balanceAfter: buyer.balance,
+      referenceType: 'ORDER',
+      referenceId: orderNumber,
+      description: `Reserved ${coupon.askingPrice}C for ${coupon.brand} Coupon (Order #${orderNumber})`
+    });
+
+    return { orderId, orderNumber };
+  })();
+};
+
+const verifyAndReleaseOrder = (orderId, adminUsername = "admin") => {
+  const database = getDb();
+  return database.transaction(() => {
+    const order = database.prepare("SELECT * FROM orders WHERE id = ?").get(orderId);
+    if (!order) throw new Error("Order not found");
+    if (order.verificationStatus !== 'PENDING') throw new Error("Order is already verified or processed");
+
+    const reservation = database.prepare("SELECT * FROM credit_reservations WHERE orderId = ? AND status = 'ACTIVE'").get(orderId);
+    if (!reservation) throw new Error("Active credit reservation not found for this order");
+
+    const coupon = database.prepare("SELECT * FROM coupons WHERE id = ?").get(order.couponId);
+    if (!coupon) throw new Error("Coupon not found");
+
+    const buyer = database.prepare("SELECT * FROM users WHERE id = ?").get(order.buyerId);
+    if (!buyer) throw new Error("Buyer not found");
+
+    database.prepare("UPDATE credit_reservations SET status = 'CONSUMED', consumedAt = datetime('now') WHERE id = ?").run(reservation.id);
+    database.prepare("UPDATE users SET balance = balance - ?, reservedBalance = reservedBalance - ? WHERE id = ?")
+      .run(order.grossAmount, order.grossAmount, order.buyerId);
+
+    database.prepare("UPDATE coupons SET status = 'sold' WHERE id = ?").run(order.couponId);
+
+    const windowEndsAt = database.prepare(`SELECT datetime('now', '+' || ? || ' hours') as val`).get(REDEMPTION_WINDOW_HOURS).val;
+    database.prepare(`
+      UPDATE orders
+      SET paymentStatus = 'PAID', orderStatus = 'VERIFIED', verificationStatus = 'APPROVED', couponReleased = 1, releasedAt = datetime('now'), redemptionWindowEndsAt = ?, updatedAt = datetime('now')
+      WHERE id = ?
+    `).run(windowEndsAt, orderId);
+
+    database.prepare(`
+      INSERT INTO seller_earnings (sellerId, orderId, grossAmount, feeRate, platformFee, sellerNetAmount, status)
+      VALUES (?, ?, ?, ?, ?, ?, 'PENDING')
+    `).run(order.sellerId, orderId, order.grossAmount, PLATFORM_FEE_PERCENT, order.platformFee, order.sellerNetAmount);
+
+    const updatedBuyer = database.prepare("SELECT balance FROM users WHERE id = ?").get(order.buyerId);
+    recordTransaction({
+      userId: order.buyerId,
+      orderId,
+      type: 'COUPON_PURCHASE_CONSUMED',
+      amount: order.grossAmount,
+      currency: 'C',
+      balanceBefore: buyer.balance,
+      balanceAfter: updatedBuyer.balance,
+      referenceType: 'ORDER',
+      referenceId: order.orderNumber,
+      description: `Finalized purchase for ${coupon.brand} Coupon (Order #${order.orderNumber})`
+    });
+
+    database.prepare(`
+      INSERT INTO audit_logs (adminUsername, action, targetType, targetId, details)
+      VALUES (?, 'VERIFY_ORDER_APPROVE', 'ORDER', ?, ?)
+    `).run(adminUsername, orderId, `Approved order ${order.orderNumber} and released coupon`);
+
+    return { success: true };
+  })();
+};
+
+const rejectOrderPurchase = (orderId, adminUsername = "admin", reason = "") => {
+  const database = getDb();
+  return database.transaction(() => {
+    const order = database.prepare("SELECT * FROM orders WHERE id = ?").get(orderId);
+    if (!order) throw new Error("Order not found");
+    if (order.verificationStatus !== 'PENDING') throw new Error("Order is already processed");
+
+    const reservation = database.prepare("SELECT * FROM credit_reservations WHERE orderId = ? AND status = 'ACTIVE'").get(orderId);
+    if (!reservation) throw new Error("Active reservation not found");
+
+    const buyer = database.prepare("SELECT * FROM users WHERE id = ?").get(order.buyerId);
+
+    database.prepare("UPDATE credit_reservations SET status = 'REFUNDED', refundedAt = datetime('now') WHERE id = ?").run(reservation.id);
+    database.prepare("UPDATE users SET reservedBalance = reservedBalance - ? WHERE id = ?").run(order.grossAmount, order.buyerId);
+    database.prepare("UPDATE coupons SET status = 'active' WHERE id = ?").run(order.couponId);
+
+    database.prepare(`
+      UPDATE orders
+      SET orderStatus = 'REJECTED', verificationStatus = 'REJECTED', rejectionReason = ?, updatedAt = datetime('now')
+      WHERE id = ?
+    `).run(reason || "Rejected by admin", orderId);
+
+    recordTransaction({
+      userId: order.buyerId,
+      orderId,
+      type: 'COUPON_PURCHASE_RESERVATION_REFUND',
+      amount: order.grossAmount,
+      currency: 'C',
+      balanceBefore: buyer ? buyer.balance : 0,
+      balanceAfter: buyer ? buyer.balance : 0,
+      referenceType: 'ORDER',
+      referenceId: order.orderNumber,
+      description: `Reservation refunded for rejected Order #${order.orderNumber}`
+    });
+
+    database.prepare(`
+      INSERT INTO audit_logs (adminUsername, action, targetType, targetId, details)
+      VALUES (?, 'VERIFY_ORDER_REJECT', 'ORDER', ?, ?)
+    `).run(adminUsername, orderId, `Rejected order ${order.orderNumber}: ${reason}`);
+
+    return { success: true };
+  })();
+};
+
+const confirmOrderRedemption = (orderId, buyerId) => {
+  const database = getDb();
+  return database.transaction(() => {
+    const order = database.prepare("SELECT * FROM orders WHERE id = ?").get(orderId);
+    if (!order) throw new Error("Order not found");
+    if (order.buyerId !== buyerId) throw new Error("Unauthorized order confirmation");
+    if (order.orderStatus !== 'VERIFIED') throw new Error("Order is not eligible for redemption confirmation");
+    if (order.disputeStatus === 'DISPUTED') throw new Error("Order has an active dispute");
+
+    if (order.redemptionStatus === 'CONFIRMED' || order.redemptionStatus === 'EXPIRED') {
+      return { success: true, message: "Order redemption already settled" };
+    }
+
+    database.prepare(`
+      UPDATE orders
+      SET redemptionStatus = 'CONFIRMED', buyerConfirmedAt = datetime('now'), settlementEligibleAt = datetime('now'), updatedAt = datetime('now')
+      WHERE id = ?
+    `).run(orderId);
+
+    const earning = database.prepare("SELECT * FROM seller_earnings WHERE orderId = ?").get(orderId);
+    if (earning && earning.status === 'PENDING') {
+      database.prepare(`
+        UPDATE seller_earnings
+        SET status = 'AVAILABLE', availableAt = datetime('now'), updatedAt = datetime('now')
+        WHERE id = ?
+      `).run(earning.id);
+    }
+
+    return { success: true };
+  })();
+};
+
+const processRedemptionSettlementCheck = () => {
+  const database = getDb();
+  const eligibleOrders = database.prepare(`
+    SELECT * FROM orders
+    WHERE verificationStatus = 'APPROVED'
+      AND couponReleased = 1
+      AND redemptionStatus = 'PENDING'
+      AND disputeStatus = 'NONE'
+      AND redemptionWindowEndsAt IS NOT NULL
+      AND redemptionWindowEndsAt <= datetime('now')
+  `).all();
+
+  let settledCount = 0;
+  for (const order of eligibleOrders) {
+    database.transaction(() => {
+      database.prepare(`
+        UPDATE orders
+        SET redemptionStatus = 'EXPIRED', settlementEligibleAt = datetime('now'), updatedAt = datetime('now')
+        WHERE id = ?
+      `).run(order.id);
+
+      const earning = database.prepare("SELECT * FROM seller_earnings WHERE orderId = ?").get(order.id);
+      if (earning && earning.status === 'PENDING') {
+        database.prepare(`
+          UPDATE seller_earnings
+          SET status = 'AVAILABLE', availableAt = datetime('now'), updatedAt = datetime('now')
+          WHERE id = ?
+        `).run(earning.id);
+        settledCount++;
+      }
+    })();
+  }
+  return settledCount;
+};
+
+const raiseOrderDispute = (orderId, buyerId, reason, description = "") => {
+  const database = getDb();
+  return database.transaction(() => {
+    const order = database.prepare("SELECT * FROM orders WHERE id = ?").get(orderId);
+    if (!order) throw new Error("Order not found");
+    if (order.buyerId !== buyerId) throw new Error("Unauthorized dispute request");
+    if (order.verificationStatus !== 'APPROVED' || order.couponReleased !== 1) {
+      throw new Error("Only released coupons can be disputed");
+    }
+    if (order.disputeStatus === 'DISPUTED') throw new Error("A dispute is already active for this order");
+    if (order.orderStatus === 'REFUNDED' || order.orderStatus === 'REJECTED') {
+      throw new Error("Cannot dispute a refunded or rejected order");
+    }
+
+    const earning = database.prepare("SELECT * FROM seller_earnings WHERE orderId = ?").get(orderId);
+    if (earning && (earning.status === 'PAID' || earning.status === 'CONVERTED_TO_CREDITS')) {
+      throw new Error("Cannot dispute an order whose earnings have already been paid out or converted");
+    }
+
+    database.prepare(`
+      UPDATE orders
+      SET disputeStatus = 'DISPUTED', redemptionStatus = 'DISPUTED', updatedAt = datetime('now')
+      WHERE id = ?
+    `).run(orderId);
+
+    if (earning) {
+      database.prepare(`
+        UPDATE seller_earnings
+        SET status = 'ON_HOLD', updatedAt = datetime('now')
+        WHERE id = ?
+      `).run(earning.id);
+    }
+
+    const res = database.prepare(`
+      INSERT INTO disputes (userId, orderId, reason, description, status)
+      VALUES (?, ?, ?, ?, 'new')
+    `).run(buyerId, orderId, reason, description);
+
+    return res.lastInsertRowid;
+  })();
+};
+
+const resolveOrderDispute = (orderId, adminUsername = "admin", winner = "seller", notes = "") => {
+  const database = getDb();
+  return database.transaction(() => {
+    const order = database.prepare("SELECT * FROM orders WHERE id = ?").get(orderId);
+    if (!order) throw new Error("Order not found");
+    if (order.disputeStatus !== 'DISPUTED') throw new Error("Order has no active dispute to resolve");
+
+    const earning = database.prepare("SELECT * FROM seller_earnings WHERE orderId = ?").get(orderId);
+    if (earning && (earning.status === 'PAID' || earning.status === 'CONVERTED_TO_CREDITS')) {
+      throw new Error("Earning has already been processed");
+    }
+
+    if (winner === 'seller') {
+      database.prepare(`
+        UPDATE orders
+        SET disputeStatus = 'RESOLVED_SELLER_WINS', redemptionStatus = 'CONFIRMED', updatedAt = datetime('now')
+        WHERE id = ?
+      `).run(orderId);
+
+      if (earning) {
+        database.prepare(`
+          UPDATE seller_earnings
+          SET status = 'AVAILABLE', availableAt = datetime('now'), updatedAt = datetime('now')
+          WHERE id = ?
+        `).run(earning.id);
+      }
+
+      database.prepare("UPDATE disputes SET status = 'resolved_seller_wins', resolvedAt = datetime('now'), resolvedBy = ? WHERE orderId = ?")
+        .run(adminUsername, orderId);
+
+      database.prepare(`
+        INSERT INTO audit_logs (adminUsername, action, targetType, targetId, details)
+        VALUES (?, 'RESOLVE_DISPUTE_SELLER_WINS', 'ORDER', ?, ?)
+      `).run(adminUsername, orderId, `Resolved dispute in seller favor: ${notes}`);
+
+    } else if (winner === 'buyer') {
+      database.prepare(`
+        UPDATE orders
+        SET disputeStatus = 'RESOLVED_BUYER_WINS', orderStatus = 'REFUNDED', redemptionStatus = 'REFUNDED', updatedAt = datetime('now')
+        WHERE id = ?
+      `).run(orderId);
+
+      if (earning) {
+        database.prepare(`
+          UPDATE seller_earnings
+          SET status = 'CANCELLED', updatedAt = datetime('now')
+          WHERE id = ?
+        `).run(earning.id);
+      }
+
+      const buyer = database.prepare("SELECT * FROM users WHERE id = ?").get(order.buyerId);
+      database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(order.grossAmount, order.buyerId);
+
+      const updatedBuyer = database.prepare("SELECT balance FROM users WHERE id = ?").get(order.buyerId);
+      recordTransaction({
+        userId: order.buyerId,
+        orderId,
+        type: 'COUPON_PURCHASE_DISPUTE_REFUND',
+        amount: order.grossAmount,
+        currency: 'C',
+        balanceBefore: buyer ? buyer.balance : 0,
+        balanceAfter: updatedBuyer.balance,
+        referenceType: 'ORDER',
+        referenceId: order.orderNumber,
+        description: `Dispute refund for Order #${order.orderNumber}`
+      });
+
+      database.prepare("UPDATE disputes SET status = 'resolved_buyer_wins', resolvedAt = datetime('now'), resolvedBy = ? WHERE orderId = ?")
+        .run(adminUsername, orderId);
+
+      database.prepare(`
+        INSERT INTO audit_logs (adminUsername, action, targetType, targetId, details)
+        VALUES (?, 'RESOLVE_DISPUTE_BUYER_WINS', 'ORDER', ?, ?)
+      `).run(adminUsername, orderId, `Resolved dispute in buyer favor with refund: ${notes}`);
+    }
+
+    return { success: true };
+  })();
+};
+
+const requestSellerPayoutDetailed = (sellerId, earningIds = []) => {
+  const database = getDb();
+  return database.transaction(() => {
+    const account = getPayoutAccountByUserId(sellerId);
+    if (!account || account.status !== 'VERIFIED') {
+      throw new Error("Your payout account must be verified by an admin before you can withdraw money.");
+    }
+
+    let availableEarnings;
+    if (earningIds && earningIds.length > 0) {
+      const placeholders = earningIds.map(() => '?').join(',');
+      availableEarnings = database.prepare(`
+        SELECT * FROM seller_earnings
+        WHERE sellerId = ? AND status = 'AVAILABLE' AND id IN (${placeholders})
+      `).all(sellerId, ...earningIds);
+    } else {
+      availableEarnings = database.prepare(`
+        SELECT * FROM seller_earnings
+        WHERE sellerId = ? AND status = 'AVAILABLE'
+      `).all(sellerId);
+    }
+
+    if (!availableEarnings || availableEarnings.length === 0) {
+      throw new Error("No available earnings selected for payout.");
+    }
+
+    const totalAmount = availableEarnings.reduce((acc, e) => acc + e.sellerNetAmount, 0);
+    const payoutNumber = `PO-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+
+    const res = database.prepare(`
+      INSERT INTO payout_requests (payoutNumber, sellerId, amount, payoutMethod, payoutAccountId, status)
+      VALUES (?, ?, ?, ?, ?, 'REQUESTED')
+    `).run(payoutNumber, sellerId, totalAmount, account.payoutMethod || 'BANK_TRANSFER', account.id);
+    const payoutRequestId = res.lastInsertRowid;
+
+    for (const e of availableEarnings) {
+      database.prepare(`
+        INSERT INTO payout_request_items (payoutRequestId, earningId, amount)
+        VALUES (?, ?, ?)
+      `).run(payoutRequestId, e.id, e.sellerNetAmount);
+
+      database.prepare(`
+        UPDATE seller_earnings
+        SET status = 'PAYOUT_REQUESTED', updatedAt = datetime('now')
+        WHERE id = ?
+      `).run(e.id);
+    }
+
+    return { payoutRequestId, payoutNumber, amount: totalAmount };
+  })();
+};
+
+const processSellerPayoutDetailed = (payoutRequestId, action, adminUsername = "admin", reason = "") => {
+  const database = getDb();
+  return database.transaction(() => {
+    const payout = database.prepare("SELECT * FROM payout_requests WHERE id = ?").get(payoutRequestId);
+    if (!payout) throw new Error("Payout request not found");
+
+    const items = database.prepare("SELECT * FROM payout_request_items WHERE payoutRequestId = ?").all(payoutRequestId);
+
+    if (action === 'process') {
+      database.prepare("UPDATE payout_requests SET status = 'PROCESSING' WHERE id = ?").run(payoutRequestId);
+      for (const item of items) {
+        database.prepare("UPDATE seller_earnings SET status = 'PROCESSING', updatedAt = datetime('now') WHERE id = ?").run(item.earningId);
+      }
+    } else if (action === 'complete') {
+      database.prepare("UPDATE payout_requests SET status = 'COMPLETED', processedBy = ?, processedAt = datetime('now') WHERE id = ?")
+        .run(adminUsername, payoutRequestId);
+      for (const item of items) {
+        database.prepare("UPDATE seller_earnings SET status = 'PAID', updatedAt = datetime('now') WHERE id = ?").run(item.earningId);
+      }
+      const seller = database.prepare("SELECT * FROM users WHERE id = ?").get(payout.sellerId);
+      recordTransaction({
+        userId: payout.sellerId,
+        type: 'SELLER_PAYOUT_COMPLETED',
+        amount: payout.amount,
+        currency: 'INR',
+        balanceBefore: seller ? seller.balance : 0,
+        balanceAfter: seller ? seller.balance : 0,
+        referenceType: 'PAYOUT',
+        referenceId: payout.payoutNumber,
+        description: `Monetary payout completed (#${payout.payoutNumber})`
+      });
+    } else if (action === 'fail' || action === 'reject') {
+      const nextStatus = action === 'fail' ? 'FAILED' : 'REJECTED';
+      database.prepare("UPDATE payout_requests SET status = ?, failureReason = ?, processedBy = ?, processedAt = datetime('now') WHERE id = ?")
+        .run(nextStatus, reason || "Failed/Rejected", adminUsername, payoutRequestId);
+      for (const item of items) {
+        database.prepare("UPDATE seller_earnings SET status = 'AVAILABLE', updatedAt = datetime('now') WHERE id = ?").run(item.earningId);
+      }
+    }
+
+    return { success: true };
+  })();
+};
+
+const convertSingleEarningToCredits = (sellerId, earningId) => {
+  const database = getDb();
+  return database.transaction(() => {
+    const earning = database.prepare("SELECT * FROM seller_earnings WHERE id = ? AND sellerId = ?").get(earningId, sellerId);
+    if (!earning) throw new Error("Earning not found or unauthorized");
+    if (earning.status !== 'AVAILABLE') throw new Error("Earning is not available for conversion");
+
+    const creditsToAdd = convertInrToCredits(earning.sellerNetAmount);
+    const seller = database.prepare("SELECT * FROM users WHERE id = ?").get(sellerId);
+
+    database.prepare("UPDATE users SET balance = balance + ? WHERE id = ?").run(creditsToAdd, sellerId);
+    database.prepare("UPDATE seller_earnings SET status = 'CONVERTED_TO_CREDITS', updatedAt = datetime('now') WHERE id = ?").run(earningId);
+
+    const updatedSeller = database.prepare("SELECT balance FROM users WHERE id = ?").get(sellerId);
+    recordTransaction({
+      userId: sellerId,
+      type: 'SELLER_EARNING_CONVERSION',
+      amount: creditsToAdd,
+      currency: 'C',
+      balanceBefore: seller ? seller.balance : 0,
+      balanceAfter: updatedSeller.balance,
+      referenceType: 'EARNING',
+      referenceId: String(earningId),
+      description: `Converted ₹${earning.sellerNetAmount} earning to ${creditsToAdd}C credits`
+    });
+
+    return { success: true, creditsAdded: creditsToAdd };
+  })();
+};
+
+const getAllPendingOrderVerifications = () => {
+  const database = getDb();
+  return database.prepare(`
+    SELECT o.id as orderId, o.orderNumber, o.grossAmount, o.platformFee, o.sellerNetAmount,
+           o.paymentStatus, o.orderStatus, o.verificationStatus, o.createdAt,
+           c.id as couponId, c.brand, c.category, c.originalValue, c.askingPrice,
+           b.id as buyerId, b.username as buyerUsername, b.fullName as buyerName,
+           s.id as sellerId, s.username as sellerUsername, s.fullName as sellerName
+    FROM orders o
+    JOIN coupons c ON o.couponId = c.id
+    JOIN users b ON o.buyerId = b.id
+    JOIN users s ON o.sellerId = s.id
+    WHERE o.verificationStatus = 'PENDING'
+    ORDER BY o.id DESC
+  `).all();
+};
+
+const getAllPendingPayoutVerifications = () => {
+  const database = getDb();
+  const requests = database.prepare(`
+    SELECT pr.*, u.username, u.fullName, u.email,
+           pa.accountHolderName, pa.bankName, pa.accountNumber, pa.ifscCode, pa.upiId, pa.status as accountStatus
+    FROM payout_requests pr
+    JOIN users u ON pr.sellerId = u.id
+    JOIN payout_accounts pa ON pr.payoutAccountId = pa.id
+    WHERE pr.status IN ('REQUESTED', 'PROCESSING')
+    ORDER BY pr.id DESC
+  `).all();
+
+  for (const r of requests) {
+    r.items = database.prepare(`
+      SELECT pri.*, se.orderId, o.orderNumber, c.brand
+      FROM payout_request_items pri
+      JOIN seller_earnings se ON pri.earningId = se.id
+      JOIN orders o ON se.orderId = o.id
+      JOIN coupons c ON o.couponId = c.id
+      WHERE pri.payoutRequestId = ?
+    `).all(r.id);
+  }
+
+  return requests;
+};
+
 module.exports = {
+  REDEMPTION_WINDOW_HOURS,
+  PLATFORM_FEE_PERCENT,
+  convertInrToCredits,
   addCredits,
   initDetailsDb,
   getDb,
@@ -1340,4 +1920,16 @@ module.exports = {
   processSellerPayout,
   getUserSalesDetailed,
   getUserPurchasesDetailed,
+  reserveCouponAndPurchase,
+  verifyAndReleaseOrder,
+  rejectOrderPurchase,
+  confirmOrderRedemption,
+  processRedemptionSettlementCheck,
+  raiseOrderDispute,
+  resolveOrderDispute,
+  requestSellerPayoutDetailed,
+  processSellerPayoutDetailed,
+  convertSingleEarningToCredits,
+  getAllPendingOrderVerifications,
+  getAllPendingPayoutVerifications,
 };

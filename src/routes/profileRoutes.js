@@ -543,11 +543,7 @@ router.post("/payout-account", (req, res) => {
     return res.json({ success: true, message: "Payout details submitted for verification successfully!", account });
   } catch (error) {
     console.error("Save payout account error:", error);
-    return res.status(500).json({ success: false, error: error.message || "Server error" });
-  }
-});
-
-// GET /api/profile/seller-earnings/:userId - Get seller earnings breakdown and history
+    return res.status(500).json({ success: false, error: error.message || "Server error" });// GET /api/profile/seller-earnings/:userId - Get seller earnings breakdown and history
 router.get("/seller-earnings/:userId", (req, res) => {
   try {
     const userId = parseInt(req.params.userId, 10);
@@ -560,12 +556,39 @@ router.get("/seller-earnings/:userId", (req, res) => {
   }
 });
 
-// POST /api/profile/convert-earnings-to-credits - Convert seller earnings to C credits (1:1 ratio)
+// POST /api/profile/convert-earning-to-credits - Convert single seller earning to credits
+router.post("/convert-earning-to-credits", (req, res) => {
+  try {
+    const { userId, earningId } = req.body;
+    if (!userId || !earningId) {
+      return res.status(400).json({ success: false, error: "User ID and Earning ID are required." });
+    }
+
+    const result = detailsDb.convertSingleEarningToCredits(parseInt(userId, 10), parseInt(earningId, 10));
+    const summary = detailsDb.getSellerEarningsSummary(parseInt(userId, 10));
+    return res.json({ success: true, message: `Successfully converted earning into ${result.creditsAdded}C credits!`, summary });
+  } catch (error) {
+    console.error("Convert earning to credits error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// POST /api/profile/convert-earnings-to-credits - Convert seller earnings to C credits
 router.post("/convert-earnings-to-credits", (req, res) => {
   try {
-    const { userId, amount } = req.body;
-    if (!userId || !amount || amount <= 0) {
-      return res.status(400).json({ success: false, error: "Valid user ID and amount are required." });
+    const { userId, amount, earningId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: "Valid user ID is required." });
+    }
+
+    if (earningId) {
+      const result = detailsDb.convertSingleEarningToCredits(parseInt(userId, 10), parseInt(earningId, 10));
+      const summary = detailsDb.getSellerEarningsSummary(parseInt(userId, 10));
+      return res.json({ success: true, message: `Successfully converted earning into ${result.creditsAdded}C credits!`, summary });
+    }
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ success: false, error: "Valid amount is required." });
     }
 
     detailsDb.convertSellerEarningToCredits(parseInt(userId, 10), parseFloat(amount));
@@ -580,13 +603,13 @@ router.post("/convert-earnings-to-credits", (req, res) => {
 // POST /api/profile/request-payout - Request monetary payout of seller earnings
 router.post("/request-payout", (req, res) => {
   try {
-    const { userId, amount } = req.body;
-    if (!userId || !amount || amount <= 0) {
-      return res.status(400).json({ success: false, error: "Valid user ID and amount are required." });
+    const { userId, amount, earningIds } = req.body;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: "Valid user ID is required." });
     }
 
-    const payoutId = detailsDb.requestSellerPayout(parseInt(userId, 10), parseFloat(amount));
-    return res.json({ success: true, message: "Payout request submitted successfully!", payoutId });
+    const result = detailsDb.requestSellerPayoutDetailed(parseInt(userId, 10), earningIds || []);
+    return res.json({ success: true, message: "Payout request submitted successfully!", payoutId: result.payoutRequestId, amount: result.amount });
   } catch (error) {
     console.error("Request seller payout error:", error);
     return res.status(400).json({ success: false, error: error.message || "Server error" });
@@ -629,7 +652,7 @@ router.get("/purchases/:userId", (req, res) => {
   }
 });
 
-// POST /api/profile/buy-coupon - Purchase coupon and generate seller earning
+// POST /api/profile/buy-coupon - Reserve coupon and create order
 router.post("/buy-coupon", (req, res) => {
   try {
     const { couponId, buyerId } = req.body;
@@ -637,10 +660,122 @@ router.post("/buy-coupon", (req, res) => {
       return res.status(400).json({ success: false, error: "Coupon ID and Buyer ID are required." });
     }
 
-    const orderId = detailsDb.createOrderWithEarnings(parseInt(couponId, 10), parseInt(buyerId, 10));
-    return res.json({ success: true, message: "Coupon purchased successfully!", orderId });
+    const result = detailsDb.reserveCouponAndPurchase(parseInt(couponId, 10), parseInt(buyerId, 10));
+    return res.json({
+      success: true,
+      message: "Purchase request submitted! Your credits have been reserved and are awaiting admin verification.",
+      orderId: result.orderId,
+      orderNumber: result.orderNumber
+    });
   } catch (error) {
     console.error("Buy coupon error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// POST /api/profile/confirm-redemption - Buyer manually confirms coupon redemption
+router.post("/confirm-redemption", (req, res) => {
+  try {
+    const { orderId, buyerId } = req.body;
+    if (!orderId || !buyerId) {
+      return res.status(400).json({ success: false, error: "Order ID and Buyer ID are required." });
+    }
+
+    const result = detailsDb.confirmOrderRedemption(parseInt(orderId, 10), parseInt(buyerId, 10));
+    return res.json({ success: true, message: "Coupon redemption confirmed successfully!" });
+  } catch (error) {
+    console.error("Confirm redemption error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// POST /api/profile/dispute-order - Buyer files redemption dispute
+router.post("/dispute-order", (req, res) => {
+  try {
+    const { orderId, buyerId, reason, description } = req.body;
+    if (!orderId || !buyerId || !reason) {
+      return res.status(400).json({ success: false, error: "Order ID, Buyer ID, and Reason are required." });
+    }
+
+    const disputeId = detailsDb.raiseOrderDispute(parseInt(orderId, 10), parseInt(buyerId, 10), reason, description || "");
+    return res.json({ success: true, message: "Dispute submitted successfully!", disputeId });
+  } catch (error) {
+    console.error("Dispute order error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// GET /api/admin/order-verifications - Get pending coupon purchase verification requests
+router.get("/admin/order-verifications", (req, res) => {
+  try {
+    const queue = detailsDb.getAllPendingOrderVerifications();
+    return res.json({ success: true, queue });
+  } catch (error) {
+    console.error("Admin order verifications queue error:", error);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+});
+
+// POST /api/admin/verify-order - Approve or Reject buyer coupon purchase
+router.post("/admin/verify-order", (req, res) => {
+  try {
+    const { orderId, action, reason } = req.body; // action: 'approve' | 'reject'
+    if (!orderId || !action) {
+      return res.status(400).json({ success: false, error: "Order ID and action are required." });
+    }
+
+    if (action === 'approve') {
+      detailsDb.verifyAndReleaseOrder(parseInt(orderId, 10), "admin");
+      return res.json({ success: true, message: "Order verified and coupon released to buyer successfully!" });
+    } else {
+      detailsDb.rejectOrderPurchase(parseInt(orderId, 10), "admin", reason || "");
+      return res.json({ success: true, message: "Order rejected and reserved credits refunded to buyer successfully." });
+    }
+  } catch (error) {
+    console.error("Verify order error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// GET /api/admin/payout-verifications - Get pending seller payout requests with item breakdown
+router.get("/admin/payout-verifications", (req, res) => {
+  try {
+    const queue = detailsDb.getAllPendingPayoutVerifications();
+    return res.json({ success: true, queue });
+  } catch (error) {
+    console.error("Admin payout verifications queue error:", error);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+});
+
+// POST /api/admin/process-payout - Process, Complete, Fail or Reject seller payout request
+router.post("/admin/process-payout", (req, res) => {
+  try {
+    const { payoutRequestId, action, reason } = req.body; // action: 'process' | 'complete' | 'fail' | 'reject'
+    if (!payoutRequestId || !action) {
+      return res.status(400).json({ success: false, error: "Payout Request ID and action are required." });
+    }
+
+    detailsDb.processSellerPayoutDetailed(parseInt(payoutRequestId, 10), action, "admin", reason || "");
+    return res.json({ success: true, message: `Payout request ${action}ed successfully!` });
+  } catch (error) {
+    console.error("Process payout error:", error);
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
+  }
+});
+
+// POST /api/admin/resolve-dispute - Admin resolves dispute in seller or buyer favor
+router.post("/admin/resolve-dispute", (req, res) => {
+  try {
+    const { orderId, winner, notes } = req.body; // winner: 'seller' | 'buyer'
+    if (!orderId || !winner) {
+      return res.status(400).json({ success: false, error: "Order ID and winner choice are required." });
+    }
+
+    detailsDb.resolveOrderDispute(parseInt(orderId, 10), "admin", winner, notes || "");
+    return res.json({ success: true, message: `Dispute resolved in favor of ${winner}!` });
+  } catch (error) {
+    console.error("Resolve dispute error:", error);
     return res.status(400).json({ success: false, error: error.message || "Server error" });
   }
 });
@@ -676,7 +811,7 @@ router.post("/admin/verify-payout-account", (req, res) => {
     return res.json({ success: true, message: `Payout account ${status.toLowerCase()} successfully!` });
   } catch (error) {
     console.error("Verify payout account error:", error);
-    return res.status(500).json({ success: false, error: error.message || "Server error" });
+    return res.status(400).json({ success: false, error: error.message || "Server error" });
   }
 });
 
